@@ -10,7 +10,7 @@ export default class Config{
     consecutiveDebugInterval:number // how fast consecutive debugging should fire in ms 
     constructor(
         editMode = true,
-        fov = 90,
+        fov = 70,
         cameraSpeed = 0.16,
         mouseMoveInterval = 16,
         maxClickMouseDownTime = 200,

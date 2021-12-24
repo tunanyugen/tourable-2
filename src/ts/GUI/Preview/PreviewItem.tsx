@@ -16,7 +16,10 @@ class PreviewItem extends GUIObject<PreviewItemProps, PreviewItemState> {
     render() { 
         let scene = this.props.tourable.sceneManager.scenes.get(this.props.sceneID);
         return (
-            <div className="tourable__preview__item">
+            <div
+                className="tourable__preview__item"
+                onClick={(e) => { this.props.tourable.sceneManager.switchScene(this.props.sceneID) }}
+            >
                 <img src={scene.panorama.src} />
                 <p className="tourable__preview__item__name">{scene.panorama.name}</p>
             </div>

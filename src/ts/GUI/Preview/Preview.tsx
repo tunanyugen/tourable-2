@@ -12,11 +12,17 @@ export interface PreviewState extends GUIObjectState{
 class Preview extends GUIObject<PreviewProps, PreviewState> {
     constructor(props: PreviewProps) {
         super(props);
+
+        this.props.tourable.onLoadObservabl.Add(() => {
+            this.forceUpdate();
+        }, true)
     }
     render() { 
         return (
             <div className="tourable__preview">
-                {this.renderItems()}
+                <div className="tourable__preview__wrapper">
+                    {this.renderItems()}
+                </div>
             </div>
         );
     }
@@ -25,6 +31,7 @@ class Preview extends GUIObject<PreviewProps, PreviewState> {
         this.props.tourable.sceneManager.scenes.forEach((scene, key) => {
             items.push(
                 <PreviewItem
+                    key={`preview-item-${key}`}
                     tourable={this.props.tourable}
                     sceneID={scene.id}
                 />
