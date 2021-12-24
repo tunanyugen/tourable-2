@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "target": "es5",
+    "allowJs": true
+  },
+  "types": [
+    "babylonjs",
+  ],
+  "files": ["src/index.ts"]
+}

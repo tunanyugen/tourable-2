@@ -1,0 +1,13 @@
+.tourable{
+    &.hide{
+        opacity: 0;
+        transition: .25s;
+        * {
+            pointer-events: none;
+        }
+    }
+    &.show{
+        opacity: 1;
+        transition: .25s;
+    }
+}
