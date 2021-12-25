@@ -8,13 +8,15 @@ import Title from "./Title/Title";
 import PlayButton from "./PlayButton/PlayButton";
 import Preview from "./Preview/Preview";
 import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
+import FloorHotspotConfig from "./Config/FloorHotspotConfig";
+import Text from "./Text/Text";
 
 export interface GUIProps extends GUIObjectProps{
     
 }
  
 export interface GUIState extends GUIObjectState{
-    
+    text:string;
 }
  
 class GUI extends GUIObject<GUIProps, GUIState> {
@@ -23,7 +25,8 @@ class GUI extends GUIObject<GUIProps, GUIState> {
         super(props);
         this.state = {
             ...this.state,
-            hidden: false
+            hidden: false,
+            text: "",
         }
 
         this.props.tourable.onLoadObservabl.Add(() => {
@@ -52,9 +55,11 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                     />
                     <PlayButton tourable={this.props.tourable}/>
                     <Preview tourable={this.props.tourable} />
+                    <Text tourable={this.props.tourable} children={this.state.text} />
                 </div>
                 {/* Editor gui */}
-                <GeneralContextMenu tourable={this.props.tourable}/>
+                <GeneralContextMenu tourable={this.props.tourable} />
+                <FloorHotspotConfig tourable={this.props.tourable} />
             </React.Fragment>
         );
     }

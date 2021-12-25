@@ -852,3 +852,47 @@ body {
   font-size: 14px;
   cursor: pointer;
 }
+
+.tourable__config {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 360px;
+  height: 100%;
+  padding: 28px 23px;
+  background-color: #2a3038;
+  color: white;
+}
+.tourable__config.show {
+  transition: 0.25s;
+}
+.tourable__config.hide {
+  transform: translateX(100%);
+  transition: 0.25s;
+}
+.tourable__config__header {
+  display: flex;
+}
+.tourable__config__title {
+  font-size: 18px;
+}
+.tourable__config__close {
+  width: 27px;
+  height: 27px;
+  margin-left: auto;
+  margin-top: auto;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+.tourable__config__close svg {
+  filter: invert(53%) sepia(79%) saturate(328%) hue-rotate(153deg) brightness(84%) contrast(94%);
+}
+.tourable__config__icon-browser__icon {
+  width: 70px;
+  height: 70px;
+}
+.tourable__config__icon-browser__icon img {
+  max-width: 100%;
+  max-height: 100%;
+}

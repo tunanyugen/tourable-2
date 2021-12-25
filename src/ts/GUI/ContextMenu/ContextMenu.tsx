@@ -25,6 +25,7 @@ abstract class ContextMenu<P extends ContextMenuProps, S extends ContextMenuStat
                 }}
                 onContextMenu={(e) => { e.preventDefault() }}
                 onPointerLeave={(e) => { this.hide() }}
+                onClick={(e) => { this.hide() }}
             >
                 <ContextMenuComponent
                     hidden={this.state.hidden}

@@ -11,7 +11,7 @@ export default class SceneObject implements SceneObjectSchema{
     public id: number;
     public mesh:Mesh;
 
-    constructor(tourable:Tourable, sceneID:number, map:Map<number, SceneObject>){
+    constructor(tourable:Tourable, sceneID:number){
         let scene = tourable.sceneManager.scenes.get(sceneID);
         // get id
         this.id = scene.uidGenerator.uid;
@@ -20,5 +20,9 @@ export default class SceneObject implements SceneObjectSchema{
     }
     grab = (tourable:Tourable, pointerX:number, pointerY:number, xAxis:boolean, yAxis:boolean, zAxis:boolean) => {
         this.mesh.position = Mathematics.TransformPoint(tourable, this.mesh.position, new Vector2(pointerX, pointerY), xAxis, yAxis, zAxis);
+    }
+    dispose = (tourable:Tourable) => {
+        tourable.sceneManager.sceneToRender.sceneObjects.delete(this.id);
+        this.mesh.dispose();
     }
 }

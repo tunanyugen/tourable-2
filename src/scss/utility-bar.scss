@@ -32,7 +32,7 @@
     background: white;
     border-radius: 50%;
     svg {
-      filter: invert(53%) sepia(79%) saturate(328%) hue-rotate(153deg) brightness(84%) contrast(94%);
+      filter: $iconBlueFilter;
     }
   }
   &--top  &__item + &__item{

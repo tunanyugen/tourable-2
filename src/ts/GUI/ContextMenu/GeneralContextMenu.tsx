@@ -1,6 +1,7 @@
 import { ContextMenuItemProps } from "@tunanyugen/react-components/src/ts/ContextMenu/ContextMenuItem";
 import ContextMenu, { ContextMenuProps, ContextMenuState } from "./ContextMenu";
 import FloorHotspot from "../../SceneObject/FloorHotspot/FloorHotspot";
+import { Vector3 } from "babylonjs";
 
 export interface GeneralContextMenuProps extends ContextMenuProps{
     
@@ -38,7 +39,11 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             icon: "",
                             name: "Create floor hotspot",
                             onClick: () => {
+                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let front = camera.getDirection(Vector3.Forward());
                                 let hotspot = new FloorHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                                hotspot.mesh.position = hotspot.mesh.position.add(new Vector3(front.x, 0, front.z));
+                                hotspot.mesh.rotation.y = camera.absoluteRotation.toEulerAngles().y;
                             }
                         }
                     ]
