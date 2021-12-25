@@ -22,6 +22,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     constructor(props: GUIProps) {
         super(props);
         this.state = {
+            ...this.state,
             hidden: false
         }
 
@@ -33,24 +34,28 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     }
     render() { 
         return (
-            <div className={`tourable ${this._className}`}>
-                <UtilityBar tourable={this.props.tourable}>
-                    <UtilityBarItem
+            <React.Fragment>
+                {/* Client gui */}
+                <div className={`tourable ${this._className}`}>
+                    <UtilityBar tourable={this.props.tourable}>
+                        <UtilityBarItem
+                            tourable={this.props.tourable}
+                            onClick={(e) => { window.innerHeight >= screen.height ? document.exitFullscreen() : document.body.requestFullscreen() }}
+                        >
+                            <i className="fas fa-expand"></i>
+                        </UtilityBarItem>
+                    </UtilityBar>
+                    <Title
                         tourable={this.props.tourable}
-                        onClick={(e) => { window.innerHeight >= screen.height ? document.exitFullscreen() : document.body.requestFullscreen() }}
-                    >
-                        <i className="fas fa-expand"></i>
-                    </UtilityBarItem>
-                </UtilityBar>
-                <Title
-                    tourable={this.props.tourable}
-                    title="Development tour"
-                    location="Anflash Technology Company"
-                />
-                <PlayButton tourable={this.props.tourable}/>
-                <Preview tourable={this.props.tourable} />
+                        title="Development tour"
+                        location="Anflash Technology Company"
+                    />
+                    <PlayButton tourable={this.props.tourable}/>
+                    <Preview tourable={this.props.tourable} />
+                </div>
+                {/* Editor gui */}
                 <GeneralContextMenu tourable={this.props.tourable}/>
-            </div>
+            </React.Fragment>
         );
     }
     static render(tourable:Tourable, containerSelector:string){

@@ -11,12 +11,21 @@ export interface ContextMenuState extends GUIObjectState{
 }
  
 abstract class ContextMenu<P extends ContextMenuProps, S extends ContextMenuState> extends GUIObject<P, S> {
+    private get _className(){ return this.state.hidden ? "hide" : "show" }
     constructor(props: P) {
         super(props);
     }
     render() { 
         return (
-            <div className="tourable__context-menu">
+            <div
+                className={`tourable__context-menu ${this._className}`}
+                style={{
+                    left: this.state.left,
+                    top: this.state.top,
+                }}
+                onContextMenu={(e) => { e.preventDefault() }}
+                onPointerLeave={(e) => { this.hide() }}
+            >
                 <ContextMenuComponent
                     hidden={this.state.hidden}
                     itemsProps={this.renderItems()}

@@ -1,4 +1,4 @@
-import { MeshBuilder } from "babylonjs";
+import { Color3, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
@@ -15,10 +15,21 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
     }
     createMesh = (tourable:Tourable, sceneID:number) => {
         let scene = tourable.sceneManager.scenes.get(sceneID);
-
+        // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
-            size: 1,
+            size: 0.1,
             updatable: true,
-        }, scene)
+        }, scene);
+        this.mesh.position.y = -1;
+        this.mesh.rotation.x = Math.PI / 2;
+        // creating material
+        let material = new StandardMaterial(this.id.toString(), scene);
+        material.backFaceCulling = false;
+        material.emissiveColor = new Color3(1, 1, 1);
+        material.diffuseTexture = new Texture(tourable.config.assets.floorHotspot, scene);
+        material.useAlphaFromDiffuseTexture = true;
+        // applying material
+        this.mesh.material = material;
+        this.mesh.renderingGroupId = 1;
     }
 }

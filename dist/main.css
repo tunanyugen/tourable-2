@@ -826,3 +826,29 @@ body {
   color: white;
   margin: 0;
 }
+
+.tourable__context-menu {
+  position: absolute;
+}
+.tourable__context-menu.show {
+  opacity: 1;
+  pointer-events: all;
+}
+.tourable__context-menu.hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s;
+  pointer-events: none;
+}
+.tourable__context-menu .react-component__context-menu {
+  background-color: white;
+  border-radius: 2px;
+  min-width: 172px;
+}
+.tourable__context-menu .react-component__context-menu__item {
+  width: 100%;
+  padding: 2px 2px;
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+}

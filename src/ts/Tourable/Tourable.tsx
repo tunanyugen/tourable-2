@@ -2,6 +2,7 @@ import * as React from 'react';
 import GUI from "../GUI/GUI";
 import UIDGenerator from "../Generator/UIDGenerator";
 import SceneManager from "../Manager/SceneManager/SceneManager";
+import SceneObjectManager from "../Manager/SceneObjectManager/SceneObjectManager";
 import EventManager from "../Manager/EventManager/EventManager";
 import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
@@ -13,6 +14,7 @@ export default class Tourable{
     uidGenerator:UIDGenerator;
     // managers
     sceneManager:SceneManager;
+    sceneObjectManager:SceneObjectManager;
     eventManager:EventManager;
     // gui
     canvas:React.RefObject<HTMLCanvasElement> = React.createRef();
@@ -29,6 +31,7 @@ export default class Tourable{
         this.uidGenerator = new UIDGenerator();
         // init managers
         this.sceneManager = new SceneManager(this);
+        this.sceneObjectManager = new SceneObjectManager(this);
         // render gui
         let renderResult = GUI.render(this, containerSelector);
         this.gui = renderResult.gui;

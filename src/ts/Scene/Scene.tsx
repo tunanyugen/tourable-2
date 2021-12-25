@@ -39,7 +39,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             this.panorama.src,
             {
                 resolution: 16,
-                size: 1,
+                size: 2,
             },
             this
         );
