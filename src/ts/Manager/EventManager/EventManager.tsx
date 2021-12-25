@@ -2,16 +2,13 @@ import KeyEvent from "../../Event/KeyEvent";
 import Tourable from "../../Tourable/Tourable";
 import MouseButtonEvent from "../../Event/MouseButtonEvent";
 import Observable from "@tunanyugen/observable";
-import { Vector2 } from "babylonjs";
 
 export default class EventManager{
     // mouse
-    onMouseMoveObservable:Observable = new Observable(null, false);
-    onMouseScrollUpObservable:Observable = new Observable(null, false);
-    onMouseScrollDownObservable:Observable = new Observable(null, false);
+    onMouseMoveObservable:Observable<PointerEvent> = new Observable(null, false);
+    onMouseScrollObservable:Observable<WheelEvent> = new Observable(null, false);
     private _moving:boolean = false;
     get moving(){ return this._moving; }
-    mousePos:Vector2 = new Vector2();
     // mouse buttons
     mouse0:MouseButtonEvent;
     mouse1:MouseButtonEvent;
@@ -58,25 +55,21 @@ export default class EventManager{
     }
 
     private MouseMove = (tourable:Tourable) => {
+        let lastPointerEvent:PointerEvent;
         window.addEventListener('pointermove', (e:PointerEvent) => {
             this._moving = true;
-            this.mousePos.x = e.clientX;
-            this.mousePos.y = e.clientY;
+            lastPointerEvent = e;
         })
         setInterval(() => {
             if (this._moving){
-                this.onMouseMoveObservable.Resolve();
+                this.onMouseMoveObservable.Resolve(lastPointerEvent);
                 this._moving = false;
             }
         }, tourable.config.mouseMoveInterval);
     }
     private MouseScroll = (tourable:Tourable) => {
         tourable.canvas.current.addEventListener('wheel', (e:WheelEvent) => {
-            if (e.deltaY < 0){
-                this.onMouseScrollUpObservable.Resolve();
-            } else {
-                this.onMouseScrollDownObservable.Resolve();
-            }
+            this.onMouseScrollObservable.Resolve(e);
         })
     }
 }

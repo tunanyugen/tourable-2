@@ -38,6 +38,7 @@ export default class Tourable{
         this.canvas = renderResult.canvas;
         // create engine
         this.engine = new Engine(this.canvas.current, true, {preserveDrawingBuffer: true, stencil: true});
+        this.engine.renderEvenInBackground = false;
         // create scenes
         sceneSchemas.forEach((schema) => {
             new Scene(this, schema.panorama)

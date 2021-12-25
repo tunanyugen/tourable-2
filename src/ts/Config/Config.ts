@@ -6,11 +6,9 @@ export default class Config{
     editMode:boolean;
     fov:number; // camera's field of view
     cameraSpeed:number; // camera movement speed
+    floorHotspotSize:number; // floor hotspot size
     mouseMoveInterval:number; // mouse move event runs every X milliseconds
     maxClickMouseDownTime:number; // amount of pointer down time until click is rendered invalid in milliseconds
-    hotspotScale:number;
-    pivotScale:number;
-    cursorScale:number;
     consecutiveDebugInterval:number // how fast consecutive debugging should fire in ms 
     assets: {
         info: string,
@@ -22,10 +20,8 @@ export default class Config{
         fov = 70,
         cameraSpeed = 0.16,
         mouseMoveInterval = 16,
+        floorHotspotSize = 0.2,
         maxClickMouseDownTime = 200,
-        hotspotScale = 0.16,
-        pivotScale = 0.03,
-        cursorScale = 0.1,
         consecutiveDebugInterval = 200,
         assets = {
             info: info,
@@ -36,11 +32,9 @@ export default class Config{
         this.editMode = editMode;
         this.fov = fov;
         this.cameraSpeed = cameraSpeed;
+        this.floorHotspotSize = floorHotspotSize;
         this.mouseMoveInterval = mouseMoveInterval;
         this.maxClickMouseDownTime = maxClickMouseDownTime;
-        this.hotspotScale = hotspotScale;
-        this.pivotScale = pivotScale;
-        this.cursorScale = cursorScale;
         this.consecutiveDebugInterval = consecutiveDebugInterval;
         this.assets = assets
     }

@@ -17,7 +17,7 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         let scene = tourable.sceneManager.scenes.get(sceneID);
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
-            size: 0.1,
+            size: tourable.config.floorHotspotSize,
             updatable: true,
         }, scene);
         this.mesh.position.y = -1;
@@ -31,5 +31,6 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         // applying material
         this.mesh.material = material;
         this.mesh.renderingGroupId = 1;
+        this.mesh.refreshBoundingInfo();
     }
 }

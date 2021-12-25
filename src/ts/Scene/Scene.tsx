@@ -26,7 +26,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         tourable.sceneManager.scenes.set(this.id, this);
         // create camera
         let camera = new FreeCamera('camera1', new Vector3(0, 0, 0), this);
-        camera.minZ = 0.0001;
+        camera.minZ = 0.001;
         camera.fov = tourable.config.fov * Math.PI / 180;
         // Target the camera to scene origin
         camera.setTarget(new Vector3(0, 0, 1));
@@ -43,6 +43,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             },
             this
         );
+        this.photoDome.mesh.isPickable = false;
         this.photoDome.onLoadObservable.addOnce(() => {
             onLoad();
         })
