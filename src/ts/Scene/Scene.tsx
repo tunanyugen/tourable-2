@@ -1,14 +1,19 @@
-import { Scene as BABYLONScene, Engine, SceneOptions, PhotoDome, FreeCamera, Vector3 } from "babylonjs";
-import Panorama, { PanoramaSchema } from "../Panorama/Panorama";
+import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3 } from "babylonjs";
+import UIDGenerator from "../Generator/UIDGenerator";
+import { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
+import SceneObject from "../SceneObject/SceneObject";
 
 export interface SceneSchema {
     id:number;
     panorama:PanoramaSchema;
+    sceneObjects:Map<number, SceneObject>;
 }
 
 export default class Scene extends BABYLONScene implements SceneSchema {
+    public uidGenerator:UIDGenerator = new UIDGenerator();
     public id:number;
+    public sceneObjects:Map<number, SceneObject> = new Map();
     public photoDome:PhotoDome;
     constructor(
         tourable:Tourable,

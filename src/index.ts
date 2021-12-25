@@ -7,6 +7,7 @@ let tourable = new Tourable(
     [
         {
             id: 1,
+            sceneObjects: new Map(),
             panorama: {
                 name: "Scene 1",
                 src: "/static/scene1.jpeg",
@@ -15,6 +16,7 @@ let tourable = new Tourable(
         },
         {
             id: 2,
+            sceneObjects: new Map(),
             panorama: {
                 name: "Scene 1",
                 src: "/static/scene1.jpeg",

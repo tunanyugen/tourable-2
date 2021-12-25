@@ -7,6 +7,7 @@ import UtilityBarItem from './UtilityBar/UtilityBaritem';
 import Title from "./Title/Title";
 import PlayButton from "./PlayButton/PlayButton";
 import Preview from "./Preview/Preview";
+import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -48,6 +49,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 />
                 <PlayButton tourable={this.props.tourable}/>
                 <Preview tourable={this.props.tourable} />
+                <GeneralContextMenu tourable={this.props.tourable}/>
             </div>
         );
     }
