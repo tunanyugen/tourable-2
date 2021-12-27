@@ -20,6 +20,9 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
         super(props);
         
         this.props.tourable.onLoadObservabl.Add(() => {
+            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+                if (!this.state.hidden){ this.hide() }
+            }, false)
             this.forceUpdate()
         }, true)
     }
@@ -43,7 +46,7 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                     onSelect={(src) => {
                         if (!this.target) { return }
                         this.setState({icon: src});
-                        (this.target.mesh.material as StandardMaterial).diffuseTexture = new Texture(src, this.props.tourable.sceneManager.sceneToRender);
+                        this.target.texture = src;
                     }}
                 />
                 <Input
@@ -55,7 +58,10 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                     items={Array.from(this.props.tourable.sceneManager.scenes).map(([id, scene]) => {
                         return {
                             label: scene.panorama.name,
-                            src: scene.panorama.thumbnail
+                            src: scene.panorama.thumbnail,
+                            onClick: () => {
+                                if (this.target){ this.target.sceneID = id }
+                            }
                         }
                     })}
                 />

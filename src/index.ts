@@ -18,8 +18,17 @@ import Tourable from "./ts/Tourable/Tourable";
             id: 2,
             sceneObjects: new Map(),
             panorama: {
-                name: "Scene 1",
-                src: "/static/scene1.jpeg",
+                name: "Scene 2",
+                src: "/static/scene2.jpeg",
+                thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
+            }
+        },
+        {
+            id: 3,
+            sceneObjects: new Map(),
+            panorama: {
+                name: "Scene 3",
+                src: "/static/scene3.jpeg",
                 thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
             }
         },

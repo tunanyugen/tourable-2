@@ -1,5 +1,6 @@
-import { Mesh } from "babylonjs";
+import { Mesh, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
+import { Scalar } from "babylonjs/Legacy/legacy";
 import Tourable from "../Tourable/Tourable";
 import Mathematics from "../Utilities/Mathematics/Mathematics";
 
@@ -24,5 +25,16 @@ export default class SceneObject implements SceneObjectSchema{
     dispose = (tourable:Tourable) => {
         tourable.sceneManager.sceneToRender.sceneObjects.delete(this.id);
         this.mesh.dispose();
+    }
+    private _scaleInterval:NodeJS.Timeout;
+    scale = (start:Vector3, end:Vector3, duration:number) => {
+        if (this._scaleInterval){ clearInterval(this._scaleInterval) }
+        let totalIterations = Math.round(duration / 16);
+        let iteration = 0;
+        this._scaleInterval = setInterval(() => {
+            if (iteration >= totalIterations){ clearInterval(this._scaleInterval) }
+            this.mesh.scaling = Vector3.Lerp(start, end, iteration / totalIterations);
+            iteration++;
+        }, 16)
     }
 }
