@@ -6,7 +6,7 @@
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "target": "es5",
-    "allowJs": true
+    "allowJs": true,
   },
   "types": [
     "babylonjs",

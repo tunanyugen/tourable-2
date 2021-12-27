@@ -8,6 +8,7 @@ import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
 import Scene, { SceneSchema } from '../Scene/Scene';
 import { Engine } from "babylonjs";
+import FloorHotspot, { FloorHotspotSchema } from '../SceneObject/FloorHotspot/FloorHotspot';
 
 export default class Tourable{
     // generators
@@ -41,10 +42,15 @@ export default class Tourable{
         this.engine.renderEvenInBackground = false;
         // create scenes
         sceneSchemas.forEach((schema) => {
-            new Scene(this, schema.panorama)
+            let scene = new Scene(this, schema.panorama);
+            (schema.sceneObjects as FloorHotspotSchema[]).forEach((sceneObject) => {
+                if (sceneObject.type == "floorHotspot"){
+                    new FloorHotspot(this, scene.id, sceneObject)
+                }
+            })
         })
         // switch to first scene
-        if (sceneSchemas.length > 0){ this.sceneManager.switchScene(sceneSchemas[0].id) }
+        if (sceneSchemas.length > 0){ this.sceneManager.switchScene(this, sceneSchemas[0].id) }
         // init events
         this.eventManager = new EventManager(this);
         // finished loading
@@ -59,5 +65,10 @@ export default class Tourable{
         window.addEventListener('resize', () => {
             this.engine.resize();
         });
+    }
+    export = () => {
+        return JSON.stringify(Array.from(this.sceneManager.scenes).map(([id, scene]) => {
+            return scene.export();
+        }))
     }
 }

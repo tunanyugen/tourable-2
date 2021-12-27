@@ -60,7 +60,11 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                             label: scene.panorama.name,
                             src: scene.panorama.thumbnail,
                             onClick: () => {
-                                if (this.target){ this.target.sceneID = id }
+                                if (this.target){
+                                    this.target.targetSceneID = scene.id;
+                                    // create new one
+                                    this.target.createBackHotspot(this.props.tourable);
+                                }
                             }
                         }
                     })}

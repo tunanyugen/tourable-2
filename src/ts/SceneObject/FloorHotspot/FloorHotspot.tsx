@@ -1,13 +1,21 @@
-import { Color3, MeshBuilder, StandardMaterial, Texture, ActionManager, ExecuteCodeAction, Scalar, Vector3 } from "babylonjs";
+import { Color3, MeshBuilder, StandardMaterial, Texture, ActionManager, ExecuteCodeAction, Scalar, Vector3, SceneSerializer } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
 export interface FloorHotspotSchema extends SceneObjectSchema {
     texture:string;
+    targetSceneID:number;
+    title:string;
+    backFloorHotspotSceneID:number,
+    backFloorHotspotID:number;
 }
 
 export default class FloorHotspot extends SceneObject implements FloorHotspotSchema {
-    sceneID:number = -1;
+    type: string = "floorHotspot";
+    targetSceneID:number = -1;
+    backFloorHotspotSceneID:number = -1;
+    backFloorHotspotID: number = -1;
+    title: string = "";
     private _texture:string = "";
     get texture(){ return this._texture }
     set texture(val:string){
@@ -25,11 +33,30 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
          this.mesh.material = newMaterial;
     }
 
-    constructor(tourable:Tourable, sceneID:number){
+    constructor(
+        tourable:Tourable,
+        sceneID:number,
+        schema:FloorHotspotSchema = null,
+    ){
         super(tourable, sceneID)
+        // set default values
+        if (schema){
+            this._texture = schema.texture;
+            this.targetSceneID = schema.targetSceneID;
+            this.title = schema.title;
+            this.backFloorHotspotSceneID = schema.backFloorHotspotSceneID,
+            this.backFloorHotspotID = schema.backFloorHotspotID;
+        }
+        // constructor
         let scene = tourable.sceneManager.scenes.get(sceneID);
         tourable.sceneManager.scenes.get(sceneID).sceneObjects.set(this.id, this);
         this.createMesh(tourable, sceneID);
+        // set default values
+        if (schema){
+            this.mesh.position = new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z)
+            this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
+            this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
+        }
         // action manager
         this.mesh.actionManager = new ActionManager(scene);
         // change cursor icon
@@ -43,10 +70,10 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         }))
         // switch scene on click
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnLeftPickTrigger, (e) => {
-            if (this.sceneID < 0){ return }
-            tourable.sceneManager.switchScene(this.sceneID);
+            if (this.targetSceneID < 0){ return }
+            tourable.sceneManager.switchScene(tourable, this.targetSceneID, this.id);
         }))
-        // show floor hotspot contextmenu
+        // show floor hotspot config
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnRightPickTrigger, (e) => {
             tourable.gui.current.floorHotspotConfig.current.setTarget(this);
         }))
@@ -63,6 +90,38 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         this.mesh.rotation.x = Math.PI / 2;
         // set texture
         this.texture = tourable.config.assets.floorHotspot[0];
-        console.log(this.mesh);
+    }
+    createBackHotspot = (tourable:Tourable) => {
+        // dispose old back hotspot
+        let backFloorHotspotScene = tourable.sceneManager.scenes.get(this.backFloorHotspotSceneID);
+        if (backFloorHotspotScene){
+            let hotspot = backFloorHotspotScene.sceneObjects.get(this.backFloorHotspotID);
+            if (hotspot){ hotspot.dispose(tourable) }
+        }
+        // create new one
+        let backHotspot = new FloorHotspot(tourable, this.targetSceneID);
+        backHotspot.texture = this.texture;
+        backHotspot.targetSceneID = tourable.sceneManager.sceneToRender.id;
+        backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
+        let position = this.mesh.position.clone().negate();
+        position.y = this.mesh.position.y;
+        backHotspot.mesh.position = position;
+        backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
+    }
+    export = () => {
+        return {
+            type: this.type,
+            id: this.id,
+            backFloorHotspotSceneID: this.backFloorHotspotSceneID,
+            backFloorHotspotID: this.backFloorHotspotID,
+            targetSceneID: this.targetSceneID,
+            texture: this.texture,
+            title: this.title,
+            mesh: {
+                position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
+                rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
+                scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
+            }
+        } as FloorHotspotSchema
     }
 }
