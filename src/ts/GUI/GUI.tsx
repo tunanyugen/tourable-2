@@ -21,6 +21,8 @@ export interface GUIState extends GUIObjectState{
  
 class GUI extends GUIObject<GUIProps, GUIState> {
     private get _className(){ return this.state.hidden ? "hide" : "show" }
+    generalContextMenu:React.RefObject<GeneralContextMenu> = React.createRef();
+    floorHotspotConfig:React.RefObject<FloorHotspotConfig> = React.createRef();
     constructor(props: GUIProps) {
         super(props);
         this.state = {
@@ -58,8 +60,8 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                     <Text tourable={this.props.tourable} children={this.state.text} />
                 </div>
                 {/* Editor gui */}
-                <GeneralContextMenu tourable={this.props.tourable} />
-                <FloorHotspotConfig tourable={this.props.tourable} />
+                <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
+                <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
             </React.Fragment>
         );
     }

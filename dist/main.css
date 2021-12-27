@@ -156,6 +156,10 @@
   min-height: 27px;
   transition: 0.25s;
 }
+.react-component__button img, .react-component__button svg {
+  max-width: 100%;
+  max-height: 100%;
+}
 .react-component__button * {
   pointer-events: none;
 }
@@ -648,6 +652,35 @@
           user-select: none;
 }
 
+.react-component__media-select.error .react-component__media-select__wrapper {
+  border: 1px solid red;
+}
+.react-component__media-select__wrapper {
+  display: grid;
+  overflow-y: auto;
+  grid-template-columns: repeat(auto-fit, minmax(307px, 1fr));
+}
+.react-component__labeled-media-select.error .react-component__labeled-media-select__wrapper {
+  border: 1px solid red;
+}
+.react-component__labeled-media-select__wrapper {
+  display: grid;
+  overflow-y: auto;
+  grid-template-columns: repeat(auto-fit, minmax(307px, 1fr));
+}
+.react-component__labeled-media-select__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.react-component__slider__label-wrapper {
+  display: flex;
+}
+.react-component__slider__value {
+  margin-left: auto;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -687,6 +720,13 @@ body {
 }
 .react-component__button:hover {
   box-shadow: 0px 0px 14px 8px rgba(64, 148, 185, 0.75);
+}
+
+.react-component__form__input input {
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
 }
 
 .tourable.hide {
@@ -864,14 +904,23 @@ body {
   color: white;
 }
 .tourable__config.show {
+  opacity: 1;
   transition: 0.25s;
 }
 .tourable__config.hide {
+  opacity: 0;
   transform: translateX(100%);
   transition: 0.25s;
 }
 .tourable__config__header {
   display: flex;
+  padding-bottom: 26px;
+}
+.tourable__config__wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 46px);
+  overflow: auto;
 }
 .tourable__config__title {
   font-size: 18px;
@@ -888,11 +937,35 @@ body {
 .tourable__config__close svg {
   filter: invert(53%) sepia(79%) saturate(328%) hue-rotate(153deg) brightness(84%) contrast(94%);
 }
-.tourable__config__icon-browser__icon {
-  width: 70px;
-  height: 70px;
+.tourable__config .react-component__form__input__label {
+  display: block;
+  padding-bottom: 2px;
 }
-.tourable__config__icon-browser__icon img {
-  max-width: 100%;
-  max-height: 100%;
+.tourable__config .react-component__labeled-media-select__wrapper {
+  grid-template-columns: repeat(auto-fit, minmax(257px, 1fr));
+  justify-items: start;
+  padding: 20px;
+}
+.tourable__config .react-component__media-select__wrapper {
+  overflow: visible;
+  background: #20242a;
+  border-radius: 4px;
+  padding: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  justify-items: center;
+}
+.tourable__config .react-component__media-select__item {
+  width: 64px;
+  height: 64px;
+  background: none;
+  box-shadow: none;
+  border-radius: 4px;
+  transition: 0.25s;
+}
+.tourable__config .react-component__media-select__item:hover {
+  -webkit-backdrop-filter: brightness(0.9);
+          backdrop-filter: brightness(0.9);
+}
+.tourable__config .react-component__media-select__item.selected {
+  border: 1px solid blue;
 }

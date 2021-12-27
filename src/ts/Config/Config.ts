@@ -1,6 +1,7 @@
 const info = require("../../assets/info.png");
 const floatingHotspot = require("../../assets/floating-hotspot.png");
 const floorHotspot = require("../../assets/floor-hotspot.png");
+const floorHotspotCircle = require("../../assets/floor-hotspot-circle.png")
 
 export default class Config{
     editMode:boolean;
@@ -13,7 +14,7 @@ export default class Config{
     assets: {
         info: string,
         floatingHotspot:string
-        floorHotspot:string,
+        floorHotspot:string[],
     }
     constructor(
         editMode = true,
@@ -26,7 +27,10 @@ export default class Config{
         assets = {
             info: info,
             floatingHotspot: floatingHotspot,
-            floorHotspot: floorHotspot
+            floorHotspot: [
+                floorHotspot,
+                floorHotspotCircle
+            ]
         }
     ){
         this.editMode = editMode;

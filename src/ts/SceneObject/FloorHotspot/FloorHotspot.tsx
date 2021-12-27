@@ -29,7 +29,7 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         }))
         // show floor hotspot contextmenu
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnRightPickTrigger, (e) => {
-        //    tourable.gui.current.floor 
+            tourable.gui.current.floorHotspotConfig.current.setTarget(this);
         }))
     }
     createMesh = (tourable:Tourable, sceneID:number) => {
@@ -45,7 +45,8 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         let material = new StandardMaterial(this.id.toString(), scene);
         material.backFaceCulling = false;
         material.emissiveColor = new Color3(1, 1, 1);
-        material.diffuseTexture = new Texture(tourable.config.assets.floorHotspot, scene);
+        material.diffuseTexture = new Texture(tourable.config.assets.floorHotspot[0], scene);
+        material.diffuseTexture.hasAlpha = true;
         material.useAlphaFromDiffuseTexture = true;
         // applying material
         this.mesh.material = material;

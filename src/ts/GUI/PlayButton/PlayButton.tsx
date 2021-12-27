@@ -1,4 +1,4 @@
-import Button from "@tunanyugen/react-components/src/ts/Form/Button";
+import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
 import GUIObject, {GUIObjectProps, GUIObjectState} from "../GUIObject";
 
 export interface PlayButtonProps extends GUIObjectProps{
