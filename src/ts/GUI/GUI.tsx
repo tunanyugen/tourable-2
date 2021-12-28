@@ -17,7 +17,7 @@ export interface GUIProps extends GUIObjectProps{
 }
  
 export interface GUIState extends GUIObjectState{
-    text:string;
+    
 }
  
 class GUI extends GUIObject<GUIProps, GUIState> {
@@ -25,12 +25,12 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     generalContextMenu:React.RefObject<GeneralContextMenu> = React.createRef();
     floorHotspotConfig:React.RefObject<FloorHotspotConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
+    text:React.RefObject<Text> = React.createRef();
     constructor(props: GUIProps) {
         super(props);
         this.state = {
             ...this.state,
             hidden: false,
-            text: "",
         }
 
         this.props.tourable.onLoadObservabl.Add(() => {
@@ -63,8 +63,9 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                     />
                     <PlayButton tourable={this.props.tourable}/>
                     <Preview tourable={this.props.tourable} />
-                    <Text tourable={this.props.tourable} children={this.state.text} />
                 </div>
+                {/* Uncontrolled gui */}
+                <Text ref={this.text} tourable={this.props.tourable} />
                 {/* Editor gui */}
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />

@@ -24,6 +24,7 @@ export default class SceneManager {
                     let lastScene = this._sceneToRender;
                     // switch scene
                     this._sceneToRender = scene;
+                    this.disableOtherSceneObjects();
                     // resolve subscriptions
                     this.onSwitchSceneObservable.Resolve({lastScene, scene});
                     // reset old scene camera
@@ -40,6 +41,7 @@ export default class SceneManager {
                 let lastScene = this._sceneToRender;
                 // switch scene
                 this._sceneToRender = scene;
+                this.disableOtherSceneObjects();
                 // resolve subscriptions
                 this.onSwitchSceneObservable.Resolve({lastScene, scene});
                 // reset old scene camera
@@ -81,5 +83,18 @@ export default class SceneManager {
             // switch scene
             this.setScene(tourable, newScene);
         }
+    }
+    disableOtherSceneObjects = () => {
+        this.scenes.forEach((scene) => {
+            if (scene != this.sceneToRender){
+                scene.sceneObjects.forEach((sceneObject) => {
+                    sceneObject.mesh.setEnabled(false);
+                })
+            } else {
+                scene.sceneObjects.forEach((sceneObject) => {
+                    sceneObject.mesh.setEnabled(true);
+                })
+            }
+        })
     }
 }

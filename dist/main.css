@@ -970,6 +970,22 @@ body {
   border: 1px solid blue;
 }
 
+.tourable__text {
+  position: absolute;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+.tourable__text.show {
+  opacity: 1;
+  transition: 0.25s;
+}
+.tourable__text.hide {
+  opacity: 0;
+  transition: 0.25s;
+  pointer-events: none;
+}
+
 .tourable__load-screen {
   position: absolute;
   left: 0;

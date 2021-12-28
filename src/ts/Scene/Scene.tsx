@@ -1,9 +1,9 @@
-import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3 } from "babylonjs";
+import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar } from "babylonjs";
 import UIDGenerator from "../Generator/UIDGenerator";
 import { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
-import { FloorHotspotSchema } from "../SceneObject/FloorHotspot/FloorHotspot";
+import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/FloorHotspot/FloorHotspot";
 
 export interface SceneSchema {
     id:number;
@@ -19,10 +19,26 @@ export default class Scene extends BABYLONScene implements SceneSchema {
     constructor(
         tourable:Tourable,
         public panorama:PanoramaSchema,
+        schema:SceneSchema = null
     ){
         super(tourable.engine);
         // get id
         this.id = tourable.uidGenerator.uid;
+        // load schema
+        if (schema){
+            this.id = schema.id;
+            tourable.uidGenerator.uid = this.id + 1;
+            this.panorama = schema.panorama;
+            tourable.onLoadObservabl.Add(() => {
+                schema.sceneObjects.forEach(() => {
+                    (schema.sceneObjects as FloorHotspotSchema[]).forEach((sceneObject) => {
+                        if (sceneObject.type == "floorHotspot"){
+                            new FloorHotspot(tourable, this.id, sceneObject)
+                        }
+                    })
+                })
+            }, true)
+        }
         // register to sceneManager
         tourable.sceneManager.scenes.set(this.id, this);
         // create camera
@@ -65,6 +81,23 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                 iteration++;
             }, 16);
             return this._moveInterval;
+        })
+    }
+    private _changeFOVInterval:NodeJS.Timeout;
+    changeFOV = (start:number, end:number, duration:number) => {
+        return new Promise((resolve) => {
+            if (this._changeFOVInterval){ clearInterval(this._changeFOVInterval) }
+            let totalIterations = Math.round(duration / 16);
+            let iteration = 0;
+            this._changeFOVInterval = setInterval(() => {
+                if (iteration >= totalIterations){
+                    clearInterval(this._changeFOVInterval);
+                    resolve(null);
+                }
+                this.activeCamera.fov = Scalar.Lerp(start, end, iteration / totalIterations);
+                iteration++;
+            }, 16);
+            return this._changeFOVInterval;
         })
     }
     resetCamera = (position:boolean = true, rotation:boolean = true) => {

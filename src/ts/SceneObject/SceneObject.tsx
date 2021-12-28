@@ -1,5 +1,6 @@
 import { Mesh, SceneSerializer, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
+import Scene from "../Scene/Scene";
 import Tourable from "../Tourable/Tourable";
 import Mathematics from "../Utilities/Mathematics/Mathematics";
 
@@ -18,8 +19,11 @@ export default abstract class SceneObject implements SceneObjectSchema{
     public id: number;
     public mesh:Mesh;
 
-    constructor(tourable:Tourable, sceneID:number){
+    constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
         let scene = tourable.sceneManager.scenes.get(sceneID);
+        if (schema){
+            scene.uidGenerator.uid = schema.id;
+        }
         // get id
         this.id = scene.uidGenerator.uid;
         // register to map
@@ -28,8 +32,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
     grab = (tourable:Tourable, pointerX:number, pointerY:number, xAxis:boolean, yAxis:boolean, zAxis:boolean) => {
         this.mesh.position = Mathematics.TransformPoint(tourable, this.mesh.position, new Vector2(pointerX, pointerY), xAxis, yAxis, zAxis);
     }
-    dispose = (tourable:Tourable) => {
-        tourable.sceneManager.sceneToRender.sceneObjects.delete(this.id);
+    dispose = () => {
+        (this.mesh.getScene() as Scene).sceneObjects.delete(this.id);
         this.mesh.dispose();
     }
     private _scaleInterval:NodeJS.Timeout;

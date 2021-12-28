@@ -42,12 +42,7 @@ export default class Tourable{
         this.engine.renderEvenInBackground = false;
         // create scenes
         sceneSchemas.forEach((schema) => {
-            let scene = new Scene(this, schema.panorama);
-            (schema.sceneObjects as FloorHotspotSchema[]).forEach((sceneObject) => {
-                if (sceneObject.type == "floorHotspot"){
-                    new FloorHotspot(this, scene.id, sceneObject)
-                }
-            })
+            new Scene(this, schema.panorama, schema);
         })
         // switch to first scene
         if (sceneSchemas.length > 0){ this.sceneManager.switchScene(this, sceneSchemas[0].id) }

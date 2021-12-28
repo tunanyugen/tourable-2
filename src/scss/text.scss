@@ -1,0 +1,15 @@
+.tourable__text{
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    &.show{
+        opacity: 1;
+        transition: .25s;
+    }
+    &.hide{
+        opacity: 0;
+        transition: .25s;
+        pointer-events: none;
+    }
+}

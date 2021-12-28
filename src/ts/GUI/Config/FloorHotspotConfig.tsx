@@ -47,11 +47,17 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                         if (!this.target) { return }
                         this.setState({icon: src});
                         this.target.texture = src;
+                        // create new back hotspot
+                        this.target.createBackHotspot(this.props.tourable);
                     }}
                 />
                 <Input
                     label="Title"
                     placeholder="Enter text here"
+                    onChange={(e) => {
+                        if (!this.target){ return }
+                        this.target.title = e.target.value;
+                    }}
                 />
                 <LabeledMediaSelect
                     label="Pick a scene"
@@ -61,8 +67,8 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                             src: scene.panorama.thumbnail,
                             onClick: () => {
                                 if (this.target){
-                                    this.target.targetSceneID = scene.id;
-                                    // create new one
+                                    this.target.setTargetSceneID(this.props.tourable, scene.id);
+                                    // create new back hotspot
                                     this.target.createBackHotspot(this.props.tourable);
                                 }
                             }

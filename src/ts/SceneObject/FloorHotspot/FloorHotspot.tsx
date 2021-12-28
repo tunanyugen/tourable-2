@@ -1,19 +1,27 @@
 import { Color3, MeshBuilder, StandardMaterial, Texture, ActionManager, ExecuteCodeAction, Scalar, Vector3, SceneSerializer } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
+import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
 export interface FloorHotspotSchema extends SceneObjectSchema {
     texture:string;
     targetSceneID:number;
     title:string;
-    backFloorHotspotSceneID:number,
     backFloorHotspotID:number;
 }
 
 export default class FloorHotspot extends SceneObject implements FloorHotspotSchema {
     type: string = "floorHotspot";
-    targetSceneID:number = -1;
-    backFloorHotspotSceneID:number = -1;
+    private _targetSceneID:number = -1;
+    get targetSceneID(){ return this._targetSceneID }
+    setTargetSceneID = (tourable:Tourable, value:number) => {
+        let lastScene = tourable.sceneManager.scenes.get(this.targetSceneID);
+        let currentScene = tourable.sceneManager.scenes.get(value);
+        this._targetSceneID = value;
+        if ((lastScene && this.title == lastScene.panorama.name) || this.title.length <= 0){
+            this.title = currentScene.panorama.name;
+        }
+    }
     backFloorHotspotID: number = -1;
     title: string = "";
     private _texture:string = "";
@@ -38,17 +46,16 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         sceneID:number,
         schema:FloorHotspotSchema = null,
     ){
-        super(tourable, sceneID)
+        super(tourable, sceneID, schema)
+        let scene = tourable.sceneManager.scenes.get(sceneID);
         // set default values
         if (schema){
             this._texture = schema.texture;
-            this.targetSceneID = schema.targetSceneID;
+            this._targetSceneID = schema.targetSceneID;
             this.title = schema.title;
-            this.backFloorHotspotSceneID = schema.backFloorHotspotSceneID,
             this.backFloorHotspotID = schema.backFloorHotspotID;
         }
         // constructor
-        let scene = tourable.sceneManager.scenes.get(sceneID);
         tourable.sceneManager.scenes.get(sceneID).sceneObjects.set(this.id, this);
         this.createMesh(tourable, sceneID);
         // set default values
@@ -59,19 +66,22 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         }
         // action manager
         this.mesh.actionManager = new ActionManager(scene);
-        // change cursor icon
+        // change cursor icon and show title
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, (e) => {
             document.body.style.cursor = "pointer"
             this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
+            let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
+            tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
         }))
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, (e) => {
             document.body.style.cursor = null
             this.scale(this.mesh.scaling, new Vector3(1, 1, 1), 150);
+            tourable.gui.current.text.current.hide();
         }))
         // switch scene on click
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnLeftPickTrigger, (e) => {
-            if (this.targetSceneID < 0){ return }
-            tourable.sceneManager.switchScene(tourable, this.targetSceneID, this.id);
+            if (this._targetSceneID < 0){ return }
+            tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id);
         }))
         // show floor hotspot config
         this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnRightPickTrigger, (e) => {
@@ -93,15 +103,16 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
     }
     createBackHotspot = (tourable:Tourable) => {
         // dispose old back hotspot
-        let backFloorHotspotScene = tourable.sceneManager.scenes.get(this.backFloorHotspotSceneID);
+        let backFloorHotspotScene = tourable.sceneManager.scenes.get(this._targetSceneID);
         if (backFloorHotspotScene){
             let hotspot = backFloorHotspotScene.sceneObjects.get(this.backFloorHotspotID);
-            if (hotspot){ hotspot.dispose(tourable) }
+            if (hotspot){ hotspot.dispose() }
         }
         // create new one
-        let backHotspot = new FloorHotspot(tourable, this.targetSceneID);
+        let backHotspot = new FloorHotspot(tourable, this._targetSceneID);
+        this.backFloorHotspotID = backHotspot.id;
         backHotspot.texture = this.texture;
-        backHotspot.targetSceneID = tourable.sceneManager.sceneToRender.id;
+        backHotspot._targetSceneID = tourable.sceneManager.sceneToRender.id;
         backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
         let position = this.mesh.position.clone().negate();
         position.y = this.mesh.position.y;
@@ -112,7 +123,6 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         return {
             type: this.type,
             id: this.id,
-            backFloorHotspotSceneID: this.backFloorHotspotSceneID,
             backFloorHotspotID: this.backFloorHotspotID,
             targetSceneID: this.targetSceneID,
             texture: this.texture,
