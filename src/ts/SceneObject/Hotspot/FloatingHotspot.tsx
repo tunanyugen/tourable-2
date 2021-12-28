@@ -61,7 +61,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             ){
                 document.body.style.cursor = "pointer"
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floatingHotspotSize, 0)));
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y / 10, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
             }
             // change cursor icon, hide title, unscale
