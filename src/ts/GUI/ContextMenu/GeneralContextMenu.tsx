@@ -3,6 +3,7 @@ import ContextMenu, { ContextMenuProps, ContextMenuState } from "./ContextMenu";
 import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import { Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
+import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 
 export interface GeneralContextMenuProps extends ContextMenuProps{
     
@@ -53,6 +54,16 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             onClick: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                                 let hotspot = new FloatingHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                                hotspot.mesh.position = camera.getDirection(Vector3.Forward());
+                                hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
+                            }
+                        },
+                        {
+                            icon: "",
+                            name: "Create info hotspot",
+                            onClick: () => {
+                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let hotspot = new InfoHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
                                 hotspot.mesh.position = camera.getDirection(Vector3.Forward());
                                 hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                             }

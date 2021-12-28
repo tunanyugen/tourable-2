@@ -81,7 +81,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
                 tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
             }
         }, false)
-        // show floor hotspot config
+        // show hotspot config
         tourable.eventManager.mouse2.onButtonDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
             if (tourable.sceneObjectManager.hoverSceneObject == this){

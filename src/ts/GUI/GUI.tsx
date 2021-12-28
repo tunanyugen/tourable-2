@@ -10,6 +10,7 @@ import Preview from "./Preview/Preview";
 import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
 import FloorHotspotConfig from "./Config/FloorHotspotConfig";
 import FloatingHotspotConfig from "./Config/FloatingHotspotConfig";
+import InfoHotspotConfig from "./Config/InfoHotspotConfig";
 import Text from "./Text/Text";
 import LoadScreen from "./LoadScreen/LoadScreen";
 
@@ -26,6 +27,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     generalContextMenu:React.RefObject<GeneralContextMenu> = React.createRef();
     floorHotspotConfig:React.RefObject<FloorHotspotConfig> = React.createRef();
     floatingHotspotConfig:React.RefObject<FloatingHotspotConfig> = React.createRef();
+    infoHotspotConfig:React.RefObject<InfoHotspotConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
     constructor(props: GUIProps) {
@@ -72,6 +74,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
                 <FloatingHotspotConfig ref={this.floatingHotspotConfig} tourable={this.props.tourable} />
+                <InfoHotspotConfig ref={this.infoHotspotConfig} tourable={this.props.tourable} />
                 <LoadScreen ref={this.loadScreen} tourable={this.props.tourable}/>
             </React.Fragment>
         );

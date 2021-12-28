@@ -61,6 +61,10 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
                 size = tourable.config.floorHotspotSize;
                 texture = tourable.config.assets.floorHotspot[0]
                 break;
+            case "infoHotspot":
+                size = tourable.config.infoHotspotSize;
+                texture = tourable.config.assets.infoHotspot[0]
+                break;
         }
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
