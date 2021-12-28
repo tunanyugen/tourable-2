@@ -8,7 +8,7 @@ export interface FloorHotspotSchema extends HotspotSchema {
 }
 
 export default class FloorHotspot extends Hotspot implements FloorHotspotSchema {
-    type: string = "floorHotspot";
+    type:"floorHotspot" = "floorHotspot";
     backFloorHotspotID: number = -1;
 
     constructor( tourable:Tourable, sceneID:number, schema:FloorHotspotSchema = null){
@@ -56,9 +56,9 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
-        // change cursor icon and show title
         tourable.eventManager.onMouseMoveObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // change cursor icon, show title and scale
             if (
                 tourable.sceneObjectManager.lastHoverSceneObject != this &&
                 tourable.sceneObjectManager.hoverSceneObject == this
@@ -67,12 +67,14 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
                 let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
-            } else if (
+            }
+            // change cursor icon, hide title, unscale
+            else if (
                 tourable.sceneObjectManager.lastHoverSceneObject == this &&
                 tourable.sceneObjectManager.hoverSceneObject != this
             ) {
                 document.body.style.cursor = null
-                this.scale(this.mesh.scaling, new Vector3(1, 1, 1), 150);
+                this.scale(this.mesh.scaling, this.originalScaling, 150);
                 tourable.gui.current.text.current.hide();
             }
         }, false)
@@ -99,6 +101,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
             targetSceneID: this.targetSceneID,
             texture: this.texture,
             title: this.title,
+            originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
                 rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},

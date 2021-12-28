@@ -995,6 +995,7 @@ body {
   color: white;
   font-size: 18px;
   font-weight: 600;
+  transform: translate(-50%, 0);
 }
 .tourable__text.show {
   opacity: 1;

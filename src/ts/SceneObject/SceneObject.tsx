@@ -7,6 +7,7 @@ import Mathematics from "../Utilities/Mathematics/Mathematics";
 export interface SceneObjectSchema {
     type:string;
     id:number;
+    originalScaling: {x:number, y:number, z:number},
     mesh: {
         position: {x:number, y:number, z:number},
         rotation: {x:number, y:number, z:number},
@@ -15,7 +16,8 @@ export interface SceneObjectSchema {
 }
 
 export default abstract class SceneObject implements SceneObjectSchema{
-    abstract type:string;
+    abstract type:"floorHotspot"|"floatingHotspot";
+    public originalScaling: Vector3 = new Vector3(1, 1, 1);
     public id: number;
     public mesh:Mesh;
 
@@ -23,6 +25,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
         let scene = tourable.sceneManager.scenes.get(sceneID);
         if (schema){
             scene.uidGenerator.uid = schema.id;
+            this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
         }
         // get id
         this.id = scene.uidGenerator.uid;
@@ -31,6 +34,12 @@ export default abstract class SceneObject implements SceneObjectSchema{
     }
     grab = (tourable:Tourable, pointerX:number, pointerY:number, xAxis:boolean, yAxis:boolean, zAxis:boolean) => {
         this.mesh.position = Mathematics.TransformPoint(tourable, this.mesh.position, new Vector2(pointerX, pointerY), xAxis, yAxis, zAxis);
+    }
+    sphericalGrab = (tourable:Tourable, pointerX:number, pointerY:number, lookAtCamera:boolean = false) => {
+        this.mesh.position = Mathematics.ScreenToWorldPoint(tourable, new Vector2(pointerX, pointerY), 1);
+        if (lookAtCamera){
+            this.mesh.lookAt(tourable.sceneManager.sceneToRender.activeCamera.getDirection(Vector3.Forward()).negate());
+        }
     }
     dispose = () => {
         (this.mesh.getScene() as Scene).sceneObjects.delete(this.id);

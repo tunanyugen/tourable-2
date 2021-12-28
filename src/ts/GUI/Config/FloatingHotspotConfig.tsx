@@ -3,9 +3,9 @@ import Config from "./Config";
 import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/MediaSelect";
 import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
 import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/LabeledMediaSelect/LabeledMediaSelect";
-import { StandardMaterial, Texture } from "babylonjs";
+import { StandardMaterial, Texture, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
-import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
+import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
 
 export interface FloatingHotspotConfigProps extends GUIObjectProps{
     
@@ -65,6 +65,19 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
                     onChange={(e) => {
                         if (!this.target){ return }
                         this.target.title = e.target.value;
+                    }}
+                />
+                <Slider
+                    label="Resize hotspot"
+                    min={15}
+                    max={100}
+                    value={this.target ? this.target.originalScaling.x * 50 : 50}
+                    onChange={(e) => {
+                        if (!this.target){ return }
+                        let value = parseInt(e.target.value) / 50;
+                        let scaling = new Vector3(value, value, value);
+                        this.target.mesh.scaling = scaling.clone();
+                        this.target.originalScaling = scaling.clone();
                     }}
                 />
                 <LabeledMediaSelect

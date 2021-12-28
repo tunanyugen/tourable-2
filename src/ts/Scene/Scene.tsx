@@ -4,6 +4,7 @@ import { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
 import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
+import FloatingHotspot, { FloatingHotspotSchema } from "../SceneObject/Hotspot/FloatingHotspot";
 
 export interface SceneSchema {
     id:number;
@@ -30,12 +31,11 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             tourable.uidGenerator.uid = this.id + 1;
             this.panorama = schema.panorama;
             tourable.onLoadObservabl.Add(() => {
-                schema.sceneObjects.forEach(() => {
-                    (schema.sceneObjects as FloorHotspotSchema[]).forEach((sceneObject) => {
-                        if (sceneObject.type == "floorHotspot"){
-                            new FloorHotspot(tourable, this.id, sceneObject)
-                        }
-                    })
+                (schema.sceneObjects as FloorHotspotSchema[]|FloatingHotspotSchema[]).forEach((sceneObject) => {
+                    switch(sceneObject.type){
+                        case "floorHotspot": new FloorHotspot(tourable, this.id, sceneObject); break;
+                        case "floatingHotspot": new FloatingHotspot(tourable, this.id, sceneObject); break;
+                    }
                 })
             }, true)
         }

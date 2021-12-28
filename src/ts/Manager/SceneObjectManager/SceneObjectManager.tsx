@@ -1,6 +1,9 @@
-import { Space, Vector3 } from "babylonjs";
+import { Space, Vector2, Vector3 } from "babylonjs";
+import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
+import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import SceneObject from "../../SceneObject/SceneObject";
 import Tourable from "../../Tourable/Tourable";
+import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
 export default class SceneObjectManager{
@@ -24,7 +27,14 @@ export default class SceneObjectManager{
             // move object on xz axis
             tourable.eventManager.onMouseMoveObservable.Add((e) => {
                 if (!this.target){ return }
-                this.target.grab(tourable, e.clientX, e.clientY, true, false, true);
+                switch(this.target.type){
+                    case "floorHotspot":
+                        this.target.grab(tourable, e.clientX, e.clientY, true, false, true);
+                        break;
+                    case "floatingHotspot":
+                        this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
+                        break;
+                }
             }, false)
             // rotate object
             tourable.eventManager.onMouseScrollObservable.Add((e) => {
