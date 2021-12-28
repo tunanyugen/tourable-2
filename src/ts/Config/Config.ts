@@ -1,8 +1,3 @@
-const info = require("../../assets/info.png");
-const floatingHotspot = require("../../assets/floating-hotspot.png");
-const floorHotspot = require("../../assets/floor-hotspot.png");
-const floorHotspotCircle = require("../../assets/floor-hotspot-circle.png")
-
 export default class Config{
     editMode:boolean;
     fov:number; // camera's field of view
@@ -25,11 +20,11 @@ export default class Config{
         maxClickMouseDownTime = 200,
         consecutiveDebugInterval = 200,
         assets = {
-            info: info,
-            floatingHotspot: floatingHotspot,
+            info: "/static/info.png",
+            floatingHotspot: "/static/floating-hotspot.png",
             floorHotspot: [
-                floorHotspot,
-                floorHotspotCircle
+                "/static/floor-hotspot.png",
+                "/static/floor-hotspot-circle.png"
             ]
         }
     ){

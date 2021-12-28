@@ -5,8 +5,18 @@ import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
 export default class SceneObjectManager{
     target:SceneObject;
+    private _lastHoverSceneObject:SceneObject;
+    get lastHoverSceneObject(){ return this._lastHoverSceneObject }
+    private _hoverSceneObject:SceneObject;
+    get hoverSceneObject(){ return this._hoverSceneObject }
     constructor(tourable:Tourable){
         tourable.onLoadObservabl.Add(() => {
+            // pick hovering scene object
+            tourable.eventManager.onMouseMoveObservable.Add(() => {
+                let result = this.pick(tourable);
+                this._lastHoverSceneObject = this._hoverSceneObject;
+                this._hoverSceneObject = result ? result.sceneObject : null;
+            }, false)
             // pick object
             tourable.eventManager.g.onKeyDownObservable.Add(() => { this._pickTarget(tourable) }, false)
             // unpick object

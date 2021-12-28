@@ -48,7 +48,9 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                         this.setState({icon: src});
                         this.target.texture = src;
                         // create new back hotspot
-                        this.target.createBackHotspot(this.props.tourable);
+                        if (this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){
+                            this.target.createBackHotspot(this.props.tourable);
+                        }
                     }}
                 />
                 <Input

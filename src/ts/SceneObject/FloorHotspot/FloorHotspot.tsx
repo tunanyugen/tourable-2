@@ -32,7 +32,7 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
          let newMaterial = new StandardMaterial(this.id.toString(), this.mesh.getScene());
          newMaterial.backFaceCulling = false;
          newMaterial.emissiveColor = new Color3(1, 1, 1);
-         newMaterial.diffuseTexture = new Texture(this._texture, this.mesh.getScene());
+         newMaterial.diffuseTexture = new Texture(this.texture, this.mesh.getScene());
          newMaterial.diffuseTexture.hasAlpha = true;
          newMaterial.useAlphaFromDiffuseTexture = true;
          // dispose old material
@@ -50,10 +50,12 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
         let scene = tourable.sceneManager.scenes.get(sceneID);
         // set default values
         if (schema){
-            this._texture = schema.texture;
             this._targetSceneID = schema.targetSceneID;
             this.title = schema.title;
             this.backFloorHotspotID = schema.backFloorHotspotID;
+            tourable.onLoadObservabl.Add(() => {
+                this.texture = schema.texture;
+            }, true)
         }
         // constructor
         tourable.sceneManager.scenes.get(sceneID).sceneObjects.set(this.id, this);
@@ -64,29 +66,39 @@ export default class FloorHotspot extends SceneObject implements FloorHotspotSch
             this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
             this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
         }
-        // action manager
-        this.mesh.actionManager = new ActionManager(scene);
-        // change cursor icon and show title
-        this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, (e) => {
-            document.body.style.cursor = "pointer"
-            this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-            let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
-            tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
-        }))
-        this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, (e) => {
-            document.body.style.cursor = null
-            this.scale(this.mesh.scaling, new Vector3(1, 1, 1), 150);
-            tourable.gui.current.text.current.hide();
-        }))
-        // switch scene on click
-        this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnLeftPickTrigger, (e) => {
-            if (this._targetSceneID < 0){ return }
-            tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id);
-        }))
-        // show floor hotspot config
-        this.mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnRightPickTrigger, (e) => {
-            tourable.gui.current.floorHotspotConfig.current.setTarget(this);
-        }))
+        tourable.onLoadObservabl.Add(() => {
+            // change cursor icon and show title
+            tourable.eventManager.onMouseMoveObservable.Add(() => {
+                if (
+                    tourable.sceneObjectManager.lastHoverSceneObject != this &&
+                    tourable.sceneObjectManager.hoverSceneObject == this
+                ){
+                    document.body.style.cursor = "pointer"
+                    this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
+                    let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
+                    tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
+                } else if (
+                    tourable.sceneObjectManager.lastHoverSceneObject == this &&
+                    tourable.sceneObjectManager.hoverSceneObject != this
+                ) {
+                    document.body.style.cursor = null
+                    this.scale(this.mesh.scaling, new Vector3(1, 1, 1), 150);
+                    tourable.gui.current.text.current.hide();
+                }
+            }, false)
+            // switch scene on click
+            tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+                if (tourable.sceneObjectManager.hoverSceneObject == this){
+                    tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id);
+                }
+            }, false)
+            // show floor hotspot config
+            tourable.eventManager.mouse2.onButtonDownObservable.Add(() => {
+                if (tourable.sceneObjectManager.hoverSceneObject == this){
+                    tourable.gui.current.floorHotspotConfig.current.setTarget(this);
+                }
+            }, false)
+        }, true)
     }
     createMesh = (tourable:Tourable, sceneID:number) => {
         let scene = tourable.sceneManager.scenes.get(sceneID);
