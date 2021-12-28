@@ -3,12 +3,13 @@ export default class Config{
     fov:number; // camera's field of view
     cameraSpeed:number; // camera movement speed
     floorHotspotSize:number; // floor hotspot size
+    floatingHotspotSize:number; // floor hotspot size
     mouseMoveInterval:number; // mouse move event runs every X milliseconds
     maxClickMouseDownTime:number; // amount of pointer down time until click is rendered invalid in milliseconds
     consecutiveDebugInterval:number // how fast consecutive debugging should fire in ms 
     assets: {
-        info: string,
-        floatingHotspot:string
+        info: string[],
+        floatingHotspot:string[],
         floorHotspot:string[],
     }
     constructor(
@@ -17,11 +18,16 @@ export default class Config{
         cameraSpeed = 0.16,
         mouseMoveInterval = 16,
         floorHotspotSize = 0.2,
+        floatingHotspotSize = 0.1,
         maxClickMouseDownTime = 200,
         consecutiveDebugInterval = 200,
         assets = {
-            info: "/static/info.png",
-            floatingHotspot: "/static/floating-hotspot.png",
+            info: [
+                "/static/info.png"
+            ],
+            floatingHotspot: [
+                "/static/floating-hotspot.png"
+            ],
             floorHotspot: [
                 "/static/floor-hotspot.png",
                 "/static/floor-hotspot-circle.png"
@@ -32,6 +38,7 @@ export default class Config{
         this.fov = fov;
         this.cameraSpeed = cameraSpeed;
         this.floorHotspotSize = floorHotspotSize;
+        this.floatingHotspotSize = floatingHotspotSize;
         this.mouseMoveInterval = mouseMoveInterval;
         this.maxClickMouseDownTime = maxClickMouseDownTime;
         this.consecutiveDebugInterval = consecutiveDebugInterval;

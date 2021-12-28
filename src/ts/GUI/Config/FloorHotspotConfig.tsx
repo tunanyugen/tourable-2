@@ -4,7 +4,8 @@ import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/Me
 import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
 import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/LabeledMediaSelect/LabeledMediaSelect";
 import { StandardMaterial, Texture } from "babylonjs";
-import FloorHotspot from "../../SceneObject/FloorHotspot/FloorHotspot";
+import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
+import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
 
 export interface FloorHotspotConfigProps extends GUIObjectProps{
     
@@ -38,6 +39,11 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                 title="Edit Hotspot"
                 hidden={this.state.hidden}
                 onClose={() => { this.hide() }}
+                onDelete={() => {
+                    if (!this.target){ return }
+                    this.target.dispose();
+                    this.hide();
+                }}
             >
                 <MediaSelect
                     label="Choose the style of the hotspot"

@@ -3,7 +3,7 @@ import UIDGenerator from "../Generator/UIDGenerator";
 import { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
-import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/FloorHotspot/FloorHotspot";
+import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
 
 export interface SceneSchema {
     id:number;

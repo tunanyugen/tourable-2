@@ -8,9 +8,11 @@ import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
 import Scene, { SceneSchema } from '../Scene/Scene';
 import { Engine } from "babylonjs";
-import FloorHotspot, { FloorHotspotSchema } from '../SceneObject/FloorHotspot/FloorHotspot';
 
 export default class Tourable{
+    // state
+    private _loaded:boolean = false;
+    get loaded(){ return this._loaded }
     // generators
     uidGenerator:UIDGenerator;
     // managers
@@ -50,6 +52,7 @@ export default class Tourable{
         this.eventManager = new EventManager(this);
         // finished loading
         this.onLoadObservabl.Resolve();
+        this._loaded = true;
         // run render loop
         this.engine.runRenderLoop(() => {
             if (this.sceneManager.sceneToRender){

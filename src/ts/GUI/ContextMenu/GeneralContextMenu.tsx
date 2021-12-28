@@ -1,7 +1,8 @@
 import { ContextMenuItemProps } from "@tunanyugen/react-components/src/ts/ContextMenu/ContextMenuItem";
 import ContextMenu, { ContextMenuProps, ContextMenuState } from "./ContextMenu";
-import FloorHotspot from "../../SceneObject/FloorHotspot/FloorHotspot";
+import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import { Vector3 } from "babylonjs";
+import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 
 export interface GeneralContextMenuProps extends ContextMenuProps{
     
@@ -45,8 +46,18 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                                 hotspot.mesh.position = hotspot.mesh.position.add(new Vector3(front.x, 0, front.z));
                                 hotspot.mesh.rotation.y = camera.absoluteRotation.toEulerAngles().y;
                             }
+                        },
+                        {
+                            icon: "",
+                            name: "Create floating hotspot",
+                            onClick: () => {
+                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let hotspot = new FloatingHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                                hotspot.mesh.position = camera.getDirection(Vector3.Forward());
+                                hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
+                            }
                         }
-                    ]
+                    ],
                 }
             }
         ]

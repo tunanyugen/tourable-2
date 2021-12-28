@@ -9,6 +9,7 @@ import PlayButton from "./PlayButton/PlayButton";
 import Preview from "./Preview/Preview";
 import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
 import FloorHotspotConfig from "./Config/FloorHotspotConfig";
+import FloatingHotspotConfig from "./Config/FloatingHotspotConfig";
 import Text from "./Text/Text";
 import LoadScreen from "./LoadScreen/LoadScreen";
 
@@ -24,6 +25,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     private get _className(){ return this.state.hidden ? "hide" : "show" }
     generalContextMenu:React.RefObject<GeneralContextMenu> = React.createRef();
     floorHotspotConfig:React.RefObject<FloorHotspotConfig> = React.createRef();
+    floatingHotspotConfig:React.RefObject<FloatingHotspotConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
     constructor(props: GUIProps) {
@@ -69,6 +71,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 {/* Editor gui */}
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
+                <FloatingHotspotConfig ref={this.floatingHotspotConfig} tourable={this.props.tourable} />
                 <LoadScreen ref={this.loadScreen} tourable={this.props.tourable}/>
             </React.Fragment>
         );

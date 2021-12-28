@@ -23,8 +23,12 @@
     &__wrapper{
         position: relative;
         width: 100%;
-        height: calc(100% - 46px);
+        height: calc(100% - 46px - 46px);
         overflow: auto;
+    }
+    &__footer{
+        position: sticky;
+        bottom: 0;
     }
     &__title{
         font-size: 18px;
@@ -39,6 +43,21 @@
         cursor: pointer;
         svg {
           filter: $iconBlueFilter;
+        }
+    }
+    &__delete{
+        width: 80%;
+        height: 40px;
+        margin: 16px auto;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 4px;
+        color: white;
+        background-color: #dd2e44;
+        box-shadow: none;
+        &:hover{
+            box-shadow: none;
+            background-color: #741824;
         }
     }
     .react-component__form__input__label{

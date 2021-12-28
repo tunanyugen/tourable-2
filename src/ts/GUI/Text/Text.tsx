@@ -17,6 +17,9 @@ class Text extends GUIObject<TextProps, TextState> {
             hidden: true,
             text: "",
         }
+        this.props.tourable.sceneManager.onSwitchSceneObservable.Add(() => {
+            this.hide()
+        }, false)
     }
     render() { 
         return (

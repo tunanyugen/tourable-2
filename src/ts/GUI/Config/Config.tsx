@@ -4,7 +4,8 @@ import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 export interface ConfigProps extends GUIObjectProps{
     title:string;
     hidden:boolean;
-    onClose:()=>any
+    onClose:()=>any;
+    onDelete:()=>any;
 }
  
 export interface ConfigState extends GUIObjectState{
@@ -15,6 +16,7 @@ class Config extends GUIObject<ConfigProps, ConfigState> {
     static defaultProps: ConfigProps = {
         hidden: true,
         onClose: () => {},
+        onDelete: () => {},
         title: "",
         tourable: null,
     }
@@ -42,6 +44,12 @@ class Config extends GUIObject<ConfigProps, ConfigState> {
                 </div>
                 <div className="tourable__config__wrapper">
                     {this.props.children}
+                </div>
+                <div className="tourable__config__footer">
+                    <Button
+                        className="tourable__config__delete"
+                        onClick={this.props.onDelete}
+                    >Delete</Button>
                 </div>
             </div>
         );
