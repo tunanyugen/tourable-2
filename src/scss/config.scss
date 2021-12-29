@@ -4,7 +4,7 @@
     top: 0;
     width: $configWidth;
     height: 100%;
-    padding: 28px 23px;
+    padding: 28px 15px 28px 23px;
     background-color: #2a3038;
     color: white;
     &.show{
@@ -24,7 +24,9 @@
         position: relative;
         width: 100%;
         height: calc(100% - 46px - 46px);
-        overflow: auto;
+        padding-right: 8px;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
     &__footer{
         position: sticky;

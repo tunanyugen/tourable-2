@@ -1,0 +1,20 @@
+.tourable__popup{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 310px;
+    height: 40vh;
+    min-height: 30vh;
+    max-height: 80vh;
+    background: white;
+    transform: translate(-50%, -50%);
+    &.show{
+        opacity: 1;
+        transition: .25s;
+    }
+    &.hide{
+        opacity: 0;
+        transition: .25s;
+        pointer-events: none;
+    }
+}

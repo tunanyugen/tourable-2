@@ -13,6 +13,7 @@ import FloatingHotspotConfig from "./Config/FloatingHotspotConfig";
 import InfoHotspotConfig from "./Config/InfoHotspotConfig";
 import Text from "./Text/Text";
 import LoadScreen from "./LoadScreen/LoadScreen";
+import Popup from "./Popup/Popup";
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -30,6 +31,8 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     infoHotspotConfig:React.RefObject<InfoHotspotConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
+    popup:React.RefObject<Popup> = React.createRef();
+
     constructor(props: GUIProps) {
         super(props);
         this.state = {
@@ -70,6 +73,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 </div>
                 {/* Uncontrolled gui */}
                 <Text ref={this.text} tourable={this.props.tourable} />
+                <Popup ref={this.popup} tourable={this.props.tourable} />
                 {/* Editor gui */}
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />

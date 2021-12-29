@@ -2,10 +2,10 @@ import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 import Config from "./Config";
 import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/MediaSelect";
 import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
-import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/LabeledMediaSelect/LabeledMediaSelect";
 import { StandardMaterial, Texture, Vector3 } from "babylonjs";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
+import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 
 export interface InfoHotspotConfigProps extends GUIObjectProps{
     
@@ -74,6 +74,12 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                         let scaling = new Vector3(value, value, value);
                         this.target.mesh.scaling = scaling.clone();
                         this.target.originalScaling = scaling.clone();
+                    }}
+                />
+                <CKEditor
+                    onChange={(content) => {
+                        if (!this.target){ return }
+                        this.target.title = content;
                     }}
                 />
             </Config>
