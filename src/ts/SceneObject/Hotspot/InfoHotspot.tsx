@@ -9,7 +9,6 @@ export interface InfoHotspotSchema extends HotspotSchema {
 
 export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
     type: "infoHotspot" = "infoHotspot";
-    backInfoHotspotID: number = -1;
 
     constructor( tourable:Tourable, sceneID:number, schema:InfoHotspotSchema = null){
         super(tourable, sceneID, schema)
@@ -32,24 +31,6 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
                 this.hookEvents(tourable)
             }, true)
         }
-    }
-    createBackHotspot = (tourable:Tourable) => {
-        // dispose old back hotspot
-        let backInfoHotspotScene = tourable.sceneManager.scenes.get(this._targetSceneID);
-        if (backInfoHotspotScene){
-            let hotspot = backInfoHotspotScene.sceneObjects.get(this.backInfoHotspotID);
-            if (hotspot){ hotspot.dispose() }
-        }
-        // create new one
-        let backHotspot = new InfoHotspot(tourable, this._targetSceneID);
-        this.backInfoHotspotID = backHotspot.id;
-        backHotspot.texture = this.texture;
-        backHotspot._targetSceneID = tourable.sceneManager.sceneToRender.id;
-        backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
-        let position = this.mesh.position.clone().negate();
-        position.y = this.mesh.position.y;
-        backHotspot.mesh.position = position;
-        backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
         tourable.eventManager.onMouseMoveObservable.Add(() => {
@@ -74,13 +55,6 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
                 tourable.gui.current.text.current.hide();
             }
         }, false)
-        // switch scene on click
-        tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
-            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
-            }
-        }, false)
         // show hotspot config
         tourable.eventManager.mouse2.onButtonDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
@@ -93,7 +67,6 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         return {
             type: this.type,
             id: this.id,
-            targetSceneID: this.targetSceneID,
             texture: this.texture,
             title: this.title,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},

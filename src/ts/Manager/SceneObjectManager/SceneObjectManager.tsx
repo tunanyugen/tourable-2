@@ -34,6 +34,9 @@ export default class SceneObjectManager{
                     case "floatingHotspot":
                         this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
                         break;
+                    case "infoHotspot":
+                        this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
+                        break;
                 }
             }, false)
             // rotate object

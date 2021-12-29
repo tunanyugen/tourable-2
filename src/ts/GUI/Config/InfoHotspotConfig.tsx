@@ -53,10 +53,6 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                         if (!this.target) { return }
                         this.setState({icon: src});
                         this.target.texture = src;
-                        // create new back hotspot
-                        if (this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){
-                            this.target.createBackHotspot(this.props.tourable);
-                        }
                     }}
                 />
                 <Input
