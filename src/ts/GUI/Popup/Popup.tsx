@@ -16,10 +16,6 @@ class Popup extends GUIObject<PopupProps, PopupState> {
             ...this.state,
             hidden: true,
         }
-
-        this.onShowObservable.Add(() => {
-            this.delayedHide(1000)
-        }, false)
     }
     render() { 
         return (
@@ -36,6 +32,7 @@ class Popup extends GUIObject<PopupProps, PopupState> {
             content: content,
             hidden: false
         })
+        this.delayedHide(1000)
     }
 }
  
