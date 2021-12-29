@@ -14,17 +14,28 @@ class Popup extends GUIObject<PopupProps, PopupState> {
         super(props);
         this.state = {
             ...this.state,
-            hidden: false,
-            content: "<h1>Hello world</h1>"
+            hidden: true,
         }
+
+        this.onShowObservable.Add(() => {
+            this.delayedHide(1000)
+        }, false)
     }
     render() { 
         return (
             <div
-                className={`tourable__popup ${this.__className}`}
+                className={`ck-content tourable__popup ${this.__className}`}
+                onPointerEnter={() => { this.cancelHideTimeout() }}
+                onPointerLeave={() => { this.hide() }}
                 dangerouslySetInnerHTML={{__html: this.state.content}}
             ></div>
         );
+    }
+    display = (content:string) => {
+        this.setState({
+            content: content,
+            hidden: false
+        })
     }
 }
  

@@ -42,8 +42,6 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             ){
                 document.body.style.cursor = "pointer"
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y / 10, 0)));
-                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
             }
             // change cursor icon, hide title, unscale
             else if (
@@ -52,9 +50,15 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             ) {
                 document.body.style.cursor = null
                 this.scale(this.mesh.scaling, this.originalScaling, 150);
-                tourable.gui.current.text.current.hide();
             }
         }, false)
+        // show popup
+        tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            if (tourable.sceneObjectManager.hoverSceneObject == this){
+                tourable.gui.current.popup.current.display(this.title);
+            }
+        }, false);
         // show hotspot config
         tourable.eventManager.mouse2.onButtonDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }

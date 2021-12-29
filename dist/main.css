@@ -1059,7 +1059,10 @@ body {
   height: 40vh;
   min-height: 30vh;
   max-height: 80vh;
+  border-radius: 4px;
+  padding: 0 8px 8px 8px;
   background: white;
+  overflow: auto;
   transform: translate(-50%, -50%);
 }
 .tourable__popup.show {
