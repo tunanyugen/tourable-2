@@ -16,7 +16,7 @@ export interface SceneObjectSchema {
 }
 
 export default abstract class SceneObject implements SceneObjectSchema{
-    abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"line";
+    abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly";
     public originalScaling: Vector3 = new Vector3(1, 1, 1);
     public id: number;
     public mesh:Mesh;
