@@ -104,7 +104,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         if (position){ this.activeCamera.position = Vector3.Zero() }
         if (rotation){ (this.activeCamera as FreeCamera).rotation = Vector3.Zero() }
     }
-    export = () => {
+    export = ():SceneSchema => {
         return {
             id: this.id,
             panorama: {
@@ -113,6 +113,6 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                 thumbnail: this.panorama.thumbnail
             },
             sceneObjects: Array.from(this.sceneObjects).map(([id, sceneObject]) => { return sceneObject.export() }),
-        } as SceneSchema
+        }
     }
 }

@@ -6,6 +6,7 @@ import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/Labeled
 import { StandardMaterial, Texture, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
+import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 
 export interface FloatingHotspotConfigProps extends GUIObjectProps{
     
@@ -59,12 +60,12 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
                         }
                     }}
                 />
-                <Input
-                    label="Title"
+                <CKEditor
+                    label="Hovering popup"
                     placeholder="Enter text here"
-                    onChange={(e) => {
+                    onChange={(content) => {
                         if (!this.target){ return }
-                        this.target.title = e.target.value;
+                        this.target.hoverTitle = content;
                     }}
                 />
                 <Slider

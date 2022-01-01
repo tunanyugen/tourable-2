@@ -28,11 +28,11 @@ class Popup extends GUIObject<PopupProps, PopupState> {
         );
     }
     display = (content:string) => {
-        this.setState({
-            content: content,
-            hidden: false
+        this.setState({content}, () => {
+            this.show(() => {
+                this.delayedHide(1000)
+            })
         })
-        this.delayedHide(1000)
     }
 }
  

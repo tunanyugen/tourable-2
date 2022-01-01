@@ -15,7 +15,6 @@ export interface GUIObjectState {
 abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> extends React.Component<P, S> {
     onShowObservable:Observable = new Observable(null, false);
     onHideObservable:Observable = new Observable(null, false);
-    private _showTimeout:NodeJS.Timeout;
     private _hideTimeout:NodeJS.Timeout;
     constructor(props: P){
         super(props);
@@ -26,28 +25,28 @@ abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> ext
             top: 0
         }
     }
-    move = (x:number, y:number) => {
+    move = (x:number, y:number, callback:()=>void = () => {}) => {
         this.setState({left: x, top: y})
     }
-    show = () => {
-        this.setState({hidden: false});
+    show = (callback:()=>void = () => {}) => {
+        this.setState({hidden: false}, callback);
         this.onShowObservable.Resolve();
     }
-    hide = () => {
-        this.setState({hidden: true})
+    hide = (callback:()=>void = () => {}) => {
+        this.setState({hidden: true}, callback);
         this.onHideObservable.Resolve();
     }
-    delayedHide = (duration:number) => {
+    delayedHide = (duration:number, callback:()=>void = () => {}) => {
         this.cancelHideTimeout();
         this._hideTimeout = setTimeout(() => {
-            this.hide();
+            this.hide(callback);
         }, duration);
     }
     cancelHideTimeout = () => {
         if (this._hideTimeout){ clearTimeout(this._hideTimeout) }
     }
-    toggle = () => {
-        this.setState({hidden: !this.state.hidden})
+    toggle = (callback:()=>void = () => {}) => {
+        this.setState({hidden: !this.state.hidden}, callback)
     }
 }
  

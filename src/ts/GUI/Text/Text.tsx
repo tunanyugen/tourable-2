@@ -5,7 +5,7 @@ export interface TextProps extends GUIObjectProps{
 }
  
 export interface TextState extends GUIObjectState{
-    text:string;
+    content:string;
 }
  
 class Text extends GUIObject<TextProps, TextState> {
@@ -15,7 +15,7 @@ class Text extends GUIObject<TextProps, TextState> {
         this.state = {
             ...this.state,
             hidden: true,
-            text: "",
+            content: "",
         }
         this.props.tourable.sceneManager.onSwitchSceneObservable.Add(() => {
             this.hide()
@@ -30,12 +30,16 @@ class Text extends GUIObject<TextProps, TextState> {
                     top: this.state.top
                 }}
             >
-                {this.state.text}
+                {this.state.content}
             </div>
         );
     }
-    display = (x:number, y:number, text:string) => {
-        this.setState({text: text, hidden: false, left: x, top: y})
+    display = (x:number, y:number, content:string) => {
+        this.setState({content}, () => {
+            this.move(x, y, () => {
+                this.show();
+            })
+        })
     }
 }
  

@@ -6,6 +6,7 @@ import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/Labeled
 import { StandardMaterial, Texture } from "babylonjs";
 import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
+import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 
 export interface FloorHotspotConfigProps extends GUIObjectProps{
     
@@ -59,12 +60,12 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                         }
                     }}
                 />
-                <Input
-                    label="Title"
+                <CKEditor
+                    label="Hovering popup"
                     placeholder="Enter text here"
-                    onChange={(e) => {
+                    onChange={(content) => {
                         if (!this.target){ return }
-                        this.target.title = e.target.value;
+                        this.target.hoverTitle = content;
                     }}
                 />
                 <LabeledMediaSelect

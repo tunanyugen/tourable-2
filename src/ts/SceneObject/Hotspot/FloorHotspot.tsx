@@ -58,48 +58,57 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
     hookEvents = (tourable:Tourable) => {
         tourable.eventManager.onMouseMoveObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
-            // change cursor icon, show title and scale
+            // on pointer enter
             if (
                 tourable.sceneObjectManager.lastHoverSceneObject != this &&
                 tourable.sceneObjectManager.hoverSceneObject == this
             ){
+                // change cursor icon
                 document.body.style.cursor = "pointer"
+                // scale hotspot mesh
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
+                // show bubble popup
                 let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
-                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.title);
+                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
-            // change cursor icon, hide title, unscale
+            // on pointer leave
             else if (
                 tourable.sceneObjectManager.lastHoverSceneObject == this &&
                 tourable.sceneObjectManager.hoverSceneObject != this
             ) {
+                // changed cursor back to default icon
                 document.body.style.cursor = null
+                // unscale hotspot mesh
                 this.scale(this.mesh.scaling, this.originalScaling, 150);
+                // hide bubble popup
                 tourable.gui.current.text.current.hide();
             }
         }, false)
-        // switch scene on click
+        // on click
         tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // switch scene
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
             }
         }, false)
-        // show floor hotspot config
+        // on right click
         tourable.eventManager.mouse2.onButtonDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // show confingurations
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.floorHotspotConfig.current.setTarget(this)
             }
         }, false)
     }
-    export = () => {
+    export = ():FloorHotspotSchema => {
         return {
             type: this.type,
             id: this.id,
             backFloorHotspotID: this.backFloorHotspotID,
             targetSceneID: this.targetSceneID,
             texture: this.texture,
+            hoverTitle: this.hoverTitle,
             title: this.title,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
@@ -107,6 +116,6 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
                 rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
                 scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
             }
-        } as FloorHotspotSchema
+        }
     }
 }

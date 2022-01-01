@@ -64,9 +64,9 @@ export default class Tourable{
             this.engine.resize();
         });
     }
-    export = () => {
-        return JSON.stringify(Array.from(this.sceneManager.scenes).map(([id, scene]) => {
+    export = ():SceneSchema[] => {
+        return Array.from(this.sceneManager.scenes).map(([id, scene]) => {
             return scene.export();
-        }))
+        })
     }
 }
