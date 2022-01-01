@@ -68,7 +68,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
                 // scale hotspot mesh
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
                 // show bubble popup
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, tourable.config.floorHotspotSize, 0)));
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y * tourable.config.floorHotspotSize * 1.1, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
             // on pointer leave

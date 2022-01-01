@@ -64,7 +64,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
                 // scale hotspot mesh
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
                 // show bubble
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y / 10, 0)));
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y * tourable.config.floatingHotspotSize * 1.1, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
             // on pointer leave

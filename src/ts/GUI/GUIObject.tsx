@@ -26,7 +26,7 @@ abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> ext
         }
     }
     move = (x:number, y:number, callback:()=>void = () => {}) => {
-        this.setState({left: x, top: y})
+        this.setState({left: x, top: y}, callback)
     }
     show = (callback:()=>void = () => {}) => {
         this.setState({hidden: false}, callback);

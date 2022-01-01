@@ -29,8 +29,9 @@ class Text extends GUIObject<TextProps, TextState> {
                     left: this.state.left,
                     top: this.state.top
                 }}
+                dangerouslySetInnerHTML={{__html: this.state.content}}
+                onPointerLeave={() => { this.delayedHide(500) }}
             >
-                {this.state.content}
             </div>
         );
     }

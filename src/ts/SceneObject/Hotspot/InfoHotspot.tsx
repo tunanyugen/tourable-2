@@ -45,6 +45,9 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
                 document.body.style.cursor = "pointer"
                 // scale hotspot mesh
                 this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
+                // show bubble
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(this.originalScaling.x * tourable.config.infoHotspotSize * 1.1, this.originalScaling.y * tourable.config.infoHotspotSize * 1.1, 0)));
+                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
             // on pointer leave
             else if (
@@ -55,6 +58,8 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
                 document.body.style.cursor = null;
                 // unscale hotspot mesh
                 this.scale(this.mesh.scaling, this.originalScaling, 150);
+                // hide bubble popup
+                tourable.gui.current.text.current.hide();
             }
         }, false)
         // on click
