@@ -13,7 +13,7 @@ export interface FloorHotspotConfigProps extends GUIObjectProps{
 }
  
 export interface FloorHotspotConfigState extends GUIObjectState{
-    icon:string;
+    
 }
  
 class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspotConfigState> {
@@ -49,15 +49,16 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                 <MediaSelect
                     label="Choose the style of the hotspot"
                     images={this.props.tourable.config.assets.floorHotspot}
-                    value={this.state.icon}
+                    value={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(src) => {
                         if (!this.target) { return }
-                        this.setState({icon: src});
                         this.target.texture = src;
                         // create new back hotspot
                         if (this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){
                             this.target.createBackHotspot(this.props.tourable);
                         }
+                        // refresh to see texture change effect
+                        this.forceUpdate();
                     }}
                 />
                 <CKEditor
@@ -92,7 +93,6 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
         this.target = floorHotspot;
         this.setState({
             hidden: false,
-            icon: (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url,
         })
         this.show();
     }

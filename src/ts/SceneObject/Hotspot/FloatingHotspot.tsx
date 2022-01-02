@@ -15,12 +15,6 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         super(tourable, sceneID, schema)
         // create mesh
         this.createMesh(tourable, sceneID);
-        // load mesh transforms
-        if (schema){
-            this.mesh.position = new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z)
-            this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
-            this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
-        }
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
@@ -44,7 +38,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
         let position = this.mesh.position.clone().negate();
         position.y = this.mesh.position.y;
-        backHotspot.mesh.position = position;
+        backHotspot.move(position);
         backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
@@ -75,6 +69,12 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             // show configurations
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.floatingHotspotConfig.current.setTarget(this)
+            }
+        }, false)
+        // on mouse move
+        this.pointerMoveObservable.Add((e) => {
+            if (this.grabbing){
+                this.sphericalGrab(tourable, e.clientX, e.clientY, true);
             }
         }, false)
     }

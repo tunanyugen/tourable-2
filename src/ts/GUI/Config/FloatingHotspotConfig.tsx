@@ -13,7 +13,7 @@ export interface FloatingHotspotConfigProps extends GUIObjectProps{
 }
  
 export interface FloatingHotspotConfigState extends GUIObjectState{
-    icon:string;
+    
 }
  
 class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, FloatingHotspotConfigState> {
@@ -49,15 +49,16 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
                 <MediaSelect
                     label="Choose the style of the hotspot"
                     images={this.props.tourable.config.assets.floatingHotspot}
-                    value={this.state.icon}
+                    value={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(src) => {
                         if (!this.target) { return }
-                        this.setState({icon: src});
                         this.target.texture = src;
                         // create new back hotspot
                         if (this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){
                             this.target.createBackHotspot(this.props.tourable);
                         }
+                        // update to see texture change effect
+                        this.forceUpdate();
                     }}
                 />
                 <CKEditor
@@ -101,11 +102,10 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
             </Config>
         );
     }
-    setTarget = (FloatingHotspot:FloatingHotspot) => {
-        this.target = FloatingHotspot;
+    setTarget = (floatingHotspot:FloatingHotspot) => {
+        this.target = floatingHotspot;
         this.setState({
             hidden: false,
-            icon: (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url,
         })
         this.show();
     }

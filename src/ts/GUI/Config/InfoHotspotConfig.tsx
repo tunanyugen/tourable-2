@@ -12,7 +12,7 @@ export interface InfoHotspotConfigProps extends GUIObjectProps{
 }
  
 export interface InfoHotspotConfigState extends GUIObjectState{
-    icon:string;
+    
 }
  
 class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotConfigState> {
@@ -48,11 +48,12 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                 <MediaSelect
                     label="Choose the style of the hotspot"
                     images={this.props.tourable.config.assets.infoHotspot}
-                    value={this.state.icon}
+                    value={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(src) => {
                         if (!this.target) { return }
-                        this.setState({icon: src});
                         this.target.texture = src;
+                        // update to see texture change effect
+                        this.forceUpdate();
                     }}
                 />
                 <Input
@@ -101,7 +102,6 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
         this.target = InfoHotspot;
         this.setState({
             hidden: false,
-            icon: (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url,
         })
         this.show();
     }

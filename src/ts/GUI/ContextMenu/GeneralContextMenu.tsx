@@ -45,7 +45,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                                 let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                                 let front = camera.getDirection(Vector3.Forward());
                                 let hotspot = new FloorHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
-                                hotspot.mesh.position = new Vector3(front.x, -1, front.z);
+                                hotspot.move(new Vector3(front.x, -1, front.z));
                                 hotspot.mesh.rotation.y = camera.absoluteRotation.toEulerAngles().y;
                             }
                         },
@@ -55,7 +55,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             onClick: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                                 let hotspot = new FloatingHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
-                                hotspot.mesh.position = camera.getDirection(Vector3.Forward());
+                                hotspot.move(camera.getDirection(Vector3.Forward()));
                                 hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                             }
                         },
@@ -65,7 +65,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             onClick: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                                 let hotspot = new InfoHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
-                                hotspot.mesh.position = camera.getDirection(Vector3.Forward());
+                                hotspot.move(camera.getDirection(Vector3.Forward()));
                                 hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                             }
                         }
@@ -79,7 +79,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                     let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                     let pivot = new Pivot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id)
                     let front = camera.getDirection(Vector3.Forward());
-                    pivot.mesh.position = new Vector3(front.x, -1, front.z);
+                    pivot.move(new Vector3(front.x, -1, front.z));
                     pivot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                 }
             }

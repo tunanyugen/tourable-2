@@ -33,6 +33,10 @@ export default class Pivot extends SceneObject implements PivotSchema {
         }
         this.createMesh(tourable, sceneID);
         this.hookEvents(tourable);
+        // look at camera
+        this.moveObservable.Add(() => {
+            this.mesh.lookAt(this.mesh.getScene().activeCamera.position);
+        }, false)
     }
 
     createMesh = (tourable:Tourable, sceneID:number) => {
@@ -58,6 +62,12 @@ export default class Pivot extends SceneObject implements PivotSchema {
             document.body.style.cursor = null;
             // unscale hotspot mesh
             this.scale(this.mesh.scaling, this.originalScaling, 150);
+        }, false)
+        // on mouse move
+        this.pointerMoveObservable.Add((e) => {
+            if (this.grabbing){
+                this.grab(tourable, e.clientX, e.clientY, true, false, true)
+            }
         }, false)
     }
     export = (): PivotSchema => {

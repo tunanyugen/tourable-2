@@ -29,6 +29,11 @@ export default abstract class SceneObject implements SceneObjectSchema{
             // load schema
             scene.uidGenerator.uid = schema.id;
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
+            tourable.onLoadObservabl.Add(() => {
+                this.move(new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z));
+                this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
+                this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
+            }, true)
         } else {
             // get id
             this.id = scene.uidGenerator.uid;
@@ -38,11 +43,16 @@ export default abstract class SceneObject implements SceneObjectSchema{
         // init events
         this.defaultEvents(tourable);
     }
+    moveObservable:Observable = new Observable(null, false);
+    move = (position:Vector3) => {
+        this.mesh.position = position.clone();
+        this.moveObservable.Resolve();
+    }
     grab = (tourable:Tourable, pointerX:number, pointerY:number, xAxis:boolean, yAxis:boolean, zAxis:boolean) => {
-        this.mesh.position = Mathematics.TransformPoint(tourable, this.mesh.position, new Vector2(pointerX, pointerY), xAxis, yAxis, zAxis);
+        this.move(Mathematics.TransformPoint(tourable, this.mesh.position, new Vector2(pointerX, pointerY), xAxis, yAxis, zAxis));
     }
     sphericalGrab = (tourable:Tourable, pointerX:number, pointerY:number, lookAtCamera:boolean = false) => {
-        this.mesh.position = Mathematics.ScreenToWorldPoint(tourable, new Vector2(pointerX, pointerY), 1);
+        this.move(Mathematics.ScreenToWorldPoint(tourable, new Vector2(pointerX, pointerY), 1))
         if (lookAtCamera){
             this.mesh.lookAt(tourable.sceneManager.sceneToRender.activeCamera.getDirection(Vector3.Forward()).negate());
         }
@@ -72,6 +82,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
     gUpObservable:Observable;
     onClickObservable:Observable<PointerEvent>;
     onRightClickObservable:Observable<PointerEvent>;
+    pointerMoveObservable:Observable<PointerEvent>;
     mouseScrollObservable:Observable<WheelEvent>;
     pointerEnterObservable:Observable<PointerEvent>;
     pointerLeaveObservable:Observable<PointerEvent>;
@@ -85,6 +96,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
         this.gUpObservable = new Observable(null, false, eventDiscardCondition);
         this.onClickObservable = new Observable(null, false, eventDiscardCondition);
         this.onRightClickObservable = new Observable(null, false, eventDiscardCondition);
+        this.pointerMoveObservable = new Observable(null, false, eventDiscardCondition);
         this.mouseScrollObservable = new Observable(null, false, eventDiscardCondition);
         this.pointerEnterObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject != this && tourable.sceneObjectManager.hoverSceneObject == this) })
         this.pointerLeaveObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject == this && tourable.sceneObjectManager.hoverSceneObject != this) })
@@ -104,6 +116,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
         tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(this.onClickObservable);
         // right click
         tourable.eventManager.mouse2.onButtonDownObservable.AddObservable(this.onRightClickObservable);
+        // pointer move
+        tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerMoveObservable);
         // mouse scroll
         tourable.eventManager.onMouseScrollObservable.AddObservable(this.mouseScrollObservable);
         this.mouseScrollObservable.Add((e) => {
@@ -114,10 +128,6 @@ export default abstract class SceneObject implements SceneObjectSchema{
         // pointer move observable
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerEnterObservable);
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerLeaveObservable);
-        tourable.eventManager.onMouseMoveObservable.Add((e) => {
-            // grab object
-            if (this.grabbing){ this.grab(tourable, e.clientX, e.clientY, true, false, true) }
-        }, false, eventDiscardCondition);
     }
     abstract export: () => SceneObjectSchema;
 }

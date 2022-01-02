@@ -20,12 +20,6 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         // create mesh
         this.createMesh(tourable, sceneID);
         this.mesh.rotation.x = Math.PI / 2;
-        // load mesh transforms
-        if (schema){
-            this.mesh.position = new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z)
-            this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
-            this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
-        }
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
@@ -49,11 +43,10 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
         let position = this.mesh.position.clone().negate();
         position.y = this.mesh.position.y;
-        backHotspot.mesh.position = position;
+        backHotspot.move(position);
         backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
-        let eventDiscardCondition = () => { return tourable.sceneManager.sceneToRender != this.mesh.getScene() }
         this.pointerEnterObservable.Add(() => {
             // change cursor icon
             document.body.style.cursor = "pointer"
@@ -83,6 +76,12 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
             // show confingurations
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.floorHotspotConfig.current.setTarget(this)
+            }
+        }, false)
+        // on mouse move
+        this.pointerMoveObservable.Add((e) => {
+            if (this.grabbing){
+                this.grab(tourable, e.clientX, e.clientY, true, false, true)
             }
         }, false)
     }
