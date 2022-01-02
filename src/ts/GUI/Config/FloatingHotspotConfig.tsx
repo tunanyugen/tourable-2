@@ -20,7 +20,7 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
     target:FloatingHotspot = null;
     constructor(props: FloatingHotspotConfigProps) {
         super(props);
-        
+        // hide on click on canvas
         this.props.tourable.onLoadObservabl.Add(() => {
             this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
                 if (!this.state.hidden){ this.hide() }

@@ -20,7 +20,7 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
     target:FloorHotspot = null;
     constructor(props: FloorHotspotConfigProps) {
         super(props);
-        
+        // hide on click on canvas
         this.props.tourable.onLoadObservabl.Add(() => {
             this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
                 if (!this.state.hidden){ this.hide() }

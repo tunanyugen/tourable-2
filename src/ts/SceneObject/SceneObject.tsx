@@ -27,7 +27,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
         let scene = tourable.sceneManager.scenes.get(sceneID);
         if (schema){
             // load schema
-            scene.uidGenerator.uid = schema.id;
+            this.id = schema.id;
+            scene.uidGenerator.uid = schema.id + 1;
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
             tourable.onLoadObservabl.Add(() => {
                 this.move(new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z));

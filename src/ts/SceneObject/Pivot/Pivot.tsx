@@ -63,6 +63,12 @@ export default class Pivot extends SceneObject implements PivotSchema {
             // unscale hotspot mesh
             this.scale(this.mesh.scaling, this.originalScaling, 150);
         }, false)
+        // on right click
+        this.onRightClickObservable.Add(() => {
+            if (tourable.sceneObjectManager.hoverSceneObject == this){
+                tourable.gui.current.pivotConfig.current.setTarget(this)
+            }
+        }, false)
         // on mouse move
         this.pointerMoveObservable.Add((e) => {
             if (this.grabbing){

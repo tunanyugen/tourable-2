@@ -14,6 +14,7 @@ import InfoHotspotConfig from "./Config/InfoHotspotConfig";
 import Text from "./Text/Text";
 import LoadScreen from "./LoadScreen/LoadScreen";
 import Popup from "./Popup/Popup";
+import PivotConfig from './Config/PivotConfig';
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -29,6 +30,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     floorHotspotConfig:React.RefObject<FloorHotspotConfig> = React.createRef();
     floatingHotspotConfig:React.RefObject<FloatingHotspotConfig> = React.createRef();
     infoHotspotConfig:React.RefObject<InfoHotspotConfig> = React.createRef();
+    pivotConfig:React.RefObject<PivotConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
     popup:React.RefObject<Popup> = React.createRef();
@@ -79,6 +81,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
                 <FloatingHotspotConfig ref={this.floatingHotspotConfig} tourable={this.props.tourable} />
                 <InfoHotspotConfig ref={this.infoHotspotConfig} tourable={this.props.tourable} />
+                <PivotConfig ref={this.pivotConfig} tourable={this.props.tourable} />
                 <LoadScreen ref={this.loadScreen} tourable={this.props.tourable}/>
             </React.Fragment>
         );

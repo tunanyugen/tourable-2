@@ -14,6 +14,21 @@ class PivotConfig extends GUIObject<PivotConfigProps, PivotConfigState> {
     target:Pivot = null;
     constructor(props: PivotConfigProps) {
         super(props);
+        this.state = {
+            ...this.state
+        }
+        // hide on click on canvas
+        this.props.tourable.onLoadObservabl.Add(() => {
+            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+                if (!this.state.hidden){ this.hide() }
+            }, false)
+            this.forceUpdate()
+        }, true)
+    }
+    componentDidUpdate(prevProps: Readonly<PivotConfigProps>, prevState: Readonly<PivotConfigState>, snapshot?: any): void {
+        if (!prevState.hidden && prevState.hidden != this.state.hidden){
+            this.target = null;
+        }
     }
     render() { 
         return (
@@ -28,7 +43,7 @@ class PivotConfig extends GUIObject<PivotConfigProps, PivotConfigState> {
                     this.hide();
                 }}
             >
-
+                
             </Config>
         );
     }

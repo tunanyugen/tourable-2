@@ -23,8 +23,6 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         schema:SceneSchema = null
     ){
         super(tourable.engine);
-        // get id
-        this.id = tourable.uidGenerator.uid;
         // load schema
         if (schema){
             this.id = schema.id;
@@ -38,6 +36,9 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                     }
                 })
             }, true)
+        } else {
+            // get id
+            this.id = tourable.uidGenerator.uid;
         }
         // register to sceneManager
         tourable.sceneManager.scenes.set(this.id, this);
