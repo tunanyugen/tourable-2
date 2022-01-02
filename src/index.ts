@@ -14,5 +14,14 @@ import Tourable from "./ts/Tourable/Tourable";
                 thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
             }
         },
+        {
+            id: 2,
+            sceneObjects: new Map(),
+            panorama: {
+                name: "Scene 2",
+                src: "/static/360 xung quanh dự án.jpg",
+                thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
+            }
+        },
     ]
 )

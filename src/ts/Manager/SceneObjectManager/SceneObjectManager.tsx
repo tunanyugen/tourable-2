@@ -28,9 +28,6 @@ export default class SceneObjectManager{
             tourable.eventManager.onMouseMoveObservable.Add((e) => {
                 if (!this.target){ return }
                 switch(this.target.type){
-                    case "floorHotspot":
-                        this.target.grab(tourable, e.clientX, e.clientY, true, false, true);
-                        break;
                     case "floatingHotspot":
                         this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
                         break;

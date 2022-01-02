@@ -47,28 +47,17 @@ export default class Pivot extends SceneObject implements PivotSchema {
         this.texture = tourable.config.assets.pivot[0];
     }
     hookEvents = (tourable:Tourable) => {
-        tourable.eventManager.onMouseMoveObservable.Add(() => {
-            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
-            // on pointer enter
-            if (
-                tourable.sceneObjectManager.lastHoverSceneObject != this &&
-                tourable.sceneObjectManager.hoverSceneObject == this
-            ){
-                // change cursor icon
-                document.body.style.cursor = "pointer"
-                // scale hotspot mesh
-                this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-            }
-            // on pointer leave
-            else if (
-                tourable.sceneObjectManager.lastHoverSceneObject == this &&
-                tourable.sceneObjectManager.hoverSceneObject != this
-            ) {
-                // set cursor icon to default
-                document.body.style.cursor = null;
-                // unscale hotspot mesh
-                this.scale(this.mesh.scaling, this.originalScaling, 150);
-            }
+        this.pointerEnterObservable.Add(() => {
+            // change cursor icon
+            document.body.style.cursor = "pointer"
+            // scale hotspot mesh
+            this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
+        }, false)
+        this.pointerLeaveObservable.Add(() => {
+            // set cursor icon to default
+            document.body.style.cursor = null;
+            // unscale hotspot mesh
+            this.scale(this.mesh.scaling, this.originalScaling, 150);
         }, false)
     }
     export = (): PivotSchema => {
