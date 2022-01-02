@@ -1,4 +1,4 @@
-import { MeshBuilder, Vector3 } from "babylonjs";
+import { Vector3 } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import Hotspot, { HotspotSchema } from "./Hotspot";
@@ -13,15 +13,12 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
 
     constructor( tourable:Tourable, sceneID:number, schema:FloorHotspotSchema = null){
         super(tourable, sceneID, schema)
-        // set default values
+        // load schema
         if (schema){
             this.backFloorHotspotID = schema.backFloorHotspotID;
         }
-        // constructor
-        tourable.sceneManager.scenes.get(sceneID).sceneObjects.set(this.id, this);
         // create mesh
         this.createMesh(tourable, sceneID);
-        this.mesh.position.y = -1;
         this.mesh.rotation.x = Math.PI / 2;
         // load mesh transforms
         if (schema){
@@ -56,8 +53,28 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
-        tourable.eventManager.onMouseMoveObservable.Add(() => {
+        // g key down
+        tourable.eventManager.g.onKeyDownObservable.Add(() => {
             if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // set grabbing state
+            if (tourable.sceneObjectManager.hoverSceneObject == this){
+                this.grabbing = true;
+            }
+        }, false)
+        // g key up
+        tourable.eventManager.g.onKeyUpObservable.Add(() => {
+            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // unset grabbing state
+            if (this.grabbing){
+                this.grabbing = false;
+            }
+        }, false)
+        tourable.eventManager.onMouseMoveObservable.Add((e) => {
+            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
+            // grab object
+            if (this.grabbing){
+                this.grab(tourable, e.clientX, e.clientY, true, false, true);
+            }
             // on pointer enter
             if (
                 tourable.sceneObjectManager.lastHoverSceneObject != this &&

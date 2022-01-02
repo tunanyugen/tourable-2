@@ -12,12 +12,8 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
 
     constructor( tourable:Tourable, sceneID:number, schema:InfoHotspotSchema = null){
         super(tourable, sceneID, schema)
-        // constructor
-        tourable.sceneManager.scenes.get(sceneID).sceneObjects.set(this.id, this);
         // create mesh
         this.createMesh(tourable, sceneID);
-        this.mesh.position.y = -1;
-        this.mesh.rotation.x = Math.PI / 2;
         // load mesh transforms
         if (schema){
             this.mesh.position = new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z)

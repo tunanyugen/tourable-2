@@ -4,6 +4,7 @@ import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import { Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
+import Pivot from "../../SceneObject/Pivot/Pivot";
 
 export interface GeneralContextMenuProps extends ContextMenuProps{
     
@@ -44,7 +45,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                                 let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
                                 let front = camera.getDirection(Vector3.Forward());
                                 let hotspot = new FloorHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
-                                hotspot.mesh.position = hotspot.mesh.position.add(new Vector3(front.x, 0, front.z));
+                                hotspot.mesh.position = new Vector3(front.x, -1, front.z);
                                 hotspot.mesh.rotation.y = camera.absoluteRotation.toEulerAngles().y;
                             }
                         },
@@ -69,6 +70,17 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             }
                         }
                     ],
+                }
+            },
+            {
+                icon: "",
+                name: "Pivot",
+                onClick: () => {
+                    let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                    let pivot = new Pivot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id)
+                    let front = camera.getDirection(Vector3.Forward());
+                    pivot.mesh.position = new Vector3(front.x, -1, front.z);
+                    pivot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                 }
             }
         ]

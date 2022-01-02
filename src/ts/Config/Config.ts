@@ -1,29 +1,16 @@
 export default class Config{
-    editMode:boolean;
-    fov:number; // camera's field of view
-    cameraSpeed:number; // camera movement speed
-    floorHotspotSize:number; // floor hotspot size
-    floatingHotspotSize:number; // floating hotspot size
-    infoHotspotSize:number; // info hotspot size
-    mouseMoveInterval:number; // mouse move event runs every X milliseconds
-    maxClickMouseDownTime:number; // amount of pointer down time until click is rendered invalid in milliseconds
-    consecutiveDebugInterval:number // how fast consecutive debugging should fire in ms 
-    assets: {
-        infoHotspot: string[],
-        floatingHotspot:string[],
-        floorHotspot:string[],
-    }
     constructor(
-        editMode = true,
-        fov = 70,
-        cameraSpeed = 0.16,
-        mouseMoveInterval = 16,
-        floorHotspotSize = 0.2,
-        floatingHotspotSize = 0.1,
-        infoHotspotSize = 0.1,
-        maxClickMouseDownTime = 200,
-        consecutiveDebugInterval = 200,
-        assets = {
+        public editMode = true,
+        public fov = 70, // camera's field of view
+        public cameraSpeed = 0.16, // camera movement speed
+        public mouseMoveInterval = 16, // floor hotspot size
+        public floorHotspotSize = 0.2, // floating hotspot size
+        public floatingHotspotSize = 0.1, // info hotspot size
+        public infoHotspotSize = 0.1, // pivot size
+        public pivotSize = 0.05, // mouse move event runs every X milliseconds
+        public maxClickMouseDownTime = 200, // amount of pointer down time until click is rendered invalid in milliseconds
+        public consecutiveDebugInterval = 200, // how fast consecutive debugging should fire in ms 
+        public assets = {
             infoHotspot: [
                 "/static/info.png"
             ],
@@ -33,18 +20,10 @@ export default class Config{
             floorHotspot: [
                 "/static/floor-hotspot.png",
                 "/static/floor-hotspot-circle.png"
+            ],
+            pivot: [
+                "/static/pivot.png"
             ]
         }
-    ){
-        this.editMode = editMode;
-        this.fov = fov;
-        this.cameraSpeed = cameraSpeed;
-        this.floorHotspotSize = floorHotspotSize;
-        this.floatingHotspotSize = floatingHotspotSize;
-        this.infoHotspotSize = infoHotspotSize;
-        this.mouseMoveInterval = mouseMoveInterval;
-        this.maxClickMouseDownTime = maxClickMouseDownTime;
-        this.consecutiveDebugInterval = consecutiveDebugInterval;
-        this.assets = assets
-    }
+    ){}
 }

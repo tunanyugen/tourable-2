@@ -1,4 +1,4 @@
-import { Mesh, SceneSerializer, Vector3 } from "babylonjs";
+import { Mesh, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
 import Scene from "../Scene/Scene";
 import Tourable from "../Tourable/Tourable";
@@ -16,19 +16,22 @@ export interface SceneObjectSchema {
 }
 
 export default abstract class SceneObject implements SceneObjectSchema{
-    abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly";
+    abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
     public originalScaling: Vector3 = new Vector3(1, 1, 1);
     public id: number;
     public mesh:Mesh;
+    public grabbing:boolean = false;
 
     constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
         let scene = tourable.sceneManager.scenes.get(sceneID);
         if (schema){
+            // load schema
             scene.uidGenerator.uid = schema.id;
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
+        } else {
+            // get id
+            this.id = scene.uidGenerator.uid;
         }
-        // get id
-        this.id = scene.uidGenerator.uid;
         // register to map
         scene.sceneObjects.set(this.id, this);
     }
