@@ -48,7 +48,6 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         }, false)
         // on click
         this.onClickObservable.Add(() => {
-            if (tourable.sceneManager.sceneToRender != this.mesh.getScene()){ return }
             // show popup
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.popup.current.display(this.title);

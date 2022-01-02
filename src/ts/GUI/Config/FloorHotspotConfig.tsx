@@ -63,6 +63,7 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                 <CKEditor
                     label="Hovering popup"
                     placeholder="Enter text here"
+                    value={this.target ? this.target.hoverTitle : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.hoverTitle = content;

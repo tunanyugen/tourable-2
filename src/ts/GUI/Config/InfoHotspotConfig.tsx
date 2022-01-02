@@ -79,6 +79,7 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                 <CKEditor
                     label="Hovering popup"
                     placeholder="Enter text here"
+                    value={this.target ? this.target.hoverTitle : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.hoverTitle = content;
@@ -87,6 +88,7 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                 <CKEditor
                     label="Popup"
                     placeholder="Enter text here"
+                    value={this.target ? this.target.title : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.title = content;

@@ -1,5 +1,5 @@
 import Observable from "@tunanyugen/observable";
-import { Mesh, Vector3 } from "babylonjs";
+import { Mesh, Space, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
 import Scene from "../Scene/Scene";
 import Tourable from "../Tourable/Tourable";
@@ -72,14 +72,20 @@ export default abstract class SceneObject implements SceneObjectSchema{
     gUpObservable:Observable;
     onClickObservable:Observable<PointerEvent>;
     onRightClickObservable:Observable<PointerEvent>;
+    mouseScrollObservable:Observable<WheelEvent>;
     pointerEnterObservable:Observable<PointerEvent>;
     pointerLeaveObservable:Observable<PointerEvent>;
     private defaultEvents = (tourable:Tourable) => {
-        let eventDiscardCondition = () => { return tourable.sceneManager.sceneToRender != this.mesh.getScene() }
+        let eventDiscardCondition = () => {
+            return (
+                tourable.sceneManager.sceneToRender != this.mesh.getScene()
+            )
+        }
         this.gDownObservable = new Observable(null, false, eventDiscardCondition);
         this.gUpObservable = new Observable(null, false, eventDiscardCondition);
         this.onClickObservable = new Observable(null, false, eventDiscardCondition);
         this.onRightClickObservable = new Observable(null, false, eventDiscardCondition);
+        this.mouseScrollObservable = new Observable(null, false, eventDiscardCondition);
         this.pointerEnterObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject != this && tourable.sceneObjectManager.hoverSceneObject == this) })
         this.pointerLeaveObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject == this && tourable.sceneObjectManager.hoverSceneObject != this) })
         // g key down
@@ -98,6 +104,13 @@ export default abstract class SceneObject implements SceneObjectSchema{
         tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(this.onClickObservable);
         // right click
         tourable.eventManager.mouse2.onButtonDownObservable.AddObservable(this.onRightClickObservable);
+        // mouse scroll
+        tourable.eventManager.onMouseScrollObservable.AddObservable(this.mouseScrollObservable);
+        this.mouseScrollObservable.Add((e) => {
+            if (this.grabbing){
+                this.mesh.rotate(Vector3.Up(), (e.deltaY * 4 / 100) * (tourable.engine.getDeltaTime() / 1000), Space.WORLD);
+            }
+        }, false);
         // pointer move observable
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerEnterObservable);
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerLeaveObservable);

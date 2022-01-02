@@ -20,27 +20,6 @@ export default class SceneObjectManager{
                 this._lastHoverSceneObject = this._hoverSceneObject;
                 this._hoverSceneObject = result ? result.sceneObject : null;
             }, false)
-            // pick object
-            tourable.eventManager.g.onKeyDownObservable.Add(() => { this._pickTarget(tourable) }, false)
-            // unpick object
-            tourable.eventManager.g.onKeyUpObservable.Add(() => { this.target = null }, false)
-            // move object on xz axis
-            tourable.eventManager.onMouseMoveObservable.Add((e) => {
-                if (!this.target){ return }
-                switch(this.target.type){
-                    case "floatingHotspot":
-                        this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
-                        break;
-                    case "infoHotspot":
-                        this.target.sphericalGrab(tourable, e.clientX, e.clientY, true);
-                        break;
-                }
-            }, false)
-            // rotate object
-            tourable.eventManager.onMouseScrollObservable.Add((e) => {
-                if (!this.target){ return }
-                this.target.mesh.rotate(Vector3.Up(), (e.deltaY * 4 / 100) * (tourable.engine.getDeltaTime() / 1000), Space.WORLD);
-            }, false)
         }, true)
     }
     pick = (tourable:Tourable):SceneObjectManagerPickResult => {
