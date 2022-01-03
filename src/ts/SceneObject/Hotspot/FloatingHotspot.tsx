@@ -28,7 +28,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         let backFloatingHotspotScene = tourable.sceneManager.scenes.get(this._targetSceneID);
         if (backFloatingHotspotScene){
             let hotspot = backFloatingHotspotScene.sceneObjects.get(this.backFloatingHotspotID);
-            if (hotspot){ hotspot.dispose() }
+            if (hotspot){ hotspot.dispose(tourable) }
         }
         // create new one
         let backHotspot = new FloatingHotspot(tourable, this._targetSceneID);
@@ -82,6 +82,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         return {
             type: this.type,
             id: this.id,
+            sceneID: this.sceneID,
             targetSceneID: this.targetSceneID,
             texture: this.texture,
             hoverTitle: this.hoverTitle,

@@ -42,7 +42,7 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
                 onClose={() => { this.hide() }}
                 onDelete={() => {
                     if (!this.target){ return }
-                    this.target.dispose();
+                    this.target.dispose(this.props.tourable);
                     this.hide();
                 }}
             >

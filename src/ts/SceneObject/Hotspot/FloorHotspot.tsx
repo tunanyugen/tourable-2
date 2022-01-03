@@ -33,7 +33,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         let backFloorHotspotScene = tourable.sceneManager.scenes.get(this._targetSceneID);
         if (backFloorHotspotScene){
             let hotspot = backFloorHotspotScene.sceneObjects.get(this.backFloorHotspotID);
-            if (hotspot){ hotspot.dispose() }
+            if (hotspot){ hotspot.dispose(tourable) }
         }
         // create new one
         let backHotspot = new FloorHotspot(tourable, this._targetSceneID);
@@ -89,6 +89,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         return {
             type: this.type,
             id: this.id,
+            sceneID: this.sceneID,
             backFloorHotspotID: this.backFloorHotspotID,
             targetSceneID: this.targetSceneID,
             texture: this.texture,

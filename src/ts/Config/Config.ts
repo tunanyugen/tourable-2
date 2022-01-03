@@ -23,6 +23,9 @@ export default class Config{
             ],
             pivot: [
                 "/static/pivot.png"
+            ],
+            poly: [
+                "/static/poly.png"
             ]
         }
     ){}

@@ -41,7 +41,7 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                 onClose={() => { this.hide() }}
                 onDelete={() => {
                     if (!this.target){ return }
-                    this.target.dispose();
+                    this.target.dispose(this.props.tourable);
                     this.hide();
                 }}
             >

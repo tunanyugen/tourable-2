@@ -8,6 +8,7 @@ import Mathematics from "../Utilities/Mathematics/Mathematics";
 export interface SceneObjectSchema {
     type:string;
     id:number;
+    sceneID:number;
     originalScaling: {x:number, y:number, z:number},
     mesh: {
         position: {x:number, y:number, z:number},
@@ -20,11 +21,13 @@ export default abstract class SceneObject implements SceneObjectSchema{
     abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
     public originalScaling: Vector3 = new Vector3(1, 1, 1);
     public id: number;
+    public sceneID: number;
     public mesh:Mesh;
     public grabbing:boolean = false;
 
     constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
-        let scene = tourable.sceneManager.scenes.get(sceneID);
+        this.sceneID = sceneID;
+        let scene = tourable.sceneManager.scenes.get(this.sceneID);
         if (schema){
             // load schema
             this.id = schema.id;
@@ -58,9 +61,17 @@ export default abstract class SceneObject implements SceneObjectSchema{
             this.mesh.lookAt(tourable.sceneManager.sceneToRender.activeCamera.getDirection(Vector3.Forward()).negate());
         }
     }
-    dispose = () => {
-        (this.mesh.getScene() as Scene).sceneObjects.delete(this.id);
-        this.mesh.dispose();
+    dispose = (tourable:Tourable) => {
+        tourable.sceneManager.scenes.get(this.sceneID).sceneObjects.delete(this.id);
+        this.gDownObservable.Dispose();
+        this.gUpObservable.Dispose();
+        this.onClickObservable.Dispose();
+        this.onRightClickObservable.Dispose();
+        this.pointerMoveObservable.Dispose();
+        this.mouseScrollObservable.Dispose();
+        this.pointerEnterObservable.Dispose();
+        this.pointerLeaveObservable.Dispose();
+        if (this.mesh){ this.mesh.dispose(); }
     }
     private _scaleInterval:NodeJS.Timeout;
     scale = (start:Vector3, end:Vector3, duration:number) => {
@@ -90,6 +101,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
     private defaultEvents = (tourable:Tourable) => {
         let eventDiscardCondition = () => {
             return (
+                !this.mesh ||
                 tourable.sceneManager.sceneToRender != this.mesh.getScene()
             )
         }

@@ -39,7 +39,7 @@ class PivotConfig extends GUIObject<PivotConfigProps, PivotConfigState> {
                 onClose={() => { this.hide() }}
                 onDelete={() => {
                     if (!this.target){ return }
-                    this.target.dispose();
+                    this.target.dispose(this.props.tourable);
                     this.hide();
                 }}
             >

@@ -22,7 +22,7 @@ export default class Mathematics{
         let matrix = Matrix.Invert(camera.getProjectionMatrix()).multiply(Matrix.Invert(camera.getViewMatrix()));
         return Vector3.TransformCoordinates(new Vector3(point.x, point.y, 1), matrix).normalize().multiplyByFloats(length, length, length);
     }
-    static ScreenToWorldXYPlane(tourable:Tourable, point:Vector2, y:number = -1){
+    static ScreenToWorldXZPlane(tourable:Tourable, point:Vector2, y:number = -1){
         let normalized = Mathematics.ScreenToWorldPoint(tourable, point);
         let lengthMultiplier = y / normalized.y;
         if (lengthMultiplier == 0) { lengthMultiplier = 1; }
@@ -46,7 +46,7 @@ export default class Mathematics{
         return vec.multiplyByFloats(t, t, t);
     }
     static TransformPoint(tourable:Tourable, originalPos:Vector3, screenPos:Vector2, xAxis:boolean, yAxis:boolean, zAxis:boolean){
-        let finalPos = Mathematics.ScreenToWorldXYPlane(tourable, screenPos, originalPos.y);
+        let finalPos = Mathematics.ScreenToWorldXZPlane(tourable, screenPos, originalPos.y);
         
         let yOffset = 0;
         if (yAxis){

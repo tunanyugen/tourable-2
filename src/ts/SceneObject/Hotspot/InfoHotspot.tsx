@@ -64,6 +64,7 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         return {
             type: this.type,
             id: this.id,
+            sceneID: this.sceneID,
             targetSceneID: -1,
             texture: this.texture,
             hoverTitle: this.hoverTitle,

@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
+import { Color3, Material, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
@@ -19,6 +19,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
          newMaterial.diffuseTexture = new Texture(this.texture, this.mesh.getScene());
          newMaterial.diffuseTexture.hasAlpha = true;
          newMaterial.useAlphaFromDiffuseTexture = true;
+         newMaterial.alpha = 0.7;
          // dispose old material
          if (this.mesh.material){ this.mesh.material.dispose() }
          // set new material
@@ -46,22 +47,19 @@ export default class Pivot extends SceneObject implements PivotSchema {
             size: tourable.config.pivotSize,
             updatable: true,
         }, scene);
-        this.mesh.renderingGroupId = 1;
         // set texture
         this.texture = tourable.config.assets.pivot[0];
+        // set rendering group
+        this.mesh.renderingGroupId = 1;
     }
     hookEvents = (tourable:Tourable) => {
         this.pointerEnterObservable.Add(() => {
             // change cursor icon
             document.body.style.cursor = "pointer"
-            // scale hotspot mesh
-            this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
         }, false)
         this.pointerLeaveObservable.Add(() => {
             // set cursor icon to default
             document.body.style.cursor = null;
-            // unscale hotspot mesh
-            this.scale(this.mesh.scaling, this.originalScaling, 150);
         }, false)
         // on right click
         this.onRightClickObservable.Add(() => {
@@ -79,6 +77,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
     export = (): PivotSchema => {
         return {
             id: this.id,
+            sceneID: this.sceneID,
             type: this.type,
             texture: this.texture,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
