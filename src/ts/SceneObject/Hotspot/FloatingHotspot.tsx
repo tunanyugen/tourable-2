@@ -18,7 +18,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
-            tourable.onLoadObservabl.Add(() => {
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.hookEvents(tourable)
             }, true)
         }
@@ -42,7 +42,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
-        this.pointerEnterObservable.Add(() => {
+        this.pointerEnterObservable.Add(this._observableManager, () => {
             // change cursor icon
             document.body.style.cursor = "pointer"
             // scale hotspot mesh
@@ -51,7 +51,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y * tourable.config.floatingHotspotSize * 1.1, 0)));
             tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
         }, false)
-        this.pointerLeaveObservable.Add(() => {
+        this.pointerLeaveObservable.Add(this._observableManager, () => {
             // set cursor icon to default
             document.body.style.cursor = null;
             // unscale hotspot mesh
@@ -59,20 +59,20 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             // hide bubble popup
             tourable.gui.current.text.current.hide();
         }, false)
-        this.onClickObservable.Add(() => {
+        this.onClickObservable.Add(this._observableManager, () => {
             // switch scene
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
             }
         }, false)
-        this.onRightClickObservable.Add(() => {
+        this.onRightClickObservable.Add(this._observableManager, () => {
             // show configurations
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.floatingHotspotConfig.current.setTarget(this)
             }
         }, false)
         // on mouse move
-        this.pointerMoveObservable.Add((e) => {
+        this.pointerMoveObservable.Add(this._observableManager, (e) => {
             if (this.grabbing){
                 this.sphericalGrab(tourable, e.clientX, e.clientY, true);
             }

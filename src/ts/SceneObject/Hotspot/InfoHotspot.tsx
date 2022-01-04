@@ -17,13 +17,13 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
-            tourable.onLoadObservabl.Add(() => {
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.hookEvents(tourable)
             }, true)
         }
     }
     hookEvents = (tourable:Tourable) => {
-        this.pointerEnterObservable.Add(() => {
+        this.pointerEnterObservable.Add(this._observableManager, () => {
             // change cursor icon
             document.body.style.cursor = "pointer"
             // scale hotspot mesh
@@ -32,7 +32,7 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(this.originalScaling.x * tourable.config.infoHotspotSize * 1.1, this.originalScaling.y * tourable.config.infoHotspotSize * 1.1, 0)));
             tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
         }, false)
-        this.pointerLeaveObservable.Add(() => {
+        this.pointerLeaveObservable.Add(this._observableManager, () => {
             // set cursor icon to default
             document.body.style.cursor = null;
             // unscale hotspot mesh
@@ -41,20 +41,20 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             tourable.gui.current.text.current.hide();
         }, false)
         // on click
-        this.onClickObservable.Add(() => {
+        this.onClickObservable.Add(this._observableManager, () => {
             // show popup
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.popup.current.display(this.title);
             }
         }, false)
-        this.onRightClickObservable.Add(() => {
+        this.onRightClickObservable.Add(this._observableManager, () => {
             // show hotspot config
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.infoHotspotConfig.current.setTarget(this)
             }
         }, false)
         // on mouse move
-        this.pointerMoveObservable.Add((e) => {
+        this.pointerMoveObservable.Add(this._observableManager, (e) => {
             if (this.grabbing){
                 this.sphericalGrab(tourable, e.clientX, e.clientY, true);
             }

@@ -14,9 +14,6 @@ abstract class ContextMenu<P extends ContextMenuProps, S extends ContextMenuStat
     private get _className(){ return this.state.hidden ? "hide" : "show" }
     constructor(props: P) {
         super(props);
-        this.onShowObservable.Add(() => {
-            
-        }, false)
     }
     render() { 
         return (

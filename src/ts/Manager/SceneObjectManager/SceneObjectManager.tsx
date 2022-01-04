@@ -1,21 +1,19 @@
-import { Space, Vector2, Vector3 } from "babylonjs";
-import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
-import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import SceneObject from "../../SceneObject/SceneObject";
 import Tourable from "../../Tourable/Tourable";
-import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
 export default class SceneObjectManager{
+    protected _observableManager:ObservableManager = new ObservableManager();
     target:SceneObject;
     private _lastHoverSceneObject:SceneObject;
     get lastHoverSceneObject(){ return this._lastHoverSceneObject }
     private _hoverSceneObject:SceneObject;
     get hoverSceneObject(){ return this._hoverSceneObject }
     constructor(tourable:Tourable){
-        tourable.onLoadObservabl.Add(() => {
+        tourable.onLoadObservabl.Add(this._observableManager, () => {
             // pick hovering scene object
-            tourable.eventManager.onMouseMoveObservable.Add(() => {
+            tourable.eventManager.onMouseMoveObservable.Add(this._observableManager, () => {
                 let result = this.pick(tourable);
                 this._lastHoverSceneObject = this._hoverSceneObject;
                 this._hoverSceneObject = result ? result.sceneObject : null;

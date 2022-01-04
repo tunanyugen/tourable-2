@@ -19,8 +19,8 @@ export interface GeneralContextMenuState extends ContextMenuState{
 class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralContextMenuState> {
     constructor(props: GeneralContextMenuProps) {
         super(props);
-        this.props.tourable.onLoadObservabl.Add(() => {
-            this.props.tourable.eventManager.mouse2.onButtonUpObservable.Add((e) => {
+        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
+            this.props.tourable.eventManager.mouse2.onButtonUpObservable.Add(this._observableManager, (e) => {
                 let result = this.props.tourable.sceneObjectManager.pick(this.props.tourable)
                 if (!result){
                     this.move(e.clientX, e.clientY);
@@ -78,6 +78,13 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
             },
             {
                 icon: "",
+                name: "Poly",
+                onClick: () => {
+                    new Poly(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                }
+            },
+            {
+                icon: "",
                 name: "Pivot",
                 onClick: () => {
                     let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
@@ -87,13 +94,6 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                     pivot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
                 }
             },
-            {
-                icon: "",
-                name: "Poly",
-                onClick: () => {
-                    new Poly(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
-                }
-            }
         ]
     }
 }

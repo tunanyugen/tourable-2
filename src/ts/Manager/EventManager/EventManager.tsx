@@ -2,11 +2,13 @@ import KeyEvent from "../../Event/KeyEvent";
 import Tourable from "../../Tourable/Tourable";
 import MouseButtonEvent from "../../Event/MouseButtonEvent";
 import Observable from "@tunanyugen/observable";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 
 export default class EventManager{
+    protected _observableManager:ObservableManager = new ObservableManager();
     // mouse
-    onMouseMoveObservable:Observable<PointerEvent> = new Observable(null, false);
-    onMouseScrollObservable:Observable<WheelEvent> = new Observable(null, false);
+    onMouseMoveObservable:Observable<PointerEvent> = new Observable(this._observableManager, null, false);
+    onMouseScrollObservable:Observable<WheelEvent> = new Observable(this._observableManager, null, false);
     private _moving:boolean = false;
     get moving(){ return this._moving; }
     // mouse buttons

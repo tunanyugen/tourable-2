@@ -8,8 +8,10 @@ import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
 import Scene, { SceneSchema } from '../Scene/Scene';
 import { Engine } from "babylonjs";
+import { ObservableManager } from '@tunanyugen/observable/src/ts/ObservableManager';
 
 export default class Tourable{
+    protected _observableManager:ObservableManager = new ObservableManager();
     // state
     private _loaded:boolean = false;
     get loaded(){ return this._loaded }
@@ -25,7 +27,7 @@ export default class Tourable{
     engine:Engine;
     config:Config
     // observables
-    onLoadObservabl:Observable = new Observable(null, true);
+    onLoadObservabl:Observable = new Observable(this._observableManager, null, true);
 
     constructor(containerSelector:string, sceneSchemas:SceneSchema[]){
         // init config

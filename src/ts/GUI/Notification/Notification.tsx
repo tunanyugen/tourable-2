@@ -5,7 +5,7 @@ export interface NotificationProps extends GUIObjectProps{
 }
  
 export interface NotificationState extends GUIObjectState{
-    messages:string[];
+    messages:Map<number,string>;
 }
  
 class Notification extends GUIObject<NotificationProps, NotificationState> {
@@ -13,7 +13,7 @@ class Notification extends GUIObject<NotificationProps, NotificationState> {
         super(props);
         this.state = {
             ...this.state,
-            messages: []
+            messages: new Map()
         }
     }
     render() {
@@ -24,24 +24,25 @@ class Notification extends GUIObject<NotificationProps, NotificationState> {
         );
     }
     renderItems = () => {
-        return this.state.messages.map((message, index) => {
+        return Array.from(this.state.messages).map(([key, value], index) => {
             return (
                 <div
                     key={index}
                     className="tourable__notification__item"
                 >
-                    {message}
+                    {value}
                 </div>
             )
         })
     }
-    notify = (message:string) => {
-        this.setState({
-            messages: [
-                ...this.state.messages,
-                message
-            ]
-        })
+    notify = (message:string, duration:number = 500) => {
+        let id = Date.now();
+        this.state.messages.set(id, message);
+        this.forceUpdate();
+        setTimeout(() => {
+            this.state.messages.delete(id);
+            this.forceUpdate();
+        }, duration);
     }
 }
  

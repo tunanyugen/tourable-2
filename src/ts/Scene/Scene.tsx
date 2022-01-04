@@ -5,6 +5,7 @@ import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
 import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
 import FloatingHotspot, { FloatingHotspotSchema } from "../SceneObject/Hotspot/FloatingHotspot";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 
 export interface SceneSchema {
     id:number;
@@ -13,6 +14,7 @@ export interface SceneSchema {
 }
 
 export default class Scene extends BABYLONScene implements SceneSchema {
+    protected _observableManager:ObservableManager = new ObservableManager();
     public uidGenerator:UIDGenerator = new UIDGenerator();
     public id:number;
     public sceneObjects:Map<number, SceneObject> = new Map();
@@ -28,7 +30,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             this.id = schema.id;
             tourable.uidGenerator.uid = this.id + 1;
             this.panorama = schema.panorama;
-            tourable.onLoadObservabl.Add(() => {
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
                 (schema.sceneObjects as FloorHotspotSchema[]|FloatingHotspotSchema[]).forEach((sceneObject) => {
                     switch(sceneObject.type){
                         case "floorHotspot": new FloorHotspot(tourable, this.id, sceneObject); break;

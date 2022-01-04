@@ -1,7 +1,7 @@
 import Observable from "@tunanyugen/observable";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { Mesh, Space, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
-import Scene from "../Scene/Scene";
 import Tourable from "../Tourable/Tourable";
 import Mathematics from "../Utilities/Mathematics/Mathematics";
 
@@ -24,6 +24,17 @@ export default abstract class SceneObject implements SceneObjectSchema{
     public sceneID: number;
     public mesh:Mesh;
     public grabbing:boolean = false;
+    protected _observableManager:ObservableManager = new ObservableManager();
+    public disposeObservable = new Observable(this._observableManager, null, true);
+    public moveObservable:Observable = new Observable(this._observableManager, null, false);
+    public gDownObservable:Observable;
+    public gUpObservable:Observable;
+    public onClickObservable:Observable<PointerEvent>;
+    public onRightClickObservable:Observable<PointerEvent>;
+    public pointerMoveObservable:Observable<PointerEvent>;
+    public mouseScrollObservable:Observable<WheelEvent>;
+    public pointerEnterObservable:Observable<PointerEvent>;
+    public pointerLeaveObservable:Observable<PointerEvent>;
 
     constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
         this.sceneID = sceneID;
@@ -33,7 +44,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
             this.id = schema.id;
             scene.uidGenerator.uid = schema.id + 1;
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
-            tourable.onLoadObservabl.Add(() => {
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.move(new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z));
                 this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
                 this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
@@ -47,7 +58,6 @@ export default abstract class SceneObject implements SceneObjectSchema{
         // init events
         this.defaultEvents(tourable);
     }
-    moveObservable:Observable = new Observable(null, false);
     move = (position:Vector3) => {
         this.mesh.position = position.clone();
         this.moveObservable.Resolve();
@@ -63,15 +73,12 @@ export default abstract class SceneObject implements SceneObjectSchema{
     }
     dispose = (tourable:Tourable) => {
         tourable.sceneManager.scenes.get(this.sceneID).sceneObjects.delete(this.id);
-        this.gDownObservable.Dispose();
-        this.gUpObservable.Dispose();
-        this.onClickObservable.Dispose();
-        this.onRightClickObservable.Dispose();
-        this.pointerMoveObservable.Dispose();
-        this.mouseScrollObservable.Dispose();
-        this.pointerEnterObservable.Dispose();
-        this.pointerLeaveObservable.Dispose();
+        this.disposeObservable.Resolve();
         if (this.mesh){ this.mesh.dispose(); }
+        // for some reason some observables will not be resolved if run the following command without delay
+        setTimeout(() => {
+            this._observableManager.Dispose();
+        }, 16)
     }
     private _scaleInterval:NodeJS.Timeout;
     scale = (start:Vector3, end:Vector3, duration:number) => {
@@ -90,14 +97,6 @@ export default abstract class SceneObject implements SceneObjectSchema{
             return this._scaleInterval;
         })
     }
-    gDownObservable:Observable;
-    gUpObservable:Observable;
-    onClickObservable:Observable<PointerEvent>;
-    onRightClickObservable:Observable<PointerEvent>;
-    pointerMoveObservable:Observable<PointerEvent>;
-    mouseScrollObservable:Observable<WheelEvent>;
-    pointerEnterObservable:Observable<PointerEvent>;
-    pointerLeaveObservable:Observable<PointerEvent>;
     private defaultEvents = (tourable:Tourable) => {
         let eventDiscardCondition = () => {
             return (
@@ -105,22 +104,22 @@ export default abstract class SceneObject implements SceneObjectSchema{
                 tourable.sceneManager.sceneToRender != this.mesh.getScene()
             )
         }
-        this.gDownObservable = new Observable(null, false, eventDiscardCondition);
-        this.gUpObservable = new Observable(null, false, eventDiscardCondition);
-        this.onClickObservable = new Observable(null, false, eventDiscardCondition);
-        this.onRightClickObservable = new Observable(null, false, eventDiscardCondition);
-        this.pointerMoveObservable = new Observable(null, false, eventDiscardCondition);
-        this.mouseScrollObservable = new Observable(null, false, eventDiscardCondition);
-        this.pointerEnterObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject != this && tourable.sceneObjectManager.hoverSceneObject == this) })
-        this.pointerLeaveObservable = new Observable(null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject == this && tourable.sceneObjectManager.hoverSceneObject != this) })
+        this.gDownObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.gUpObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.onClickObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.onRightClickObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.pointerMoveObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.mouseScrollObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        this.pointerEnterObservable = new Observable(this._observableManager, null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject != this && tourable.sceneObjectManager.hoverSceneObject == this) })
+        this.pointerLeaveObservable = new Observable(this._observableManager, null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject == this && tourable.sceneObjectManager.hoverSceneObject != this) })
         // g key down
-        this.gDownObservable.Add(() => {
+        this.gDownObservable.Add(this._observableManager, () => {
             // set grabbing state
             if (tourable.sceneObjectManager.hoverSceneObject == this){ this.grabbing = true }
         }, false);
         tourable.eventManager.g.onKeyDownObservable.AddObservable(this.gDownObservable);
         // g key up
-        this.gUpObservable.Add(() => {
+        this.gUpObservable.Add(this._observableManager, () => {
             // unset grabbing state
             if (this.grabbing){ this.grabbing = false }
         }, false)
@@ -133,7 +132,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerMoveObservable);
         // mouse scroll
         tourable.eventManager.onMouseScrollObservable.AddObservable(this.mouseScrollObservable);
-        this.mouseScrollObservable.Add((e) => {
+        this.mouseScrollObservable.Add(this._observableManager, (e) => {
             if (this.grabbing){
                 this.mesh.rotate(Vector3.Up(), (e.deltaY * 4 / 100) * (tourable.engine.getDeltaTime() / 1000), Space.WORLD);
             }

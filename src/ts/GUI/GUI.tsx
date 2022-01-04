@@ -44,8 +44,8 @@ class GUI extends GUIObject<GUIProps, GUIState> {
             hidden: false,
         }
 
-        this.props.tourable.onLoadObservabl.Add(() => {
-            this.props.tourable.eventManager.mouse0.onButtonUpObservable.Add(() => {
+        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
+            this.props.tourable.eventManager.mouse0.onButtonUpObservable.Add(this._observableManager, () => {
                 if (!this.props.tourable.sceneObjectManager.pick(this.props.tourable)){
                     if (this.props.tourable.eventManager.mouse0.timeElapsed <= 110){
                         this.toggle();

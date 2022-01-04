@@ -1,4 +1,5 @@
 import Observable from '@tunanyugen/observable';
+import { ObservableManager } from '@tunanyugen/observable/src/ts/ObservableManager';
 import * as React from 'react';
 import Tourable from '../Tourable/Tourable';
 
@@ -13,8 +14,9 @@ export interface GUIObjectState {
 }
  
 abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> extends React.Component<P, S> {
-    onShowObservable:Observable = new Observable(null, false);
-    onHideObservable:Observable = new Observable(null, false);
+    protected _observableManager:ObservableManager = new ObservableManager();
+    onShowObservable:Observable = new Observable(this._observableManager, null, false);
+    onHideObservable:Observable = new Observable(this._observableManager, null, false);
     private _hideTimeout:NodeJS.Timeout;
     constructor(props: P){
         super(props);

@@ -1,12 +1,15 @@
 import Observable from "@tunanyugen/observable";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { FreeCamera, Vector3 } from "babylonjs";
 import Scene from "../../Scene/Scene";
 import Tourable from "../../Tourable/Tourable";
 
 export default class SceneManager {
-    scenes:Map<number, Scene> = new Map();
+    protected _observableManager:ObservableManager = new ObservableManager();
+    public scenes:Map<number, Scene> = new Map();
     private _sceneToRender:Scene;
     get sceneToRender(){ return this._sceneToRender }
+    public onSwitchSceneObservable:Observable<{lastScene:Scene, scene:Scene}> = new Observable(this._observableManager, null, false);
     setScene = (tourable:Tourable, scene:Scene, delay:number = 500) => {
         // show load screen
         tourable.gui.current.loadScreen.current.show();
@@ -49,7 +52,6 @@ export default class SceneManager {
             }
         }, delay);
     }
-    onSwitchSceneObservable:Observable<{lastScene:Scene, scene:Scene}> = new Observable(null, false);
 
     constructor(tourable:Tourable){}
     switchScene = (tourable:Tourable, sceneID:number, hotspotID:number = -1) => {
@@ -70,7 +72,7 @@ export default class SceneManager {
             // camera move out of scene effect
             this.sceneToRender.moveCamera(this.sceneToRender.activeCamera.position.clone(), moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance), 750).then(() => {
                 // subscribe
-                this.onSwitchSceneObservable.Add((res) => {
+                this.onSwitchSceneObservable.Add(this._observableManager, (res) => {
                     // camera move into scene effect
                     res.scene.moveCamera(moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance).negate(), Vector3.Zero(), 750);
                 }, true)

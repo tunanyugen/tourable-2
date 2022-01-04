@@ -20,8 +20,8 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
     constructor(props: InfoHotspotConfigProps) {
         super(props);
         // hide on click on canvas
-        this.props.tourable.onLoadObservabl.Add(() => {
-            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
+            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(this._observableManager, () => {
                 if (!this.state.hidden){ this.hide() }
             }, false)
             this.forceUpdate()

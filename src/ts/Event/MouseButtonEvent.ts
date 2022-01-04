@@ -1,9 +1,11 @@
 import Tourable from "../Tourable/Tourable";
 import Observable from "@tunanyugen/observable";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 
 export default class MouseButtonEvent{
-    onButtonDownObservable:Observable<PointerEvent> = new Observable(null, false);
-    onButtonUpObservable:Observable<PointerEvent> = new Observable(null, false);
+    protected _observableManager:ObservableManager = new ObservableManager();
+    onButtonDownObservable:Observable<PointerEvent> = new Observable(this._observableManager, null, false);
+    onButtonUpObservable:Observable<PointerEvent> = new Observable(this._observableManager, null, false);
     private _isDown:boolean = false;
     get isDown(){ return this._isDown; }
     private _startElapseTime:number;

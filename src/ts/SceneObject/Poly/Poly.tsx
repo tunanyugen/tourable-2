@@ -1,5 +1,5 @@
 import Observable from "@tunanyugen/observable";
-import { Color3, Mesh, StandardMaterial, Texture, Vector2, VertexData } from "babylonjs";
+import { Color3, Mesh, StandardMaterial, Texture, Vector2, VertexBuffer, VertexData } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import Pivot from "../Pivot/Pivot";
@@ -8,34 +8,49 @@ import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
 export interface PolySchema extends SceneObjectSchema {
     pivotIDs:number[];
+    color: {r:number, g:number, b:number}
 }
 
 export default class Poly extends SceneObject implements PolySchema{
     type: "poly" = "poly";
     public id: number;
-    pivotIDs: number[] = [];
+    public pivotIDs: number[] = [];
+    private _color:Color3 = new Color3();
+    public get color(){ return this._color }
+    public set color(value:Color3){
+        this._color = value.clone();
+    }
     constructor(tourable:Tourable, sceneID:number, schema:PolySchema = null){
         super(tourable, sceneID, schema);
         // load data from schema
         if (schema){
             this.pivotIDs = schema.pivotIDs;
         }
-        console.log("Pick 1st point");
-        let pivotPickObservable = new Observable<PointerEvent>((e) => {
+        tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
+        let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
             // pick pivot or create new one as poly's vertex
             let result = tourable.sceneObjectManager.pick(tourable);
+            let pivot:Pivot = null;
             if (result && result.sceneObject instanceof Pivot){
-                this.pivotIDs.push(result.sceneObject.id);
+                pivot = result.sceneObject;
             } else {
-                let newPivot = new Pivot(tourable, this.sceneID);
-                newPivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
-                this.pivotIDs.push(newPivot.id);
+                pivot = new Pivot(tourable, this.sceneID);
+                pivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
             }
+            // add pivot array
+            this.pivotIDs.push(pivot.id);
+            // subcribe to pivot events
+            // update mesh on pivot move
+            pivot.moveObservable.Add(this._observableManager, () => { this.updateVertexData(tourable) }, false)
+            // dispose on pivot dispose
+            pivot.disposeObservable.Add(this._observableManager, () => {
+                this.dispose(tourable);
+            }, true);
             // state check
-            if (this.pivotIDs.length == 1){ console.log(`Picked 1st point (2 left)`) }
-            else if (this.pivotIDs.length == 2){ console.log(`Picked 2nd point (1 left)`) }
+            if (this.pivotIDs.length == 1){ tourable.gui.current.notification.current.notify(`Picked 1st point (2 left)`, 2000) }
+            else if (this.pivotIDs.length == 2){ tourable.gui.current.notification.current.notify(`Picked 2nd point (1 left)`, 2000) }
             else {
-                console.log(`Last point picked, creating poly`);
+                tourable.gui.current.notification.current.notify(`Creating poly`, 1000)
                 this.createMesh(tourable);
                 // dispose observable
                 pivotPickObservable.Dispose();
@@ -57,7 +72,7 @@ export default class Poly extends SceneObject implements PolySchema{
         let vertexData = new VertexData();
         vertexData.positions = positions;
         vertexData.indices = indices;
-        vertexData.applyToMesh(this.mesh);
+        vertexData.applyToMesh(this.mesh, true);
         // create material
         let material = new StandardMaterial(this.id.toString(), scene);
         material.emissiveColor = new Color3(1, 1, 1);
@@ -67,12 +82,24 @@ export default class Poly extends SceneObject implements PolySchema{
         // set rendering group
         this.mesh.renderingGroupId = 1;
     }
+    updateVertexData = (tourable:Tourable) => {
+        // create new positions
+        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let positions:number[] = [];
+        this.pivotIDs.forEach((id) => {
+            let pivot = scene.sceneObjects.get(id) as Pivot;
+            positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
+        })
+        this.mesh.updateVerticesData(VertexBuffer.PositionKind, positions);
+        this.mesh.refreshBoundingInfo();
+    }
     export = ():PolySchema => {
         return {
             id: this.id,
             sceneID: this.sceneID,
             type: this.type,
             pivotIDs: this.pivotIDs,
+            color: {r: this.color.r, g: this.color.g, b: this.color.b},
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},

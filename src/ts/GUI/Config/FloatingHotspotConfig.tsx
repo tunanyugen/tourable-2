@@ -1,7 +1,6 @@
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 import Config from "./Config";
 import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/MediaSelect";
-import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
 import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/LabeledMediaSelect/LabeledMediaSelect";
 import { StandardMaterial, Texture, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
@@ -21,8 +20,8 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
     constructor(props: FloatingHotspotConfigProps) {
         super(props);
         // hide on click on canvas
-        this.props.tourable.onLoadObservabl.Add(() => {
-            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(() => {
+        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
+            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(this._observableManager, () => {
                 if (!this.state.hidden){ this.hide() }
             }, false)
             this.forceUpdate()

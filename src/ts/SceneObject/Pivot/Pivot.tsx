@@ -35,7 +35,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
         this.createMesh(tourable, sceneID);
         this.hookEvents(tourable);
         // look at camera
-        this.moveObservable.Add(() => {
+        this.moveObservable.Add(this._observableManager, () => {
             this.mesh.lookAt(this.mesh.getScene().activeCamera.position);
         }, false)
     }
@@ -53,22 +53,22 @@ export default class Pivot extends SceneObject implements PivotSchema {
         this.mesh.renderingGroupId = 1;
     }
     hookEvents = (tourable:Tourable) => {
-        this.pointerEnterObservable.Add(() => {
+        this.pointerEnterObservable.Add(this._observableManager, () => {
             // change cursor icon
             document.body.style.cursor = "pointer"
         }, false)
-        this.pointerLeaveObservable.Add(() => {
+        this.pointerLeaveObservable.Add(this._observableManager, () => {
             // set cursor icon to default
             document.body.style.cursor = null;
         }, false)
         // on right click
-        this.onRightClickObservable.Add(() => {
+        this.onRightClickObservable.Add(this._observableManager, () => {
             if (tourable.sceneObjectManager.hoverSceneObject == this){
                 tourable.gui.current.pivotConfig.current.setTarget(this)
             }
         }, false)
         // on mouse move
-        this.pointerMoveObservable.Add((e) => {
+        this.pointerMoveObservable.Add(this._observableManager, (e) => {
             if (this.grabbing){
                 this.grab(tourable, e.clientX, e.clientY, true, false, true)
             }

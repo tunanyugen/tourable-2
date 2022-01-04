@@ -1076,3 +1076,52 @@ body {
   transition: 0.25s;
   pointer-events: none;
 }
+
+.tourable__notification {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 290px;
+  height: 100%;
+  padding: 8px;
+  top: 0;
+  right: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.tourable__notification * {
+  pointer-events: all;
+}
+.tourable__notification__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 72px;
+  background-color: #4094b9;
+  border-radius: 4px;
+  color: white;
+  font-weight: 700;
+  transition: 0.25s;
+  -webkit-animation: slideIn 0.25s;
+          animation: slideIn 0.25s;
+}
+.tourable__notification__item + .tourable__notification__item {
+  margin-top: 8px;
+}
+@-webkit-keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}

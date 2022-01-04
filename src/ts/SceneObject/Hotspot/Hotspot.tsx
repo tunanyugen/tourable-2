@@ -44,7 +44,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
             this._targetSceneID = schema.targetSceneID;
             this.title = schema.title;
             this.hoverTitle = schema.hoverTitle;
-            tourable.onLoadObservabl.Add(() => {
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.texture = schema.texture;
             }, true)
         }

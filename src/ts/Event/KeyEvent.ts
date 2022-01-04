@@ -1,9 +1,11 @@
 import Observable from "@tunanyugen/observable";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import Tourable from "../Tourable/Tourable";
 
 export default class KeyEvent{
-    onKeyDownObservable:Observable = new Observable(null, false);
-    onKeyUpObservable:Observable = new Observable(null, false);
+    protected _observableManager:ObservableManager = new ObservableManager(); 
+    onKeyDownObservable:Observable = new Observable(this._observableManager, null, false);
+    onKeyUpObservable:Observable = new Observable(this._observableManager, null, false);
     private _isDown:boolean = false;
     get isDown(){ return this._isDown; }
 
