@@ -15,6 +15,7 @@ import Text from "./Text/Text";
 import LoadScreen from "./LoadScreen/LoadScreen";
 import Popup from "./Popup/Popup";
 import PivotConfig from './Config/PivotConfig';
+import Notification from './Notification/Notification';
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -34,6 +35,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
     popup:React.RefObject<Popup> = React.createRef();
+    notification:React.RefObject<Notification> = React.createRef();
 
     constructor(props: GUIProps) {
         super(props);
@@ -83,6 +85,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 <InfoHotspotConfig ref={this.infoHotspotConfig} tourable={this.props.tourable} />
                 <PivotConfig ref={this.pivotConfig} tourable={this.props.tourable} />
                 <LoadScreen ref={this.loadScreen} tourable={this.props.tourable}/>
+                <Notification ref={this.notification} tourable={this.props.tourable} />
             </React.Fragment>
         );
     }
