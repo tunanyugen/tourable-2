@@ -67,16 +67,12 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         // on click
         this.onClickObservable.Add(this._observableManager, () => {
             // switch scene
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
-            }
+            tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
         }, false)
         // on right click
         this.onRightClickObservable.Add(this._observableManager, () => {
             // show confingurations
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.gui.current.floorHotspotConfig.current.setTarget(this)
-            }
+            tourable.gui.current.floorHotspotConfig.current.setTarget(this)
         }, false)
         // on mouse move
         this.pointerMoveObservable.Add(this._observableManager, (e) => {

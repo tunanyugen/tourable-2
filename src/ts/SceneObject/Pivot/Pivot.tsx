@@ -63,9 +63,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
         }, false)
         // on right click
         this.onRightClickObservable.Add(this._observableManager, () => {
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.gui.current.pivotConfig.current.setTarget(this)
-            }
+            tourable.gui.current.pivotConfig.current.setTarget(this)
         }, false)
         // on mouse move
         this.pointerMoveObservable.Add(this._observableManager, (e) => {

@@ -98,24 +98,27 @@ export default abstract class SceneObject implements SceneObjectSchema{
         })
     }
     private defaultEvents = (tourable:Tourable) => {
-        let eventDiscardCondition = () => {
+        let validObjectCondition = () => {
             return (
                 !this.mesh ||
                 tourable.sceneManager.sceneToRender != this.mesh.getScene()
             )
         }
-        this.gDownObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
-        this.gUpObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
-        this.onClickObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
-        this.onRightClickObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
-        this.pointerMoveObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
-        this.mouseScrollObservable = new Observable(this._observableManager, null, false, eventDiscardCondition);
+        let mouseOverObjectCondition = () => {
+            return (tourable.sceneObjectManager.hoverSceneObject != this || validObjectCondition())
+        }
+        this.gDownObservable = new Observable(this._observableManager, null, false, mouseOverObjectCondition);
+        this.gUpObservable = new Observable(this._observableManager, null, false, validObjectCondition);
+        this.onClickObservable = new Observable(this._observableManager, null, false, mouseOverObjectCondition);
+        this.onRightClickObservable = new Observable(this._observableManager, null, false, mouseOverObjectCondition);
+        this.pointerMoveObservable = new Observable(this._observableManager, null, false, validObjectCondition);
+        this.mouseScrollObservable = new Observable(this._observableManager, null, false, validObjectCondition);
         this.pointerEnterObservable = new Observable(this._observableManager, null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject != this && tourable.sceneObjectManager.hoverSceneObject == this) })
         this.pointerLeaveObservable = new Observable(this._observableManager, null, false, () => { return !(tourable.sceneObjectManager.lastHoverSceneObject == this && tourable.sceneObjectManager.hoverSceneObject != this) })
         // g key down
         this.gDownObservable.Add(this._observableManager, () => {
             // set grabbing state
-            if (tourable.sceneObjectManager.hoverSceneObject == this){ this.grabbing = true }
+            this.grabbing = true
         }, false);
         tourable.eventManager.g.onKeyDownObservable.AddObservable(this.gDownObservable);
         // g key up

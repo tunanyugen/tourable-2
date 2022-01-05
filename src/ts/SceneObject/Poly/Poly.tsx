@@ -8,24 +8,40 @@ import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
 export interface PolySchema extends SceneObjectSchema {
     pivotIDs:number[];
-    color: {r:number, g:number, b:number}
+    color: {r:number, g:number, b:number};
+    opacity: number;
 }
 
 export default class Poly extends SceneObject implements PolySchema{
     type: "poly" = "poly";
     public id: number;
     public pivotIDs: number[] = [];
-    private _color:Color3 = new Color3();
+    private _color:Color3 = new Color3(1, 1, 1);
     public get color(){ return this._color }
     public set color(value:Color3){
         this._color = value.clone();
+        (this.mesh.material as StandardMaterial).emissiveColor = this._color;
+    }
+    private _opacity:number = 1;;
+    public get opacity(){ return this._opacity }
+    public set opacity(value:number){
+        this._opacity = value;
+        (this.mesh.material as StandardMaterial).alpha = value;
     }
     constructor(tourable:Tourable, sceneID:number, schema:PolySchema = null){
         super(tourable, sceneID, schema);
         // load data from schema
         if (schema){
             this.pivotIDs = schema.pivotIDs;
+            this._color = new Color3(schema.color.r, schema.color.g, schema.color.b);
+            this._opacity = schema.opacity;
+        } else {
+            this._color = new Color3(tourable.config.poly.color.r, tourable.config.poly.color.g, tourable.config.poly.color.b);
+            this._opacity = tourable.config.poly.opacity;
         }
+        // hook events
+        this.hookEvents(tourable);
+        // tutorial
         tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
         let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
             // pick pivot or create new one as poly's vertex
@@ -75,9 +91,10 @@ export default class Poly extends SceneObject implements PolySchema{
         vertexData.applyToMesh(this.mesh, true);
         // create material
         let material = new StandardMaterial(this.id.toString(), scene);
-        material.emissiveColor = new Color3(1, 1, 1);
+        material.emissiveColor = this.color;
         material.diffuseTexture = new Texture(tourable.config.assets.poly[0], scene);
         material.backFaceCulling = false;
+        material.alpha = this.opacity;
         this.mesh.material = material;
         // set rendering group
         this.mesh.renderingGroupId = 1;
@@ -93,6 +110,11 @@ export default class Poly extends SceneObject implements PolySchema{
         this.mesh.updateVerticesData(VertexBuffer.PositionKind, positions);
         this.mesh.refreshBoundingInfo();
     }
+    hookEvents = (tourable:Tourable) => {
+        this.onRightClickObservable.Add(this._observableManager, () => {
+            tourable.gui.current.polyConfig.current.setTarget(this);
+        }, false)
+    }
     export = ():PolySchema => {
         return {
             id: this.id,
@@ -100,6 +122,7 @@ export default class Poly extends SceneObject implements PolySchema{
             type: this.type,
             pivotIDs: this.pivotIDs,
             color: {r: this.color.r, g: this.color.g, b: this.color.b},
+            opacity: this.opacity,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},

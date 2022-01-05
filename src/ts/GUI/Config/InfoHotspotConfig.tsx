@@ -59,6 +59,7 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                 <Input
                     label="Title"
                     placeholder="Enter text here"
+                    value={this.target ? this.target.title : ""}
                     onChange={(e) => {
                         if (!this.target){ return }
                         this.target.title = e.target.value;
@@ -98,8 +99,8 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
             </Config>
         );
     }
-    setTarget = (InfoHotspot:InfoHotspot) => {
-        this.target = InfoHotspot;
+    setTarget = (infoHotspot:InfoHotspot) => {
+        this.target = infoHotspot;
         this.setState({
             hidden: false,
         })

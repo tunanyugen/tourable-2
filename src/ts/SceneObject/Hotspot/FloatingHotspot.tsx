@@ -61,15 +61,11 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         }, false)
         this.onClickObservable.Add(this._observableManager, () => {
             // switch scene
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
-            }
+            tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
         }, false)
         this.onRightClickObservable.Add(this._observableManager, () => {
             // show configurations
-            if (tourable.sceneObjectManager.hoverSceneObject == this){
-                tourable.gui.current.floatingHotspotConfig.current.setTarget(this)
-            }
+            tourable.gui.current.floatingHotspotConfig.current.setTarget(this)
         }, false)
         // on mouse move
         this.pointerMoveObservable.Add(this._observableManager, (e) => {

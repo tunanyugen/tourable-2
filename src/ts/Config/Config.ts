@@ -8,6 +8,10 @@ export default class Config{
         public floatingHotspotSize = 0.1, // info hotspot size
         public infoHotspotSize = 0.1, // pivot size
         public pivotSize = 0.05, // mouse move event runs every X milliseconds
+        public poly = {
+            color: {r: 1, g: 1, b: 1},
+            opacity: 1
+        },
         public maxClickMouseDownTime = 200, // amount of pointer down time until click is rendered invalid in milliseconds
         public consecutiveDebugInterval = 200, // how fast consecutive debugging should fire in ms 
         public assets = {
