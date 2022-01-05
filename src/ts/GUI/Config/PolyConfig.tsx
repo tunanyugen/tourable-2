@@ -47,7 +47,7 @@ class PolyConfig extends GUIObject<PolyConfigProps, PolyConfigState> {
                 <Input
                     label="Color"
                     placeholder="Enter hex code here"
-                    value={this.target ? colorConverter.rgb.hex(this.target.color.r, this.target.color.g, this.target.color.b) : ""}
+                    value={this.target ? `#${colorConverter.rgb.hex(this.target.color.r * 255, this.target.color.g * 255, this.target.color.b * 255)}` : ""}
                     onChange={(e) => {
                         if (!this.target){ return }
                         let rgb = (colorConverter.hex.rgb(e.target.value) as number[]).map((color) => { return color / 255 })
@@ -59,7 +59,7 @@ class PolyConfig extends GUIObject<PolyConfigProps, PolyConfigState> {
                     label="Opacity"
                     min={15}
                     max={100}
-                    value={this.target ? this.target.originalScaling.x * 100 : 100}
+                    value={this.target ? this.target.opacity * 100 : 100}
                     onChange={(e) => {
                         if (!this.target){ return }
                         let opacity = parseFloat(e.target.value) / 100;
