@@ -56,13 +56,22 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                         this.forceUpdate();
                     }}
                 />
-                <Input
-                    label="Title"
+                <CKEditor
+                    label="Title on hover"
                     placeholder="Enter text here"
-                    value={this.target ? this.target.title : ""}
-                    onChange={(e) => {
+                    value={this.target ? this.target.hoverTitle : ""}
+                    onChange={(content) => {
                         if (!this.target){ return }
-                        this.target.title = e.target.value;
+                        this.target.hoverTitle = content;
+                    }}
+                />
+                <CKEditor
+                    label="Title on click"
+                    placeholder="Enter text here"
+                    value={this.target ? this.target.clickTitle : ""}
+                    onChange={(content) => {
+                        if (!this.target){ return }
+                        this.target.clickTitle = content;
                     }}
                 />
                 <Slider
@@ -76,24 +85,6 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                         let scaling = new Vector3(value, value, value);
                         this.target.mesh.scaling = scaling.clone();
                         this.target.originalScaling = scaling.clone();
-                    }}
-                />
-                <CKEditor
-                    label="Hovering popup"
-                    placeholder="Enter text here"
-                    value={this.target ? this.target.hoverTitle : ""}
-                    onChange={(content) => {
-                        if (!this.target){ return }
-                        this.target.hoverTitle = content;
-                    }}
-                />
-                <CKEditor
-                    label="Popup"
-                    placeholder="Enter text here"
-                    value={this.target ? this.target.title : ""}
-                    onChange={(content) => {
-                        if (!this.target){ return }
-                        this.target.title = content;
                     }}
                 />
             </Config>

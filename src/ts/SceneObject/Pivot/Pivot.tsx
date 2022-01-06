@@ -83,7 +83,9 @@ export default class Pivot extends SceneObject implements PivotSchema {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
                 rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
                 scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            }
+            },
+            hoverTitle: this.hoverTitle,
+            clickTitle: this.clickTitle,
         }
     }
 }

@@ -15,6 +15,8 @@ export interface SceneObjectSchema {
         rotation: {x:number, y:number, z:number},
         scaling: {x:number, y:number, z:number},
     } | Mesh;
+    hoverTitle: string;
+    clickTitle: string;
 }
 
 export default abstract class SceneObject implements SceneObjectSchema{
@@ -23,6 +25,20 @@ export default abstract class SceneObject implements SceneObjectSchema{
     public id: number;
     public sceneID: number;
     public mesh:Mesh;
+    private _hoverTitle: string = "";
+    public setHoverTitleWithoutInvokingObservable = (value:string) => { this._hoverTitle = value }
+    public get hoverTitle(){ return this._hoverTitle }
+    public set hoverTitle(value:string){
+        this._hoverTitle = value;
+        this.hoverTitleChangeObservable.Resolve(value);
+    }
+    private _clickTitle: string = "";
+    public setClickTitleWithoutInvokingObservable = (value:string) => { this._clickTitle = value }
+    public get clickTitle(){ return this._clickTitle }
+    public set clickTitle(value){
+        this._clickTitle = value;
+        this.clickTitleChangeObserable.Resolve(value);
+    }
     public grabbing:boolean = false;
     protected _observableManager:ObservableManager = new ObservableManager();
     public disposeObservable = new Observable(this._observableManager, null, true);
@@ -35,6 +51,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
     public mouseScrollObservable:Observable<WheelEvent>;
     public pointerEnterObservable:Observable<PointerEvent>;
     public pointerLeaveObservable:Observable<PointerEvent>;
+    public hoverTitleChangeObservable:Observable<string> = new Observable(this._observableManager, null, false);
+    public clickTitleChangeObserable:Observable<string> = new Observable(this._observableManager, null, false);
 
     constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
         this.sceneID = sceneID;
@@ -44,6 +62,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
             this.id = schema.id;
             scene.uidGenerator.uid = schema.id + 1;
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
+            this.hoverTitle = schema.hoverTitle;
+            this.clickTitle = schema.clickTitle;
             tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.move(new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z));
                 this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
@@ -135,14 +155,35 @@ export default abstract class SceneObject implements SceneObjectSchema{
         tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerMoveObservable);
         // mouse scroll
         tourable.eventManager.onMouseScrollObservable.AddObservable(this.mouseScrollObservable);
+        // pointer move observable
+        tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerEnterObservable);
+        tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerLeaveObservable);
+        // default events
         this.mouseScrollObservable.Add(this._observableManager, (e) => {
             if (this.grabbing){
                 this.mesh.rotate(Vector3.Up(), (e.deltaY * 4 / 100) * (tourable.engine.getDeltaTime() / 1000), Space.WORLD);
             }
         }, false);
-        // pointer move observable
-        tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerEnterObservable);
-        tourable.eventManager.onMouseMoveObservable.AddObservable(this.pointerLeaveObservable);
+        this.pointerEnterObservable.Add(this._observableManager, () => {
+            // show bubble
+            if (this.hoverTitle.length > 0){
+                let boundingInfo = this.mesh.getBoundingInfo();
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, boundingInfo.boundingSphere.radius, 0)));
+                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
+            }
+        }, false)
+        this.pointerLeaveObservable.Add(this._observableManager, () => {
+            // hide bubble popup
+            if (!tourable.gui.current.text.current.state.hidden){
+                tourable.gui.current.text.current.hide();
+            }
+        }, false)
+        this.onClickObservable.Add(this._observableManager, () => {
+            // show popup
+            if (this.clickTitle.length > 0){
+                tourable.gui.current.popup.current.display(this.clickTitle);
+            }
+        }, false)
     }
     abstract export: () => SceneObjectSchema;
 }

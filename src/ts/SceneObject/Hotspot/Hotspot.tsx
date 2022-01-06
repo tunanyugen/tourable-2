@@ -5,8 +5,6 @@ import SceneObject, {SceneObjectSchema} from "../SceneObject";
 export interface HotspotSchema extends SceneObjectSchema{
     texture:string;
     targetSceneID:number;
-    hoverTitle:string;
-    title:string;
 }
 
 export default abstract class Hotspot extends SceneObject implements HotspotSchema{
@@ -19,8 +17,6 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
             this.hoverTitle = currentScene.panorama.name;
         }
     }
-    hoverTitle: string = "";
-    title: string = "";
     protected _texture:string = "";
     get texture(){ return this._texture }
     set texture(val:string){
@@ -42,7 +38,6 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
         super(tourable, sceneID, schema);
         if (schema){
             this._targetSceneID = schema.targetSceneID;
-            this.title = schema.title;
             this.hoverTitle = schema.hoverTitle;
             tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.texture = schema.texture;

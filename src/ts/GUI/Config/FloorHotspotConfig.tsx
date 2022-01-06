@@ -62,12 +62,21 @@ class FloorHotspotConfig extends GUIObject<FloorHotspotConfigProps, FloorHotspot
                     }}
                 />
                 <CKEditor
-                    label="Hovering popup"
+                    label="Title on hover"
                     placeholder="Enter text here"
                     value={this.target ? this.target.hoverTitle : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.hoverTitle = content;
+                    }}
+                />
+                <CKEditor
+                    label="Title on click"
+                    placeholder="Enter text here"
+                    value={this.target ? this.target.clickTitle : ""}
+                    onChange={(content) => {
+                        if (!this.target){ return }
+                        this.target.clickTitle = content;
                     }}
                 />
                 <LabeledMediaSelect

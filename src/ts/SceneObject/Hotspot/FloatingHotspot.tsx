@@ -35,7 +35,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         this.backFloatingHotspotID = backHotspot.id;
         backHotspot.texture = this.texture;
         backHotspot._targetSceneID = tourable.sceneManager.sceneToRender.id;
-        backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
+        backHotspot.hoverTitle = tourable.sceneManager.sceneToRender.panorama.name;
         let position = this.mesh.position.clone().negate();
         position.y = this.mesh.position.y;
         backHotspot.move(position);
@@ -43,21 +43,12 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
     }
     hookEvents = (tourable:Tourable) => {
         this.pointerEnterObservable.Add(this._observableManager, () => {
-            // change cursor icon
-            document.body.style.cursor = "pointer"
             // scale hotspot mesh
             this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-            // show bubble
-            let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y * tourable.config.floatingHotspotSize * 1.1, 0)));
-            tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
         }, false)
         this.pointerLeaveObservable.Add(this._observableManager, () => {
-            // set cursor icon to default
-            document.body.style.cursor = null;
             // unscale hotspot mesh
             this.scale(this.mesh.scaling, this.originalScaling, 150);
-            // hide bubble popup
-            tourable.gui.current.text.current.hide();
         }, false)
         this.onClickObservable.Add(this._observableManager, () => {
             // switch scene
@@ -82,7 +73,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             targetSceneID: this.targetSceneID,
             texture: this.texture,
             hoverTitle: this.hoverTitle,
-            title: this.title,
+            clickTitle: this.clickTitle,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},

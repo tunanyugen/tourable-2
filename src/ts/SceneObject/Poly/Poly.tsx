@@ -114,6 +114,34 @@ export default class Poly extends SceneObject implements PolySchema{
         this.onRightClickObservable.Add(this._observableManager, () => {
             tourable.gui.current.polyConfig.current.setTarget(this);
         }, false)
+        this.hoverTitleChangeObservable.Add(this._observableManager, (hoverTitle) => {
+            this.connectedPolies(tourable).forEach((poly) => {
+                poly.setHoverTitleWithoutInvokingObservable(hoverTitle);
+            })
+        }, false)
+    }
+    connectedPolies = (tourable:Tourable) => {
+        let polies:Poly[] = [];
+        let pivotMap = new Map<number, boolean>();
+        // add pivot ids to map
+        this.pivotIDs.forEach((id) => { pivotMap.set(id, true) });
+        // loop through all scene objects in scene
+        tourable.sceneManager.sceneToRender.sceneObjects.forEach((poly, key) => {
+            // check if scene object is a poly
+            if (poly instanceof Poly){
+                // check if poly is connected
+                for (let i = 0; i < poly.pivotIDs.length; i++){
+                    if (pivotMap.get(poly.pivotIDs[i])){
+                        // add poly to array
+                        polies.push(poly);
+                        // add pivots to map
+                        poly.pivotIDs.forEach((id) => { pivotMap.set(id, true) })
+                        break;
+                    }
+                }
+            }
+        });
+        return polies;
     }
     export = ():PolySchema => {
         return {
@@ -128,7 +156,9 @@ export default class Poly extends SceneObject implements PolySchema{
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
                 rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
                 scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            }
+            },
+            hoverTitle: this.hoverTitle,
+            clickTitle: this.clickTitle,
         }
     }
 }

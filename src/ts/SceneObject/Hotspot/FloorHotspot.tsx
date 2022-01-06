@@ -40,7 +40,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         this.backFloorHotspotID = backHotspot.id;
         backHotspot.texture = this.texture;
         backHotspot._targetSceneID = tourable.sceneManager.sceneToRender.id;
-        backHotspot.title = tourable.sceneManager.sceneToRender.panorama.name;
+        backHotspot.hoverTitle = tourable.sceneManager.sceneToRender.panorama.name;
         let position = this.mesh.position.clone().negate();
         position.y = this.mesh.position.y;
         backHotspot.move(position);
@@ -52,17 +52,12 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
             document.body.style.cursor = "pointer"
             // scale hotspot mesh
             this.scale(this.mesh.scaling, this.mesh.scaling.multiplyByFloats(1.1, 1.1, 1.1), 150);
-            // show bubble popup
-            let titlePos = Mathematics.WorldToScreenPoint(tourable, this.mesh.position.add(new Vector3(0, this.originalScaling.y * tourable.config.floorHotspotSize * 1.1, 0)));
-            tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
         }, false)
         this.pointerLeaveObservable.Add(this._observableManager, () => {
             // changed cursor back to default icon
             document.body.style.cursor = null
             // unscale hotspot mesh
             this.scale(this.mesh.scaling, this.originalScaling, 150);
-            // hide bubble popup
-            tourable.gui.current.text.current.hide();
         }, false)
         // on click
         this.onClickObservable.Add(this._observableManager, () => {
@@ -89,14 +84,14 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
             backFloorHotspotID: this.backFloorHotspotID,
             targetSceneID: this.targetSceneID,
             texture: this.texture,
-            hoverTitle: this.hoverTitle,
-            title: this.title,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {
                 position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
                 rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
                 scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            }
+            },
+            hoverTitle: this.hoverTitle,
+            clickTitle: this.clickTitle,
         }
     }
 }
