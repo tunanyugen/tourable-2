@@ -4,24 +4,25 @@ import Tourable from "./ts/Tourable/Tourable";
 
 (window as any).tourable = new Tourable(
     "#tourable",
-    [
-        {
-            id: 1,
-            sceneObjects: new Map(),
-            panorama: {
-                name: "Scene 1",
-                src: "/static/360 xung quanh dự án.jpg",
-                thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
-            }
-        },
-        {
-            id: 2,
-            sceneObjects: new Map(),
-            panorama: {
-                name: "Scene 2",
-                src: "/static/360 xung quanh dự án.jpg",
-                thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
-            }
-        },
-    ]
+    JSON.parse('[{"id":1,"panorama":{"name":"Scene 1","src":"/static/360 xung quanh dự án.jpg","thumbnail":"https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg"},"sceneObjects":[{"type":"floorHotspot","id":1,"sceneID":1,"backFloorHotspotID":1,"targetSceneID":2,"texture":"/static/floor-hotspot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":-0.21620457700174225,"y":-1,"z":1.5291655680064717},"rotation":{"x":1.5707963267948966,"y":0.03989926702699737,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"Scene 2","clickTitle":""},{"type":"floatingHotspot","id":2,"sceneID":1,"targetSceneID":2,"texture":"/static/floating-hotspot.png","hoverTitle":"Scene 2","clickTitle":"","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.24425445831937864,"y":-0.1885815322424248,"z":0.9511975427261188},"rotation":{"x":-0.3825952616473645,"y":3.3506380458545353,"z":0},"scaling":{"x":1,"y":1,"z":1}}},{"type":"infoHotspot","id":3,"sceneID":1,"targetSceneID":-1,"texture":"/static/info.png","originalScaling":{"x":1.74,"y":1.74,"z":1.74},"mesh":{"position":{"x":0.5045475844532791,"y":-0.2843185637895409,"z":0.8152267717065075},"rotation":{"x":-0.42361804570992734,"y":3.6818438347108273,"z":0},"scaling":{"x":1.74,"y":1.74,"z":1.74}},"hoverTitle":"<p>Hover</p>","clickTitle":"<p>Click</p>"},{"id":4,"sceneID":1,"type":"poly","pivotIDs":[5,6,7,7,5,8],"color":{"r":0.9882352941176471,"g":0.7294117647058823,"b":0.011764705882352941},"opacity":0.63,"originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0,"y":0,"z":0},"rotation":{"x":0,"y":0,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"<p>asdasdasd</p>","clickTitle":"<p>hfghgfhfhfgh</p>"},{"id":5,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.2242621408780201,"y":-1,"z":1.0826120279191846},"rotation":{"x":-0.735290013625654,"y":3.3458528322565266,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""},{"id":6,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.2425797266886067,"y":-1,"z":0.5161213093124735},"rotation":{"x":-1.052511954303826,"y":3.5809578436301273,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""},{"id":7,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.8252909589027297,"y":-0.9999999999999999,"z":0.5422089075313753},"rotation":{"x":-0.7917029197059327,"y":4.131114713311902,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""},{"id":8,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.8030092492880406,"y":-1,"z":1.115727325186368},"rotation":{"x":-0.6289162930598131,"y":3.7654300840627934,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""},{"id":9,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":-0.6632971554764938,"y":-1,"z":0.7391637615662928},"rotation":{"x":-0.8377120338645035,"y":2.632183297539317,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""},{"id":10,"sceneID":1,"type":"pivot","texture":"/static/pivot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":-0.4739555230406335,"y":-1,"z":0.7787925997695103},"rotation":{"x":-0.8525449672560402,"y":2.7526306054801197,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"","clickTitle":""}]},{"id":2,"panorama":{"name":"Scene 2","src":"/static/360 xung quanh dự án.jpg","thumbnail":"https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg"},"sceneObjects":[{"type":"floorHotspot","id":1,"sceneID":2,"backFloorHotspotID":-1,"targetSceneID":1,"texture":"/static/floor-hotspot.png","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":0.21620457700174225,"y":-1,"z":-1.5291655680064717},"rotation":{"x":1.5707963267948966,"y":3.1814919206167906,"z":0},"scaling":{"x":1,"y":1,"z":1}},"hoverTitle":"Scene 1","clickTitle":""},{"type":"floatingHotspot","id":2,"sceneID":2,"targetSceneID":1,"texture":"/static/floating-hotspot.png","hoverTitle":"Scene 1","clickTitle":"","originalScaling":{"x":1,"y":1,"z":1},"mesh":{"position":{"x":-0.24425445831937864,"y":-0.1885815322424248,"z":-0.9511975427261188},"rotation":{"x":0,"y":6.492230699444328,"z":0},"scaling":{"x":1,"y":1,"z":1}}}]}]')
+    // [
+    //     {
+    //         id: 1,
+    //         sceneObjects: new Map(),
+    //         panorama: {
+    //             name: "Scene 1",
+    //             src: "/static/360 xung quanh dự án.jpg",
+    //             thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
+    //         }
+    //     },
+    //     {
+    //         id: 2,
+    //         sceneObjects: new Map(),
+    //         panorama: {
+    //             name: "Scene 2",
+    //             src: "/static/360 xung quanh dự án.jpg",
+    //             thumbnail: "https://ichef.bbci.co.uk/news/976/cpsprodpb/67CF/production/_108857562_mediaitem108857561.jpg",
+    //         }
+    //     },
+    // ]
 )

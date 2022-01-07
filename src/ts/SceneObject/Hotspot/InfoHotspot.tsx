@@ -1,6 +1,4 @@
-import { Vector3 } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
-import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import Hotspot, { HotspotSchema } from "./Hotspot";
 
 export interface InfoHotspotSchema extends HotspotSchema {

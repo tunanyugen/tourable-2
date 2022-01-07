@@ -30,7 +30,9 @@ export default class Pivot extends SceneObject implements PivotSchema {
         super(tourable, sceneID, schema)
         // load schema
         if (schema){
-            this.texture = schema.texture;
+            tourable.onLoadObservabl.Add(this._observableManager, () => {
+                this.texture = schema.texture;
+            }, true)
         }
         this.createMesh(tourable, sceneID);
         this.hookEvents(tourable);
@@ -47,8 +49,6 @@ export default class Pivot extends SceneObject implements PivotSchema {
             size: tourable.config.pivotSize,
             updatable: true,
         }, scene);
-        // set texture
-        this.texture = tourable.config.assets.pivot[0];
         // set rendering group
         this.mesh.renderingGroupId = 1;
     }

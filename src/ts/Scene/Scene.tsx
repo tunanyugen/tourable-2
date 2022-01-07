@@ -6,6 +6,9 @@ import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
 import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
 import FloatingHotspot, { FloatingHotspotSchema } from "../SceneObject/Hotspot/FloatingHotspot";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
+import InfoHotspot, { InfoHotspotSchema } from "../SceneObject/Hotspot/InfoHotspot";
+import Pivot, { PivotSchema } from "../SceneObject/Pivot/Pivot";
+import Poly, { PolySchema } from "../SceneObject/Poly/Poly";
 
 export interface SceneSchema {
     id:number;
@@ -31,10 +34,13 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             tourable.uidGenerator.uid = this.id + 1;
             this.panorama = schema.panorama;
             tourable.onLoadObservabl.Add(this._observableManager, () => {
-                (schema.sceneObjects as FloorHotspotSchema[]|FloatingHotspotSchema[]).forEach((sceneObject) => {
-                    switch(sceneObject.type){
-                        case "floorHotspot": new FloorHotspot(tourable, this.id, sceneObject); break;
-                        case "floatingHotspot": new FloatingHotspot(tourable, this.id, sceneObject); break;
+                (schema.sceneObjects as any).forEach((schema) => {
+                    switch(schema.type){
+                        case "floorHotspot": new FloorHotspot(tourable, this.id, schema); break;
+                        case "floatingHotspot": new FloatingHotspot(tourable, this.id, schema); break;
+                        case "infoHotspot": new InfoHotspot(tourable, this.id, schema); break;
+                        case "poly": new Poly(tourable, this.id, schema); break;
+                        case "pivot": new Pivot(tourable, this.id, schema); break;
                     }
                 })
             }, true)
