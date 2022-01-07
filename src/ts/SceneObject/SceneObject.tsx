@@ -20,7 +20,7 @@ export interface SceneObjectSchema {
 }
 
 export default abstract class SceneObject implements SceneObjectSchema{
-    abstract type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
+    abstract readonly type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
     public originalScaling: Vector3 = new Vector3(1, 1, 1);
     public id: number;
     public sceneID: number;
@@ -168,7 +168,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
             // show bubble
             if (this.hoverTitle.length > 0){
                 let boundingInfo = this.mesh.getBoundingInfo();
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, boundingInfo.boundingSphere.radius, 0)));
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, boundingInfo.boundingSphere.radius / 4, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
         }, false)

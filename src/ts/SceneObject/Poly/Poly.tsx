@@ -39,8 +39,12 @@ export default class Poly extends SceneObject implements PolySchema{
             this._color = new Color3(tourable.config.poly.color.r, tourable.config.poly.color.g, tourable.config.poly.color.b);
             this._opacity = tourable.config.poly.opacity;
         }
+        // create mesh
+        this.createMesh(tourable);
         // hook events
         this.hookEvents(tourable);
+        // map to check if pivot exists in pivotIDs array
+        let pivotMap = new Map<number, boolean>();
         // tutorial
         tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
         let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
@@ -55,40 +59,33 @@ export default class Poly extends SceneObject implements PolySchema{
             }
             // add pivot array
             this.pivotIDs.push(pivot.id);
-            // subcribe to pivot events
-            // update mesh on pivot move
-            pivot.moveObservable.Add(this._observableManager, () => { this.updateVertexData(tourable) }, false)
-            // dispose on pivot dispose
-            pivot.disposeObservable.Add(this._observableManager, () => {
-                this.dispose(tourable);
-            }, true);
-            // state check
-            if (this.pivotIDs.length == 1){ tourable.gui.current.notification.current.notify(`Picked 1st point (2 left)`, 2000) }
-            else if (this.pivotIDs.length == 2){ tourable.gui.current.notification.current.notify(`Picked 2nd point (1 left)`, 2000) }
-            else {
-                tourable.gui.current.notification.current.notify(`Creating poly`, 1000)
-                this.createMesh(tourable);
-                // dispose observable
-                pivotPickObservable.Dispose();
+            if (!pivotMap.has(pivot.id)){
+                // subcribe to pivot events
+                // update mesh on pivot move
+                pivot.moveObservable.Add(this._observableManager, () => { this.updateMesh(tourable) }, false)
+                // dispose on pivot dispose
+                pivot.disposeObservable.Add(this._observableManager, () => {
+                    this.dispose(tourable);
+                }, true);
+                // add pivot to map
+                pivotMap.set(pivot.id, true);
             }
+            // recreate vertex data
+            this.createVertexData(tourable);
+            // notify user on how to stop
+            tourable.gui.current.notification.current.notify(`Press "Esc" to stop`, 2000)
         }, false)
+        // press escape to stop
+        tourable.eventManager.escape.onKeyDownObservable.Add(this._observableManager, () => {
+            pivotPickObservable.Dispose();
+            tourable.gui.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
+        }, true)
         tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(pivotPickObservable);
     }
     createMesh = (tourable:Tourable) => {
         let scene = tourable.sceneManager.scenes.get(this.sceneID);
         // create mesh
         this.mesh = new Mesh(this.id.toString(), scene);
-        // create vertex data
-        let positions:number[] = [];
-        this.pivotIDs.forEach((id) => {
-            let pivot = scene.sceneObjects.get(id) as Pivot;
-            positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
-        })
-        let indices = [0, 1, 2];
-        let vertexData = new VertexData();
-        vertexData.positions = positions;
-        vertexData.indices = indices;
-        vertexData.applyToMesh(this.mesh, true);
         // create material
         let material = new StandardMaterial(this.id.toString(), scene);
         material.emissiveColor = this.color;
@@ -99,14 +96,34 @@ export default class Poly extends SceneObject implements PolySchema{
         // set rendering group
         this.mesh.renderingGroupId = 1;
     }
-    updateVertexData = (tourable:Tourable) => {
+    createVertexData = (tourable:Tourable) => {
+        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        // generate positions
+        let positions:number[] = [];
+        let verticesCount = parseInt(`${this.pivotIDs.length / 3}`) * 3;
+        for (let i = 0; i < verticesCount; i++){
+            let pivot = scene.sceneObjects.get(this.pivotIDs[i]) as Pivot;
+            positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
+        }
+        // generate indices
+        let indices:number[] = [];
+        for (let i = 0; i < verticesCount; i+=3){
+            indices.push(i, i + 1, i + 2)
+        }
+        let vertexData = new VertexData();
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.applyToMesh(this.mesh, true);
+    }
+    updateMesh = (tourable:Tourable) => {
         // create new positions
         let scene = tourable.sceneManager.scenes.get(this.sceneID);
         let positions:number[] = [];
-        this.pivotIDs.forEach((id) => {
-            let pivot = scene.sceneObjects.get(id) as Pivot;
+        let count = parseInt(`${this.pivotIDs.length / 3}`) * 3;
+        for (let i = 0; i < count; i++){
+            let pivot = scene.sceneObjects.get(this.pivotIDs[i]) as Pivot;
             positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
-        })
+        }
         this.mesh.updateVerticesData(VertexBuffer.PositionKind, positions);
         this.mesh.refreshBoundingInfo();
     }
