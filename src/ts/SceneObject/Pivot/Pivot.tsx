@@ -19,7 +19,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
          newMaterial.diffuseTexture = new Texture(this.texture, this.mesh.getScene());
          newMaterial.diffuseTexture.hasAlpha = true;
          newMaterial.useAlphaFromDiffuseTexture = true;
-         newMaterial.alpha = 0.7;
+         newMaterial.alpha = 0.55;
          // dispose old material
          if (this.mesh.material){ this.mesh.material.dispose() }
          // set new material
@@ -35,6 +35,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
             }, true)
         }
         this.createMesh(tourable, sceneID);
+        if (!schema){ this.texture = tourable.config.assets.pivot[0] }
         this.hookEvents(tourable);
         // look at camera
         this.moveObservable.Add(this._observableManager, () => {
@@ -46,11 +47,11 @@ export default class Pivot extends SceneObject implements PivotSchema {
         let scene = tourable.sceneManager.scenes.get(sceneID);
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
-            size: tourable.config.pivotSize,
+            size: tourable.config.pivot.size,
             updatable: true,
         }, scene);
         // set rendering group
-        this.mesh.renderingGroupId = 1;
+        this.mesh.renderingGroupId = tourable.config.pivot.renderingGroupID;
     }
     hookEvents = (tourable:Tourable) => {
         this.pointerEnterObservable.Add(this._observableManager, () => {

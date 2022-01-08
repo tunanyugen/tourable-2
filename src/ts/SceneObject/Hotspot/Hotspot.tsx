@@ -49,18 +49,22 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
         let scene = tourable.sceneManager.scenes.get(sceneID);
         let size = 1;
         let texture = "";
+        let renderingGroupID = 0;
         switch(this.type){
             case "floatingHotspot":
-                size = tourable.config.floatingHotspotSize;
+                size = tourable.config.floatingHotspot.size;
                 texture = tourable.config.assets.floatingHotspot[0];
+                renderingGroupID = tourable.config.floatingHotspot.renderingGroupID;
                 break;
             case "floorHotspot":
-                size = tourable.config.floorHotspotSize;
-                texture = tourable.config.assets.floorHotspot[0]
+                size = tourable.config.floorHotspot.size;
+                texture = tourable.config.assets.floorHotspot[0];
+                renderingGroupID = tourable.config.floorHotspot.renderingGroupID;
                 break;
             case "infoHotspot":
-                size = tourable.config.infoHotspotSize;
-                texture = tourable.config.assets.infoHotspot[0]
+                size = tourable.config.infoHotspot.size;
+                texture = tourable.config.assets.infoHotspot[0];
+                renderingGroupID = tourable.config.infoHotspot.renderingGroupID;
                 break;
         }
         // create plane using mesh builder
@@ -68,7 +72,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
             size: size,
             updatable: true,
         }, scene);
-        this.mesh.renderingGroupId = 1;
+        this.mesh.renderingGroupId = renderingGroupID;
         // set texture
         this.texture = texture;
     }

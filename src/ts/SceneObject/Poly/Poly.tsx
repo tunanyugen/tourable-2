@@ -108,7 +108,7 @@ export default class Poly extends SceneObject implements PolySchema{
         material.alpha = this.opacity;
         this.mesh.material = material;
         // set rendering group
-        this.mesh.renderingGroupId = 1;
+        this.mesh.renderingGroupId = tourable.config.poly.renderingGroupID;
     }
     createVertexData = (tourable:Tourable) => {
         let scene = tourable.sceneManager.scenes.get(this.sceneID);

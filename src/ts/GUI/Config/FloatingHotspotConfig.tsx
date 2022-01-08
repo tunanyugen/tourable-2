@@ -1,5 +1,5 @@
-import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
-import Config from "./Config";
+import * as React from 'react';
+import Config, { ConfigProps, ConfigState } from "./Config";
 import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/MediaSelect";
 import LabeledMediaSelect from "@tunanyugen/react-components/src/ts/Form/LabeledMediaSelect/LabeledMediaSelect";
 import { StandardMaterial, Texture, Vector3 } from "babylonjs";
@@ -7,44 +7,33 @@ import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
 import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 
-export interface FloatingHotspotConfigProps extends GUIObjectProps{
+export interface FloatingHotspotConfigProps extends ConfigProps{
     
 }
  
-export interface FloatingHotspotConfigState extends GUIObjectState{
+export interface FloatingHotspotConfigState extends ConfigState{
     
 }
  
-class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, FloatingHotspotConfigState> {
+class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfigProps, FloatingHotspotConfigState> {
     target:FloatingHotspot = null;
     constructor(props: FloatingHotspotConfigProps) {
         super(props);
-        // hide on click on canvas
-        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
-            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(this._observableManager, () => {
-                if (!this.state.hidden){ this.hide() }
-            }, false)
-            this.forceUpdate()
-        }, true)
-    }
-    componentDidUpdate(prevProps: Readonly<FloatingHotspotConfigProps>, prevState: Readonly<FloatingHotspotConfigState>, snapshot?: any): void {
-        if (!prevState.hidden && prevState.hidden != this.state.hidden){
-            this.target = null;
+        this.state = {
+            ...this.state,
+            title: "Edit Hotspot",
+            hidden: true,
+            onClose: () => { this.hide() },
+            onDelete: () => {
+                if (!this.target){ return }
+                this.target.dispose(this.props.tourable);
+                this.hide();
+            }
         }
     }
-    render() {
+    renderComponents = () => {
         return (
-            <Config
-                tourable={this.props.tourable}
-                title="Edit Hotspot"
-                hidden={this.state.hidden}
-                onClose={() => { this.hide() }}
-                onDelete={() => {
-                    if (!this.target){ return }
-                    this.target.dispose(this.props.tourable);
-                    this.hide();
-                }}
-            >
+            <React.Fragment>
                 <MediaSelect
                     label="Choose the style of the hotspot"
                     images={this.props.tourable.config.assets.floatingHotspot}
@@ -107,15 +96,8 @@ class FloatingHotspotConfig extends GUIObject<FloatingHotspotConfigProps, Floati
                         }
                     })}
                 />
-            </Config>
-        );
-    }
-    setTarget = (floatingHotspot:FloatingHotspot) => {
-        this.target = floatingHotspot;
-        this.setState({
-            hidden: false,
-        })
-        this.show();
+            </React.Fragment>
+        )
     }
 }
  

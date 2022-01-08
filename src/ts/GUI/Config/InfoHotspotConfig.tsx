@@ -1,50 +1,38 @@
-import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
-import Config from "./Config";
+import * as React from 'react';
+import Config, { ConfigProps, ConfigState } from "./Config";
 import MediaSelect from "@tunanyugen/react-components/src/ts/Form/MediaSelect/MediaSelect";
-import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
-import { StandardMaterial, Texture, Vector3 } from "babylonjs";
+import { StandardMaterial, Vector3 } from "babylonjs";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
 import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 
-export interface InfoHotspotConfigProps extends GUIObjectProps{
+export interface InfoHotspotConfigProps extends ConfigProps{
     
 }
  
-export interface InfoHotspotConfigState extends GUIObjectState{
+export interface InfoHotspotConfigState extends ConfigState{
     
 }
  
-class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotConfigState> {
+class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, InfoHotspotConfigState> {
     target:InfoHotspot = null;
     constructor(props: InfoHotspotConfigProps) {
         super(props);
-        // hide on click on canvas
-        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
-            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(this._observableManager, () => {
-                if (!this.state.hidden){ this.hide() }
-            }, false)
-            this.forceUpdate()
-        }, true)
-    }
-    componentDidUpdate(prevProps: Readonly<InfoHotspotConfigProps>, prevState: Readonly<InfoHotspotConfigState>, snapshot?: any): void {
-        if (!prevState.hidden && prevState.hidden != this.state.hidden){
-            this.target = null;
+        this.state = {
+            ...this.state,
+            title: "Edit Hotspot",
+            hidden: true,
+            onClose: () => { this.hide() },
+            onDelete: () => {
+                if (!this.target){ return }
+                this.target.dispose(this.props.tourable);
+                this.hide();
+            }
         }
     }
-    render() {
+    renderComponents = () => {
         return (
-            <Config
-                tourable={this.props.tourable}
-                title="Edit Hotspot"
-                hidden={this.state.hidden}
-                onClose={() => { this.hide() }}
-                onDelete={() => {
-                    if (!this.target){ return }
-                    this.target.dispose(this.props.tourable);
-                    this.hide();
-                }}
-            >
+            <React.Fragment>
                 <MediaSelect
                     label="Choose the style of the hotspot"
                     images={this.props.tourable.config.assets.infoHotspot}
@@ -87,15 +75,8 @@ class InfoHotspotConfig extends GUIObject<InfoHotspotConfigProps, InfoHotspotCon
                         this.target.originalScaling = scaling.clone();
                     }}
                 />
-            </Config>
-        );
-    }
-    setTarget = (infoHotspot:InfoHotspot) => {
-        this.target = infoHotspot;
-        this.setState({
-            hidden: false,
-        })
-        this.show();
+            </React.Fragment>
+        )
     }
 }
  

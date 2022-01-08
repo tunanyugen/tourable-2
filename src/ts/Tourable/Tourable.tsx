@@ -7,7 +7,7 @@ import EventManager from "../Manager/EventManager/EventManager";
 import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
 import Scene, { SceneSchema } from '../Scene/Scene';
-import { Engine } from "babylonjs";
+import { Engine, RenderingManager } from "babylonjs";
 import { ObservableManager } from '@tunanyugen/observable/src/ts/ObservableManager';
 
 export default class Tourable{
@@ -30,6 +30,7 @@ export default class Tourable{
     onLoadObservabl:Observable = new Observable(this._observableManager, null, true);
 
     constructor(containerSelector:string, sceneSchemas:SceneSchema[]){
+        RenderingManager.MAX_RENDERINGGROUPS = Config.MAX_RENDERINGGROUPS;
         // init config
         this.config = new Config();
         // init uid generator

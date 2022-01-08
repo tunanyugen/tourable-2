@@ -1,50 +1,28 @@
+import * as React from 'react';
 import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
 import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
 import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
 import { Color3 } from "babylonjs";
 import Poly from "../../SceneObject/Poly/Poly";
-import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
-import Config from "./Config";
+import Config, { ConfigProps, ConfigState } from "./Config";
 const colorConverter = require("color-convert");
 
-export interface PolyConfigProps extends GUIObjectProps{
+export interface PolyConfigProps extends ConfigProps{
     
 }
  
-export interface PolyConfigState extends GUIObjectState{
+export interface PolyConfigState extends ConfigState{
     
 }
  
-class PolyConfig extends GUIObject<PolyConfigProps, PolyConfigState> {
+class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     target:Poly = null;
     constructor(props: PolyConfigProps) {
         super(props);
-        // hide on click on canvas
-        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
-            this.props.tourable.eventManager.mouse0.onButtonDownObservable.Add(this._observableManager, () => {
-                if (!this.state.hidden){ this.hide() }
-            }, false)
-            this.forceUpdate()
-        }, true)
     }
-    componentDidUpdate(prevProps: Readonly<PolyConfigProps>, prevState: Readonly<PolyConfigState>, snapshot?: any): void {
-        if (!prevState.hidden && prevState.hidden != this.state.hidden){
-            this.target = null;
-        }
-    }
-    render() { 
+    renderComponents = () => {
         return (
-            <Config
-                tourable={this.props.tourable}
-                title="Edit poly"
-                hidden={this.state.hidden}
-                onClose={() => { this.hide() }}
-                onDelete={() => {
-                    if (!this.target){ return }
-                    this.target.dispose(this.props.tourable);
-                    this.hide();
-                }}
-            >
+            <React.Fragment>
                 <Input
                     label="Color"
                     placeholder="Enter hex code here"
@@ -86,15 +64,8 @@ class PolyConfig extends GUIObject<PolyConfigProps, PolyConfigState> {
                         this.props.tourable.config.poly.opacity = opacity;
                     }}
                 />
-            </Config>
-        );
-    }
-    setTarget = (poly:Poly) => {
-        this.target = poly;
-        this.setState({
-            hidden: false,
-        })
-        this.show();
+            </React.Fragment>
+        )
     }
 }
  
