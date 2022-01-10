@@ -952,6 +952,7 @@ body {
   position: -webkit-sticky;
   position: sticky;
   bottom: 0;
+  width: 100%;
 }
 .tourable__config__title {
   font-size: 18px;
@@ -968,8 +969,8 @@ body {
 .tourable__config__close svg {
   filter: invert(53%) sepia(79%) saturate(328%) hue-rotate(153deg) brightness(84%) contrast(94%);
 }
-.tourable__config__delete {
-  width: 80%;
+.tourable__config__delete, .tourable__config__edit {
+  width: 100%;
   height: 40px;
   margin: 16px auto;
   font-size: 14px;
@@ -979,9 +980,20 @@ body {
   background-color: #dd2e44;
   box-shadow: none;
 }
-.tourable__config__delete:hover {
+.tourable__config__delete:hover, .tourable__config__edit:hover {
   box-shadow: none;
+}
+.tourable__config__delete {
+  background-color: #dd2e44;
+}
+.tourable__config__delete:hover {
   background-color: #741824;
+}
+.tourable__config__edit {
+  background-color: #4094b9;
+}
+.tourable__config__edit:hover {
+  background-color: #367e9d;
 }
 .tourable__config .react-component__form__input__label {
   display: block;

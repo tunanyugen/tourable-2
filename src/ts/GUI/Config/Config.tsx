@@ -9,6 +9,7 @@ export interface ConfigState extends GUIObjectState{
     hidden:boolean;
     onClose:()=>any;
     onDelete:()=>any;
+    onEdit:()=>any;
 }
  
 abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends GUIObject<P, S> {
@@ -46,14 +47,30 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                 <div className="tourable__config__wrapper">
                     {this.renderComponents()}
                 </div>
-                <div className="tourable__config__footer">
-                    <Button
-                        className="tourable__config__delete"
-                        onClick={this.state.onDelete}
-                    >Delete</Button>
-                </div>
+                <table className="tourable__config__footer">
+                    <tr>
+                        <td>
+                            <Button
+                                className="tourable__config__delete"
+                                onClick={this.state.onDelete}
+                            >Delete</Button>
+                        </td>
+                        <td>
+                            {this.renderEditButton()}
+                        </td>
+                    </tr>
+                </table>
             </div>
         );
+    }
+    renderEditButton = () => {
+        if (!this.state.onEdit){ return "" }
+        return (
+            <Button
+                className="tourable__config__edit"
+                onClick={this.state.onEdit}
+            >Edit</Button>
+        )
     }
     setTarget = (target:T) => {
         this.target = target;

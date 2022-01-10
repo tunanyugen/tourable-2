@@ -43,44 +43,8 @@ export default class Poly extends SceneObject implements PolySchema{
         this.createMesh(tourable);
         // hook events
         this.hookEvents(tourable);
-        // map to check if pivot exists in pivotIDs array
-        let pivotMap = new Map<number, boolean>();
-        let subscribeToPivot = (pivot:Pivot) => {
-            pivot.moveObservable.Add(this._observableManager, () => { this.updateMesh(tourable) }, false);
-            pivot.disposeObservable.Add(this._observableManager, () => { this.dispose(tourable) }, true);
-        }
         if (!schema){
-            // tutorial
-            tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
-            let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
-                // pick pivot or create new one as poly's vertex
-                let result = tourable.sceneObjectManager.pick(tourable);
-                let pivot:Pivot = null;
-                if (result && result.sceneObject instanceof Pivot){
-                    pivot = result.sceneObject;
-                } else {
-                    pivot = new Pivot(tourable, this.sceneID);
-                    pivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
-                }
-                // add pivot array
-                this.pivotIDs.push(pivot.id);
-                if (!pivotMap.has(pivot.id)){
-                    // subcribe to pivot events
-                    subscribeToPivot(pivot);
-                    // add pivot to map
-                    pivotMap.set(pivot.id, true);
-                }
-                // recreate vertex data
-                this.createVertexData(tourable);
-                // notify user on how to stop
-                tourable.gui.current.notification.current.notify(`Press "Esc" to stop`, 2000)
-            }, false)
-            // press escape to stop
-            tourable.eventManager.escape.onKeyDownObservable.Add(this._observableManager, () => {
-                pivotPickObservable.Dispose();
-                tourable.gui.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
-            }, true)
-            tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(pivotPickObservable);
+            this.tutorial(tourable);
         } else {
             tourable.onLoadObservabl.Add(this._observableManager, () => {
                 let scene = tourable.sceneManager.scenes.get(this.sceneID);
@@ -88,7 +52,7 @@ export default class Poly extends SceneObject implements PolySchema{
                 schema.pivotIDs.forEach((id) => {
                     if (!pivotMap.has(id)){{
                         let pivot = scene.sceneObjects.get(id) as Pivot;
-                        subscribeToPivot(pivot);
+                        this.subscribeToPivot(tourable, pivot);
                         pivotMap.set(id, true);
                     }}
                 })
@@ -145,34 +109,45 @@ export default class Poly extends SceneObject implements PolySchema{
         this.onRightClickObservable.Add(this._observableManager, () => {
             tourable.gui.current.polyConfig.current.setTarget(this);
         }, false)
-        this.hoverTitleChangeObservable.Add(this._observableManager, (hoverTitle) => {
-            this.connectedPolies(tourable).forEach((poly) => {
-                poly.setHoverTitleWithoutInvokingObservable(hoverTitle);
-            })
-        }, false)
     }
-    connectedPolies = (tourable:Tourable) => {
-        let polies:Poly[] = [];
+    subscribeToPivot = (tourable:Tourable, pivot:Pivot) => {
+        pivot.moveObservable.Add(this._observableManager, () => { this.updateMesh(tourable) }, false);
+        pivot.disposeObservable.Add(this._observableManager, () => { this.dispose(tourable) }, true);
+    }
+    tutorial = (tourable:Tourable) => {
+        // map to check if pivot exists in pivotIDs array
         let pivotMap = new Map<number, boolean>();
-        // add pivot ids to map
-        this.pivotIDs.forEach((id) => { pivotMap.set(id, true) });
-        // loop through all scene objects in scene
-        tourable.sceneManager.sceneToRender.sceneObjects.forEach((poly, key) => {
-            // check if scene object is a poly
-            if (poly instanceof Poly){
-                // check if poly is connected
-                for (let i = 0; i < poly.pivotIDs.length; i++){
-                    if (pivotMap.get(poly.pivotIDs[i])){
-                        // add poly to array
-                        polies.push(poly);
-                        // add pivots to map
-                        poly.pivotIDs.forEach((id) => { pivotMap.set(id, true) })
-                        break;
-                    }
-                }
+
+        tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
+        let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
+            // pick pivot or create new one as poly's vertex
+            let result = tourable.sceneObjectManager.pick(tourable);
+            let pivot:Pivot = null;
+            if (result && result.sceneObject instanceof Pivot){
+                pivot = result.sceneObject;
+            } else {
+                pivot = new Pivot(tourable, this.sceneID);
+                pivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
             }
-        });
-        return polies;
+            // add pivot array
+            this.pivotIDs.push(pivot.id);
+            if (!pivotMap.has(pivot.id)){
+                // subcribe to pivot events
+                this.subscribeToPivot(tourable, pivot);
+                // add pivot to map
+                pivotMap.set(pivot.id, true);
+            }
+            // recreate vertex data
+            this.createVertexData(tourable);
+            // notify user on how to stop
+            tourable.gui.current.notification.current.notify(`Press "Esc" to stop`, 2000)
+        }, false)
+        tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(pivotPickObservable);
+        // press escape to stop
+        tourable.eventManager.escape.onKeyDownObservable.Add(this._observableManager, () => {
+            pivotPickObservable.Dispose();
+            tourable.gui.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
+        }, true)
     }
     export = ():PolySchema => {
         return {

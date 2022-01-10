@@ -31,6 +31,7 @@
     &__footer{
         position: sticky;
         bottom: 0;
+        width: 100%;
     }
     &__title{
         font-size: 18px;
@@ -47,8 +48,8 @@
           filter: $iconBlueFilter;
         }
     }
-    &__delete{
-        width: 80%;
+    &__delete, &__edit{
+        width: 100%;
         height: 40px;
         margin: 16px auto;
         font-size: 14px;
@@ -59,7 +60,18 @@
         box-shadow: none;
         &:hover{
             box-shadow: none;
+        }
+    }
+    &__delete{
+        background-color: #dd2e44;
+        &:hover{
             background-color: #741824;
+        }
+    }
+    &__edit{
+        background-color: #4094b9;
+        &:hover{
+            background-color: #367e9d;
         }
     }
     .react-component__form__input__label{

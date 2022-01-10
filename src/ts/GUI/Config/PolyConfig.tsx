@@ -19,6 +19,22 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     target:Poly = null;
     constructor(props: PolyConfigProps) {
         super(props);
+        this.state = {
+            ...this.state,
+            title: "Edit poly",
+            hidden: true,
+            onClose: () => { this.hide() },
+            onDelete: () => {
+                if (!this.target){ return }
+                this.target.dispose(this.props.tourable);
+                this.hide();
+            },
+            onEdit: () => {
+                if (!this.target){ return }
+                this.target.tutorial(this.props.tourable);
+                this.hide();
+            }
+        }
     }
     renderComponents = () => {
         return (
