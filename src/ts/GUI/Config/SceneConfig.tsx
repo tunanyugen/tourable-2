@@ -47,9 +47,6 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                     label="Panorama"
                     placeholder="Url"
                     value={this.props.tourable.sceneManager.sceneToRender ? this.props.tourable.sceneManager.sceneToRender.panorama.src : ""}
-                    onChange={(e) => {
-                        this.props.tourable.sceneManager.sceneToRender.panorama.src = e.target.value;
-                    }}
                     onFinishedTyping={(e) => {
                         this.props.tourable.sceneManager.sceneToRender.panorama.src = e.target.value;
                     }}
