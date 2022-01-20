@@ -64,7 +64,7 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
           <tbody>
             <tr>
               <td>
-                <Button className="tourable__config__delete" onClick={this.state.onDelete}>
+                <Button className="error tourable__config__delete" onClick={this.state.onDelete}>
                   Delete
                 </Button>
               </td>

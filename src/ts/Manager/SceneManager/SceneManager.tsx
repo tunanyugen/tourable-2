@@ -4,6 +4,8 @@ import { FreeCamera, Vector3 } from "babylonjs";
 import Scene from "../../Scene/Scene";
 import Panorama from "../../Panorama/Panorama";
 import Tourable from "../../Tourable/Tourable";
+import { Camera } from "babylonjs/Cameras/camera";
+import Hotspot from "../../SceneObject/Hotspot/Hotspot";
 
 export default class SceneManager {
     protected _observableManager:ObservableManager = new ObservableManager();
@@ -11,17 +13,9 @@ export default class SceneManager {
     private _sceneToRender:Scene;
     get sceneToRender(){ return this._sceneToRender }
     public onSwitchSceneObservable:Observable<{lastScene:Scene, scene:Scene}> = new Observable(this._observableManager, null, false);
-    setScene = (tourable:Tourable, scene:Scene, delay:number = 500) => {
+    setScene = (tourable:Tourable, scene:Scene, delay:number = 500, callback = () => {}) => {
         // show load screen
         tourable.gui.current.loadScreen.current.show();
-        // sync camera
-        if (this.sceneToRender){
-            if (scene.activeCamera){
-                scene.activeCamera.detachControl();
-                (scene.activeCamera as FreeCamera).rotation = (this.sceneToRender.activeCamera as FreeCamera).rotation;
-                scene.activeCamera.attachControl();
-            }
-        }
         setTimeout(() => {
             // load dome and switch scene
             if (!scene.photoDome){
@@ -40,6 +34,7 @@ export default class SceneManager {
                     setTimeout(() => {
                         // hide load screen
                         tourable.gui.current.loadScreen.current.hide();
+                        callback();
                     }, timeout);
                 })
             } else {
@@ -52,6 +47,7 @@ export default class SceneManager {
                 if (lastScene){ lastScene.resetCamera(true, false) }
                 // hide load screen
                 tourable.gui.current.loadScreen.current.hide();
+                callback();
             }
         }, delay);
     }
@@ -65,30 +61,35 @@ export default class SceneManager {
         // get scene to check if scene exists
         let newScene = this.scenes.get(sceneID);
         if (!newScene){ console.error(`Scene ${sceneID} not found.`); return }
-        // get hotspot to know which direction to move toward
-        let hotspot = this.sceneToRender ? this.sceneToRender.sceneObjects.get(hotspotID) : null;
+        // get hotspot to know which direction to move toward to
+        let hotspot = this.sceneToRender ? this.sceneToRender.sceneObjects.get(hotspotID) as Hotspot : null;
         // wait for dome to be created or switch to scene if dome has already been created
         // get move direction
         if (hotspot){
             let moveDirection = hotspot.mesh.position.clone();
-            moveDirection.y = this.sceneToRender.activeCamera.position.y;
+            moveDirection.y = this.sceneToRender.camera.position.y;
             moveDirection.normalize();
             let moveDistance = 0.15;
             // show load screen
             tourable.gui.current.loadScreen.current.show();
             // camera move out of scene effect
-            this.sceneToRender.moveCamera(this.sceneToRender.activeCamera.position.clone(), moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance), 750).then(() => {
-                // subscribe
-                this.onSwitchSceneObservable.Add(this._observableManager, (res) => {
-                    // camera move into scene effect
-                    res.scene.moveCamera(moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance).negate(), Vector3.Zero(), 750);
-                }, true)
+            this.sceneToRender.moveCamera(this.sceneToRender.camera.position.clone(), moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance), 750).then(() => {
                 // switch scene
-                this.setScene(tourable, newScene, 0);
+                this.setScene(tourable, newScene, 0, () => {
+                    this.sceneToRender.camera.detachControl();
+                    this.sceneToRender.camera.rotation = hotspot.enteringAngle;
+                    this.sceneToRender.camera.attachControl();
+                });
             })
         } else {
             // switch scene
-            this.setScene(tourable, newScene);
+            this.setScene(tourable, newScene, 500, () => {
+                if (hotspot){
+                    this.sceneToRender.camera.detachControl();
+                    this.sceneToRender.camera.rotation = hotspot.enteringAngle;
+                    this.sceneToRender.camera.attachControl();
+                }
+            });
         }
     }
 }

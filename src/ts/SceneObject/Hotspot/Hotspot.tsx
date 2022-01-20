@@ -1,15 +1,19 @@
-import { Color3, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
+import { Color3, MeshBuilder, Quaternion, StandardMaterial, Texture, Vector3 } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, {SceneObjectSchema} from "../SceneObject";
 
 export interface HotspotSchema extends SceneObjectSchema{
     texture:string;
     targetSceneID:number;
+    enteringAngle:Vector3|{x:number,y:number,z:number};
 }
 
 export default abstract class Hotspot extends SceneObject implements HotspotSchema{
     protected _targetSceneID:number = -1;
-    get targetSceneID(){ return this._targetSceneID }
+    get targetSceneID(){ return this._targetSceneID.valueOf() }
+    protected _enteringAngle = new Vector3();
+    get enteringAngle(){ return this._enteringAngle.clone() }
+    set enteringAngle(rotation:Vector3){ this._enteringAngle = rotation.clone() }
     setTargetSceneID = (tourable:Tourable, value:number) => {
         let currentScene = tourable.sceneManager.scenes.get(value);
         this._targetSceneID = value;
@@ -20,7 +24,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
     protected _texture:string = "";
     get texture(){ return this._texture }
     set texture(val:string){
-        this._texture = val;
+        this._texture = val.valueOf();
          // creating material
          let newMaterial = new StandardMaterial(this.id.toString(), this.mesh.getScene());
          newMaterial.backFaceCulling = false;
@@ -38,6 +42,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
         super(tourable, sceneID, schema);
         if (schema){
             this._targetSceneID = schema.targetSceneID;
+            this.enteringAngle = schema.enteringAngle ? new Vector3(schema.enteringAngle.x, schema.enteringAngle.y, schema.enteringAngle.z) : new Vector3();
             this.hoverTitle = schema.hoverTitle;
             tourable.onLoadObservabl.Add(this._observableManager, () => {
                 this.texture = schema.texture;

@@ -23,6 +23,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
     public sceneObjects:Map<number, SceneObject> = new Map();
     public photoDome:PhotoDome;
     public panorama:Panorama;
+    public camera:FreeCamera;
     constructor(
         tourable:Tourable,
         panorama:Panorama,
@@ -53,14 +54,14 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         // register to sceneManager
         tourable.sceneManager.scenes.set(this.id, this);
         // create camera
-        let camera = new FreeCamera('camera1', new Vector3(0, 0, 0), this);
-        camera.angularSensibility *= -1;
-        camera.minZ = 0.001;
-        camera.fov = tourable.config.fov * Math.PI / 180;
+        this.camera = new FreeCamera('camera1', new Vector3(0, 0, 0), this);
+        this.camera.angularSensibility *= -1;
+        this.camera.minZ = 0.001;
+        this.camera.fov = tourable.config.fov * Math.PI / 180;
         // Target the camera to scene origin
-        camera.setTarget(new Vector3(0, 0, 1));
+        this.camera.setTarget(new Vector3(0, 0, 1));
         // Attach the camera to the canvas
-        camera.attachControl();
+        this.camera.attachControl();
 
         this.onDisposeObservable.addOnce(() => {
             this.panorama.dispose();
@@ -97,7 +98,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                     clearInterval(this._moveInterval);
                     resolve(null);
                 }
-                this.activeCamera.position = Vector3.Lerp(start, end, iteration / totalIterations);
+                this.camera.position = Vector3.Lerp(start, end, iteration / totalIterations);
                 iteration++;
             }, 16);
             return this._moveInterval;
@@ -114,7 +115,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                     clearInterval(this._changeFOVInterval);
                     resolve(null);
                 }
-                this.activeCamera.fov = Scalar.Lerp(start, end, iteration / totalIterations);
+                this.camera.fov = Scalar.Lerp(start, end, iteration / totalIterations);
                 iteration++;
             }, 16);
             return this._changeFOVInterval;
@@ -132,9 +133,9 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         tourable.sceneManager.switchScene(tourable, tourable.sceneManager.scenes.entries().next().value[1].id)
     }
     resetCamera = (position:boolean = true, rotation:boolean = true) => {
-        if (!this.activeCamera){ return }
-        if (position){ this.activeCamera.position = Vector3.Zero() }
-        if (rotation){ (this.activeCamera as FreeCamera).rotation = Vector3.Zero() }
+        if (!this.camera){ return }
+        if (position){ this.camera.position = Vector3.Zero() }
+        if (rotation){ (this.camera as FreeCamera).rotation = Vector3.Zero() }
     }
     export = ():SceneSchema => {
         return {

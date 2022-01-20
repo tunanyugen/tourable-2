@@ -49,7 +49,8 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             type: this.type,
             id: this.id,
             sceneID: this.sceneID,
-            targetSceneID: -1,
+            targetSceneID: this.targetSceneID,
+            enteringAngle: {x: this.enteringAngle.x, y: this.enteringAngle.y, z: this.enteringAngle.z},
             texture: this.texture,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {

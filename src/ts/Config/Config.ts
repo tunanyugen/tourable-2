@@ -35,7 +35,8 @@ export default class Config{
                 "/static/info.png"
             ],
             floatingHotspot: [
-                "/static/floating-hotspot.png"
+                "/static/floating-hotspot.png",
+                "/static/door-icon.png",
             ],
             floorHotspot: [
                 "/static/floor-hotspot.png",

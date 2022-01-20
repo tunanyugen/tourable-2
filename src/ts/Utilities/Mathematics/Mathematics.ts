@@ -3,7 +3,7 @@ import Tourable from "../../Tourable/Tourable";
 
 export default class Mathematics{
     static WorldToScreenPoint(tourable:Tourable, point:Vector3){
-        let camera = tourable.sceneManager.sceneToRender.activeCamera;
+        let camera = tourable.sceneManager.sceneToRender.camera;
         let halfW = tourable.engine.getRenderWidth() / 2;
         let halfH = tourable.engine.getRenderHeight() / 2;
         let matrix = camera.getViewMatrix().multiply(camera.getProjectionMatrix());
@@ -14,7 +14,7 @@ export default class Mathematics{
         );
     }
     static ScreenToWorldPoint(tourable:Tourable, point:Vector2, length:number = 1){
-        let camera = tourable.sceneManager.sceneToRender.activeCamera;
+        let camera = tourable.sceneManager.sceneToRender.camera;
         let halfW = tourable.engine.getRenderWidth() / 2;
         let halfH = tourable.engine.getRenderHeight() / 2;
         point.x = (point.x - halfW) / halfW;
@@ -50,7 +50,7 @@ export default class Mathematics{
         
         let yOffset = 0;
         if (yAxis){
-            let camera = tourable.sceneManager.sceneToRender.activeCamera;
+            let camera = tourable.sceneManager.sceneToRender.camera;
             let right = Vector3.Cross(camera.getDirection(new Vector3(0, 0, 1)), Vector3.Up());
             
             yOffset = Mathematics.LinePlaneIntersect(originalPos, originalPos.add(right), originalPos.add(Vector3.Up()), finalPos).y - originalPos.y;

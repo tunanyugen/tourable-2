@@ -56,23 +56,6 @@
         font-weight: 500;
         border-radius: 4px;
         color: white;
-        background-color: #dd2e44;
-        box-shadow: none;
-        &:hover{
-            box-shadow: none;
-        }
-    }
-    &__delete{
-        background-color: #dd2e44;
-        &:hover{
-            background-color: #741824;
-        }
-    }
-    &__edit{
-        background-color: #4094b9;
-        &:hover{
-            background-color: #367e9d;
-        }
     }
     .react-component__form__input__label{
         display: block;

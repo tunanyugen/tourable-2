@@ -40,10 +40,6 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                     onSelect={(src) => {
                         if (!this.target) { return }
                         this.target.texture = src;
-                        // create new back hotspot
-                        if (this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){
-                            this.target.createBackHotspot(this.props.tourable);
-                        }
                         // refresh to see texture change effect
                         this.forceUpdate();
                     }}
@@ -75,8 +71,6 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                             onClick: () => {
                                 if (this.target){
                                     this.target.setTargetSceneID(this.props.tourable, scene.id);
-                                    // create new back hotspot
-                                    this.target.createBackHotspot(this.props.tourable);
                                 }
                             }
                         }

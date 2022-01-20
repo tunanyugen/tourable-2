@@ -69,7 +69,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             icon: "",
                             name: "Create floor hotspot",
                             onClick: () => {
-                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let camera = this.props.tourable.sceneManager.sceneToRender.camera;
                                 let hotspot = new FloorHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
                                 let screenPos = new Vector2(this.props.tourable.sceneManager.sceneToRender.pointerX, this.props.tourable.sceneManager.sceneToRender.pointerY);
                                 hotspot.move(Mathematics.ScreenToWorldXZPlane(this.props.tourable, screenPos, -1));
@@ -80,7 +80,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             icon: "",
                             name: "Create floating hotspot",
                             onClick: () => {
-                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let camera = this.props.tourable.sceneManager.sceneToRender.camera;
                                 let hotspot = new FloatingHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
                                 let screenPos = new Vector2(this.props.tourable.sceneManager.sceneToRender.pointerX, this.props.tourable.sceneManager.sceneToRender.pointerY);
                                 hotspot.move(Mathematics.ScreenToWorldPoint(this.props.tourable, screenPos, 1));
@@ -91,7 +91,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             icon: "",
                             name: "Create info hotspot",
                             onClick: () => {
-                                let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                                let camera = this.props.tourable.sceneManager.sceneToRender.camera;
                                 let hotspot = new InfoHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
                                 let screenPos = new Vector2(this.props.tourable.sceneManager.sceneToRender.pointerX, this.props.tourable.sceneManager.sceneToRender.pointerY);
                                 hotspot.move(Mathematics.ScreenToWorldPoint(this.props.tourable, screenPos, 1));
@@ -112,7 +112,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                 icon: "",
                 name: "Pivot",
                 onClick: () => {
-                    let camera = this.props.tourable.sceneManager.sceneToRender.activeCamera;
+                    let camera = this.props.tourable.sceneManager.sceneToRender.camera;
                     let pivot = new Pivot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id)
                     let screenPos = new Vector2(this.props.tourable.sceneManager.sceneToRender.pointerX, this.props.tourable.sceneManager.sceneToRender.pointerY);
                     pivot.move(Mathematics.ScreenToWorldXZPlane(this.props.tourable, screenPos, -1));

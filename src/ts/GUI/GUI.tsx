@@ -18,6 +18,7 @@ import PivotConfig from './Config/PivotConfig';
 import Notification from './Notification/Notification';
 import PolyConfig from './Config/PolyConfig';
 import SceneConfig from "./Config/SceneConfig";
+import Confirm from './Confirm/Confirm';
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -40,6 +41,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     text:React.RefObject<Text> = React.createRef();
     popup:React.RefObject<Popup> = React.createRef();
     notification:React.RefObject<Notification> = React.createRef();
+    confirm:React.RefObject<Confirm> = React.createRef();
 
     constructor(props: GUIProps) {
         super(props);
@@ -82,6 +84,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 {/* Uncontrolled gui */}
                 <Text ref={this.text} tourable={this.props.tourable} />
                 <Popup ref={this.popup} tourable={this.props.tourable} />
+                <Confirm ref={this.confirm} tourable={this.props.tourable} />
                 {/* Editor gui */}
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />

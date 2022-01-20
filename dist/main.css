@@ -716,12 +716,28 @@ body {
 .react-component__button {
   border: none;
   outline: none;
+  background-color: #4094b9;
   box-shadow: 0px 0px 14px 0px rgba(64, 148, 185, 0.75);
+  color: white;
   transition: 0.25s;
   cursor: pointer;
 }
 .react-component__button:hover {
   box-shadow: 0px 0px 14px 8px rgba(64, 148, 185, 0.75);
+}
+.react-component__button.tourable__button {
+  width: calc(100% - 16px);
+  height: 40px;
+  border-radius: 4px;
+  margin: 0 8px;
+}
+
+.react-component__button.error {
+  background-color: #dd2e44;
+  box-shadow: 0px 0px 14px 0px rgba(221, 46, 68, 0.75);
+}
+.react-component__button.error:hover {
+  box-shadow: 0px 0px 14px 8px rgba(221, 46, 68, 0.75);
 }
 
 .react-component__form__input input {
@@ -824,7 +840,6 @@ body {
   margin-left: 4px;
   width: 50% !important;
   height: 50% !important;
-  filter: invert(100%) sepia(0%) saturate(7261%) hue-rotate(308deg) brightness(115%) contrast(102%);
 }
 
 .tourable__preview {
@@ -959,23 +974,6 @@ body {
   font-weight: 500;
   border-radius: 4px;
   color: white;
-  background-color: #dd2e44;
-  box-shadow: none;
-}
-.tourable__config__delete:hover, .tourable__config__edit:hover {
-  box-shadow: none;
-}
-.tourable__config__delete {
-  background-color: #dd2e44;
-}
-.tourable__config__delete:hover {
-  background-color: #741824;
-}
-.tourable__config__edit {
-  background-color: #4094b9;
-}
-.tourable__config__edit:hover {
-  background-color: #367e9d;
 }
 .tourable__config .react-component__form__input__label {
   display: block;
@@ -1119,4 +1117,45 @@ body {
   100% {
     transform: translateX(0%);
   }
+}
+
+.tourable__confirm {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 8px;
+  left: 8px;
+  width: 360px;
+  padding: 4px;
+  min-height: 200px;
+  background: white;
+  border-radius: 4px;
+}
+.tourable__confirm.show {
+  opacity: 1;
+  transition: 0.25s;
+  pointer-events: all;
+}
+.tourable__confirm.hide {
+  opacity: 0;
+  transition: 0.25s;
+  pointer-events: none;
+}
+.tourable__confirm__message {
+  flex: 1;
+  padding: 4px;
+}
+.tourable__confirm__buttons {
+  display: flex;
+  flex: 0 0 56px;
+  justify-content: center;
+  align-items: center;
+}
+.tourable__confirm__confirm, .tourable__confirm__cancel {
+  flex: 1;
+  height: 40px;
+  border-radius: 4px;
+  margin: 0 4px;
+  color: white;
+  font-weight: 700;
 }

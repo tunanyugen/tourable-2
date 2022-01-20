@@ -88,7 +88,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
     sphericalGrab = (tourable:Tourable, pointerX:number, pointerY:number, lookAtCamera:boolean = false) => {
         this.move(Mathematics.ScreenToWorldPoint(tourable, new Vector2(pointerX, pointerY), 1))
         if (lookAtCamera){
-            this.mesh.lookAt(tourable.sceneManager.sceneToRender.activeCamera.getDirection(Vector3.Forward()).negate());
+            this.mesh.lookAt(tourable.sceneManager.sceneToRender.camera.getDirection(Vector3.Forward()).negate());
         }
     }
     dispose = (tourable:Tourable) => {
@@ -168,7 +168,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
             // show bubble
             if (this.hoverTitle.length > 0){
                 let boundingInfo = this.mesh.getBoundingInfo();
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, boundingInfo.boundingSphere.radius / 4, 0)));
+                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, -boundingInfo.boundingSphere.radius / 2, 0)));
                 tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
             }
         }, false)

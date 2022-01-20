@@ -1,22 +1,15 @@
-import { Vector3 } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
-import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import Hotspot, { HotspotSchema } from "./Hotspot";
 
 export interface FloorHotspotSchema extends HotspotSchema {
-    backFloorHotspotID:number;
+    
 }
 
 export default class FloorHotspot extends Hotspot implements FloorHotspotSchema {
     type:"floorHotspot" = "floorHotspot";
-    backFloorHotspotID: number = -1;
 
     constructor( tourable:Tourable, sceneID:number, schema:FloorHotspotSchema = null){
         super(tourable, sceneID, schema)
-        // load schema
-        if (schema){
-            this.backFloorHotspotID = schema.backFloorHotspotID;
-        }
         // create mesh
         this.createMesh(tourable, sceneID);
         this.mesh.rotation.x = Math.PI / 2;
@@ -27,24 +20,6 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
                 this.hookEvents(tourable)
             }, true)
         }
-    }
-    createBackHotspot = (tourable:Tourable) => {
-        // dispose old back hotspot
-        let backFloorHotspotScene = tourable.sceneManager.scenes.get(this._targetSceneID);
-        if (backFloorHotspotScene){
-            let hotspot = backFloorHotspotScene.sceneObjects.get(this.backFloorHotspotID);
-            if (hotspot){ hotspot.dispose(tourable) }
-        }
-        // create new one
-        let backHotspot = new FloorHotspot(tourable, this._targetSceneID);
-        this.backFloorHotspotID = backHotspot.id;
-        backHotspot.texture = this.texture;
-        backHotspot._targetSceneID = tourable.sceneManager.sceneToRender.id;
-        backHotspot.hoverTitle = tourable.sceneManager.sceneToRender.panorama.name;
-        let position = this.mesh.position.clone().negate();
-        position.y = this.mesh.position.y;
-        backHotspot.move(position);
-        backHotspot.mesh.rotation.y = this.mesh.rotation.clone().y + Math.PI;
     }
     hookEvents = (tourable:Tourable) => {
         this.pointerEnterObservable.Add(this._observableManager, () => {
@@ -81,8 +56,8 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
             type: this.type,
             id: this.id,
             sceneID: this.sceneID,
-            backFloorHotspotID: this.backFloorHotspotID,
             targetSceneID: this.targetSceneID,
+            enteringAngle: {x: this.enteringAngle.x, y: this.enteringAngle.y, z: this.enteringAngle.z},
             texture: this.texture,
             originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
             mesh: {

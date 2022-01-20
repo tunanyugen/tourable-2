@@ -50,11 +50,26 @@ body {
 .react-component__button {
   border: none;
   outline: none;
+  background-color: #4094b9;
   box-shadow: 0px 0px 14px 0px rgba(64, 148, 185, 0.75);
+  color: white;
   transition: 0.25s;
   cursor: pointer;
   &:hover {
     box-shadow: 0px 0px 14px 8px rgba(64, 148, 185, 0.75);
+  }
+  &.tourable__button{
+    width: calc(100% - 16px);
+    height: 40px;
+    border-radius: 4px;
+    margin: 0 8px;
+  }
+}
+.react-component__button.error{
+  background-color: #dd2e44;
+  box-shadow: 0px 0px 14px 0px rgba(221, 46, 68, 0.75);
+  &:hover {
+    box-shadow: 0px 0px 14px 8px rgba(221, 46, 68, 0.75);
   }
 }
 .react-component__form__input {
