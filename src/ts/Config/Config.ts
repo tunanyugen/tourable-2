@@ -6,6 +6,7 @@ export default class Config{
         public fov = 70, // camera's field of view
         public cameraSpeed = 0.16, // camera movement speed
         public mouseMoveInterval = 16, // floor hotspot size
+        public defaultPanorama = "/static/default-panorama.jpg",
         public floorHotspot = {
             size: 0.2,
             renderingGroupID: Config.renderingGroupInterval,

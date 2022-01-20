@@ -1,6 +1,6 @@
-import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar } from "babylonjs";
+import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar, Texture } from "babylonjs";
 import UIDGenerator from "../Generator/UIDGenerator";
-import { PanoramaSchema } from "../Panorama/Panorama";
+import Panorama, { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
 import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
@@ -12,7 +12,7 @@ import Poly, { PolySchema } from "../SceneObject/Poly/Poly";
 
 export interface SceneSchema {
     id:number;
-    panorama:PanoramaSchema;
+    panorama:Panorama|PanoramaSchema;
     sceneObjects:Map<number, SceneObject>|SceneObjectSchema[]|FloorHotspotSchema[];
 }
 
@@ -22,9 +22,10 @@ export default class Scene extends BABYLONScene implements SceneSchema {
     public id:number;
     public sceneObjects:Map<number, SceneObject> = new Map();
     public photoDome:PhotoDome;
+    public panorama:Panorama;
     constructor(
         tourable:Tourable,
-        public panorama:PanoramaSchema,
+        panorama:Panorama,
         schema:SceneSchema = null
     ){
         super(tourable.engine);
@@ -32,7 +33,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         if (schema){
             this.id = schema.id;
             tourable.uidGenerator.uid = this.id + 1;
-            this.panorama = schema.panorama;
+            this.panorama = new Panorama(schema.panorama.name, schema.panorama.src, schema.panorama.thumbnail);
             tourable.onLoadObservabl.Add(this._observableManager, () => {
                 (schema.sceneObjects as any).forEach((schema) => {
                     switch(schema.type){
@@ -47,6 +48,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         } else {
             // get id
             this.id = tourable.uidGenerator.uid;
+            this.panorama = panorama;
         }
         // register to sceneManager
         tourable.sceneManager.scenes.set(this.id, this);
@@ -59,6 +61,10 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         camera.setTarget(new Vector3(0, 0, 1));
         // Attach the camera to the canvas
         camera.attachControl();
+
+        this.onDisposeObservable.addOnce(() => {
+            this.panorama.dispose();
+        })
     }
     createPhotoDome = (onLoad:Function = () => {}) => {
         this.photoDome = new PhotoDome(
@@ -71,6 +77,11 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             this
         );
         this.photoDome.mesh.isPickable = false;
+        this.panorama.srcObservable.Add(this._observableManager, (src) => {
+            this.photoDome.material.diffuseTexture = new Texture(src, this, {
+                invertY: false
+            });
+        }, false)
         this.photoDome.onLoadObservable.addOnce(() => {
             onLoad();
         })
@@ -109,7 +120,19 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             return this._changeFOVInterval;
         })
     }
+    delete = (tourable:Tourable) => {
+        tourable.sceneManager.scenes.delete(this.id);
+        tourable.sceneManager.onSwitchSceneObservable.Add(this._observableManager, () => {
+            this.dispose();
+        }, true)
+        if (tourable.sceneManager.scenes.size <= 0){
+            // create default scene
+            tourable.sceneManager.createDefaultScene(tourable);
+        }
+        tourable.sceneManager.switchScene(tourable, tourable.sceneManager.scenes.entries().next().value[1].id)
+    }
     resetCamera = (position:boolean = true, rotation:boolean = true) => {
+        if (!this.activeCamera){ return }
         if (position){ this.activeCamera.position = Vector3.Zero() }
         if (rotation){ (this.activeCamera as FreeCamera).rotation = Vector3.Zero() }
     }

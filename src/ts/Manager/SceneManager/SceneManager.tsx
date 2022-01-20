@@ -2,6 +2,7 @@ import Observable from "@tunanyugen/observable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { FreeCamera, Vector3 } from "babylonjs";
 import Scene from "../../Scene/Scene";
+import Panorama from "../../Panorama/Panorama";
 import Tourable from "../../Tourable/Tourable";
 
 export default class SceneManager {
@@ -15,9 +16,11 @@ export default class SceneManager {
         tourable.gui.current.loadScreen.current.show();
         // sync camera
         if (this.sceneToRender){
-            scene.activeCamera.detachControl();
-            (scene.activeCamera as FreeCamera).rotation = (this.sceneToRender.activeCamera as FreeCamera).rotation;
-            scene.activeCamera.attachControl();
+            if (scene.activeCamera){
+                scene.activeCamera.detachControl();
+                (scene.activeCamera as FreeCamera).rotation = (this.sceneToRender.activeCamera as FreeCamera).rotation;
+                scene.activeCamera.attachControl();
+            }
         }
         setTimeout(() => {
             // load dome and switch scene
@@ -54,6 +57,10 @@ export default class SceneManager {
     }
 
     constructor(tourable:Tourable){}
+    createDefaultScene = (tourable:Tourable):Scene => {
+        let newPanorama = new Panorama("New scene", tourable.config.defaultPanorama, tourable.config.defaultPanorama);
+        return new Scene(tourable, newPanorama); 
+    }
     switchScene = (tourable:Tourable, sceneID:number, hotspotID:number = -1) => {
         // get scene to check if scene exists
         let newScene = this.scenes.get(sceneID);

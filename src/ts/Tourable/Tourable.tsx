@@ -7,6 +7,7 @@ import EventManager from "../Manager/EventManager/EventManager";
 import Config from "../Config/Config";
 import Observable from '@tunanyugen/observable';
 import Scene, { SceneSchema } from '../Scene/Scene';
+import Panorama from "../Panorama/Panorama";
 import { Engine, RenderingManager } from "babylonjs";
 import { ObservableManager } from '@tunanyugen/observable/src/ts/ObservableManager';
 
@@ -46,11 +47,15 @@ export default class Tourable{
         this.engine = new Engine(this.canvas.current, true, {preserveDrawingBuffer: true, stencil: true});
         this.engine.renderEvenInBackground = false;
         // create scenes
-        sceneSchemas.forEach((schema) => {
-            new Scene(this, schema.panorama, schema);
-        })
+        if (sceneSchemas.length <= 0){
+            this.sceneManager.createDefaultScene(this);
+        } else {
+            sceneSchemas.forEach((schema) => {
+                new Scene(this, new Panorama(schema.panorama.name, schema.panorama.src, schema.panorama.thumbnail), schema);
+            })
+        }
         // switch to first scene
-        if (sceneSchemas.length > 0){ this.sceneManager.switchScene(this, sceneSchemas[0].id) }
+        this.sceneManager.switchScene(this, this.sceneManager.scenes.entries().next().value[1].id)
         // init events
         this.eventManager = new EventManager(this);
         // finished loading

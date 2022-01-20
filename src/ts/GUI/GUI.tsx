@@ -17,6 +17,7 @@ import Popup from "./Popup/Popup";
 import PivotConfig from './Config/PivotConfig';
 import Notification from './Notification/Notification';
 import PolyConfig from './Config/PolyConfig';
+import SceneConfig from "./Config/SceneConfig";
 
 export interface GUIProps extends GUIObjectProps{
     
@@ -34,6 +35,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
     infoHotspotConfig:React.RefObject<InfoHotspotConfig> = React.createRef();
     pivotConfig:React.RefObject<PivotConfig> = React.createRef();
     polyConfig:React.RefObject<PolyConfig> = React.createRef();
+    sceneConfig:React.RefObject<SceneConfig> = React.createRef();
     loadScreen:React.RefObject<LoadScreen> = React.createRef();
     text:React.RefObject<Text> = React.createRef();
     popup:React.RefObject<Popup> = React.createRef();
@@ -49,7 +51,7 @@ class GUI extends GUIObject<GUIProps, GUIState> {
         this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
             this.props.tourable.eventManager.mouse0.onButtonUpObservable.Add(this._observableManager, () => {
                 if (!this.props.tourable.sceneObjectManager.pick(this.props.tourable)){
-                    if (this.props.tourable.eventManager.mouse0.timeElapsed <= 110){
+                    if (this.props.tourable.eventManager.mouse0.timeElapsed <= 150){
                         this.toggle();
                     }
                 }
@@ -85,8 +87,9 @@ class GUI extends GUIObject<GUIProps, GUIState> {
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
                 <FloatingHotspotConfig ref={this.floatingHotspotConfig} tourable={this.props.tourable} />
                 <InfoHotspotConfig ref={this.infoHotspotConfig} tourable={this.props.tourable} />
-                <PivotConfig ref={this.pivotConfig} tourable={this.props.tourable} />\
+                <PivotConfig ref={this.pivotConfig} tourable={this.props.tourable} />
                 <PolyConfig ref={this.polyConfig} tourable={this.props.tourable} />
+                <SceneConfig ref={this.sceneConfig} tourable={this.props.tourable} />
                 <LoadScreen ref={this.loadScreen} tourable={this.props.tourable}/>
                 <Notification ref={this.notification} tourable={this.props.tourable} />
             </React.Fragment>

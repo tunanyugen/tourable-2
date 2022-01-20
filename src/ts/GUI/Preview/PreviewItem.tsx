@@ -11,7 +11,6 @@ export interface PreviewItemState extends GUIObjectState{
 class PreviewItem extends GUIObject<PreviewItemProps, PreviewItemState> {
     constructor(props: PreviewItemProps) {
         super(props);
-
     }
     render() { 
         let scene = this.props.tourable.sceneManager.scenes.get(this.props.sceneID);

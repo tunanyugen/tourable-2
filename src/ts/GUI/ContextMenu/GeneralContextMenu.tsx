@@ -1,6 +1,8 @@
 import { ContextMenuItemProps } from "@tunanyugen/react-components/src/ts/ContextMenu/ContextMenuItem";
 import ContextMenu, { ContextMenuProps, ContextMenuState } from "./ContextMenu";
 import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
+import Scene from "../../Scene/Scene";
+import Panorama from "../../Panorama/Panorama";
 import { Vector2, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
@@ -35,6 +37,29 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
     }
     renderItems = ():ContextMenuItemProps[] => {
         return [
+            {
+                icon: "",
+                name: "Scene",
+                contextMenuProps: {
+                    itemsProps: [
+                        {
+                            icon: "",
+                            name: "Create scene",
+                            onClick: () => {
+                                let newScene = this.props.tourable.sceneManager.createDefaultScene(this.props.tourable);
+                                this.props.tourable.sceneManager.switchScene(this.props.tourable, newScene.id);
+                            }
+                        },
+                        {
+                            icon: "",
+                            name: "Config scene",
+                            onClick: () => {
+                                this.props.tourable.gui.current.sceneConfig.current.show();
+                            }
+                        },
+                    ]
+                }
+            },
             {
                 icon: "",
                 name: "Hotspot",
