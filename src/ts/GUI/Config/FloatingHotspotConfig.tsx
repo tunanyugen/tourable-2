@@ -79,25 +79,6 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                         this.target.originalScaling = scaling.clone();
                     }}
                 />
-                <Button
-                    className="tourable__button"
-                    onClick={(e) => {
-                        if (!this.target || !this.props.tourable.sceneManager.scenes.get(this.target.targetSceneID)){ return }
-                        // store hotspot in another reference so that it can be kept when target changes
-                        let hotspot = this.props.tourable.sceneManager.scenes.get(this.target.sceneID).sceneObjects.get(this.target.id) as FloatingHotspot;
-                        // switch to target scene
-                        this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
-                        this.props.tourable.gui.current.confirm.current.display(
-                            "Move to your desired angle and click \"Confirm\".",
-                            () => {
-                                hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
-                                this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
-                            }, () => {
-                                this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
-                            }
-                        )
-                    }}    
-                >Set entering angle</Button>
                 <LabeledMediaSelect
                     label="Pick a scene"
                     items={Array.from(this.props.tourable.sceneManager.scenes).map(([id, scene]) => {
@@ -105,9 +86,23 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                             label: scene.panorama.name,
                             src: scene.panorama.thumbnail,
                             onClick: () => {
-                                if (this.target){
-                                    this.target.setTargetSceneID(this.props.tourable, scene.id);
-                                }
+                                if (!this.target){ return }
+                                // set target scene
+                                this.target.setTargetSceneID(this.props.tourable, scene.id);
+                                // set entering angle
+                                // store hotspot in another reference so that it can be kept when target changes
+                                let hotspot = this.props.tourable.sceneManager.scenes.get(this.target.sceneID).sceneObjects.get(this.target.id) as FloatingHotspot;
+                                // switch to target scene
+                                this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
+                                this.props.tourable.gui.current.confirm.current.display(
+                                    "Move to your desired angle and click \"Confirm\".",
+                                    () => {
+                                        hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
+                                        this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                                    }, () => {
+                                        this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                                    }
+                                )
                             }
                         }
                     })}

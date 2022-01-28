@@ -164,12 +164,14 @@ export default abstract class SceneObject implements SceneObjectSchema{
                 this.mesh.rotate(Vector3.Up(), (e.deltaY * 4 / 100) * (tourable.engine.getDeltaTime() / 1000), Space.WORLD);
             }
         }, false);
-        this.pointerEnterObservable.Add(this._observableManager, () => {
+        this.pointerEnterObservable.Add(this._observableManager, (e) => {
             // show bubble
             if (this.hoverTitle.length > 0){
-                let boundingInfo = this.mesh.getBoundingInfo();
-                let titlePos = Mathematics.WorldToScreenPoint(tourable, boundingInfo.boundingSphere.centerWorld.add(new Vector3(0, -boundingInfo.boundingSphere.radius / 2, 0)));
-                tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
+                let titlePos = new Vector2(e.clientX, e.clientY);
+                // delaying to prevent hide function executes right after display
+                setTimeout(() => {
+                    tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
+                }, 16);
             }
         }, false)
         this.pointerLeaveObservable.Add(this._observableManager, () => {

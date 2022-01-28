@@ -1,11 +1,10 @@
 import Observable from "@tunanyugen/observable";
-import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import { FreeCamera, Vector3 } from "babylonjs";
+import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";;
 import Scene from "../../Scene/Scene";
 import Panorama from "../../Panorama/Panorama";
 import Tourable from "../../Tourable/Tourable";
-import { Camera } from "babylonjs/Cameras/camera";
 import Hotspot from "../../SceneObject/Hotspot/Hotspot";
+import { Vector3 } from "babylonjs";
 
 export default class SceneManager {
     protected _observableManager:ObservableManager = new ObservableManager();
@@ -79,6 +78,8 @@ export default class SceneManager {
                     this.sceneToRender.camera.detachControl();
                     this.sceneToRender.camera.rotation = hotspot.enteringAngle;
                     this.sceneToRender.camera.attachControl();
+                    // camera move into scene effect
+                    this.sceneToRender.moveCamera(this.sceneToRender.camera.getDirection(Vector3.Forward()).multiplyByFloats(moveDistance, moveDistance, moveDistance).negate(), this.sceneToRender.camera.position.clone(), 750)
                 });
             })
         } else {
