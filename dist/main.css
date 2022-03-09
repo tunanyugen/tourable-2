@@ -140,9 +140,10 @@
 
 .react-component__checkbox {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
 }
-.react-component__checkbox input {
+.react-component__checkbox__input {
+  margin-left: 4px;
   min-height: 0px;
   cursor: pointer;
 }
@@ -661,6 +662,11 @@
   opacity: 0;
   transition: 0.25s;
   pointer-events: none;
+}
+
+.react-component__optional__container {
+  overflow: hidden;
+  transition: 0.25s;
 }
 
 * {
