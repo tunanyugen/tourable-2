@@ -54,7 +54,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             icon: "",
                             name: "Config scene",
                             onClick: () => {
-                                this.props.tourable.gui.current.sceneConfig.current.show();
+                                this.props.tourable.editorGUI.current.sceneConfig.current.show();
                             }
                         },
                     ]

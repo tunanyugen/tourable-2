@@ -170,20 +170,20 @@ export default abstract class SceneObject implements SceneObjectSchema{
                 let titlePos = new Vector2(e.clientX, e.clientY);
                 // delaying to prevent hide function executes right after display
                 setTimeout(() => {
-                    tourable.gui.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
+                    tourable.uncontrolledGUI.current.text.current.display(titlePos.x, titlePos.y, this.hoverTitle);
                 }, 16);
             }
         }, false)
         this.pointerLeaveObservable.Add(this._observableManager, () => {
             // hide bubble popup
-            if (!tourable.gui.current.text.current.state.hidden){
-                tourable.gui.current.text.current.hide();
+            if (!tourable.uncontrolledGUI.current.text.current.state.hidden){
+                tourable.uncontrolledGUI.current.text.current.hide();
             }
         }, false)
         this.onClickObservable.Add(this._observableManager, () => {
             // show popup
             if (this.clickTitle.length > 0){
-                tourable.gui.current.popup.current.display(this.clickTitle);
+                tourable.uncontrolledGUI.current.popup.current.display(this.clickTitle);
             }
         }, false)
     }

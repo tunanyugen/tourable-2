@@ -14,7 +14,7 @@ export default class SceneManager {
     public onSwitchSceneObservable:Observable<{lastScene:Scene, scene:Scene}> = new Observable(this._observableManager, null, false);
     setScene = (tourable:Tourable, scene:Scene, delay:number = 500, callback = () => {}) => {
         // show load screen
-        tourable.gui.current.loadScreen.current.show();
+        tourable.uncontrolledGUI.current.loadScreen.current.show();
         setTimeout(() => {
             // load dome and switch scene
             if (!scene.photoDome){
@@ -32,7 +32,7 @@ export default class SceneManager {
                     timeout = timeout < 0 ? 0 : timeout;
                     setTimeout(() => {
                         // hide load screen
-                        tourable.gui.current.loadScreen.current.hide();
+                        tourable.uncontrolledGUI.current.loadScreen.current.hide();
                         callback();
                     }, timeout);
                 })
@@ -45,7 +45,7 @@ export default class SceneManager {
                 // reset old scene camera
                 if (lastScene){ lastScene.resetCamera(true, false) }
                 // hide load screen
-                tourable.gui.current.loadScreen.current.hide();
+                tourable.uncontrolledGUI.current.loadScreen.current.hide();
                 callback();
             }
         }, delay);
@@ -70,7 +70,7 @@ export default class SceneManager {
             moveDirection.normalize();
             let moveDistance = 0.15;
             // show load screen
-            tourable.gui.current.loadScreen.current.show();
+            tourable.uncontrolledGUI.current.loadScreen.current.show();
             // camera move out of scene effect
             this.sceneToRender.moveCamera(this.sceneToRender.camera.position.clone(), moveDirection.multiplyByFloats(moveDistance, moveDistance, moveDistance), 750).then(() => {
                 // switch scene

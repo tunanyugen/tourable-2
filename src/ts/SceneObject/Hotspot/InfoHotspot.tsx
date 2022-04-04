@@ -35,7 +35,7 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         }, false)
         this.onRightClickObservable.Add(this._observableManager, () => {
             // show hotspot config
-            tourable.gui.current.infoHotspotConfig.current.setTarget(this)
+            tourable.editorGUI.current.infoHotspotConfig.current.setTarget(this)
         }, false)
         // on mouse move
         this.pointerMoveObservable.Add(this._observableManager, (e) => {

@@ -35,7 +35,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         }, false)
         this.onRightClickObservable.Add(this._observableManager, () => {
             // show configurations
-            tourable.gui.current.floatingHotspotConfig.current.setTarget(this)
+            tourable.editorGUI.current.floatingHotspotConfig.current.setTarget(this)
         }, false)
         // on mouse move
         this.pointerMoveObservable.Add(this._observableManager, (e) => {

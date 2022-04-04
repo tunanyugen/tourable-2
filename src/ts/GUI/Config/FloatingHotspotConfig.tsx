@@ -94,7 +94,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                                 let hotspot = this.props.tourable.sceneManager.scenes.get(this.target.sceneID).sceneObjects.get(this.target.id) as FloatingHotspot;
                                 // switch to target scene
                                 this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
-                                this.props.tourable.gui.current.confirm.current.display(
+                                this.props.tourable.uncontrolledGUI.current.confirm.current.display(
                                     "Move to your desired angle and click \"Confirm\".",
                                     () => {
                                         hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;

@@ -107,7 +107,7 @@ export default class Poly extends SceneObject implements PolySchema{
     }
     hookEvents = (tourable:Tourable) => {
         this.onRightClickObservable.Add(this._observableManager, () => {
-            tourable.gui.current.polyConfig.current.setTarget(this);
+            tourable.editorGUI.current.polyConfig.current.setTarget(this);
         }, false)
     }
     subscribeToPivot = (tourable:Tourable, pivot:Pivot) => {
@@ -118,7 +118,7 @@ export default class Poly extends SceneObject implements PolySchema{
         // map to check if pivot exists in pivotIDs array
         let pivotMap = new Map<number, boolean>();
 
-        tourable.gui.current.notification.current.notify("Click anywhere to select a point", 2000)
+        tourable.uncontrolledGUI.current.notification.current.notify("Click anywhere to select a point", 2000)
         let pivotPickObservable = new Observable<PointerEvent>(this._observableManager, (e) => {
             // pick pivot or create new one as poly's vertex
             let result = tourable.sceneObjectManager.pick(tourable);
@@ -140,13 +140,13 @@ export default class Poly extends SceneObject implements PolySchema{
             // recreate vertex data
             this.createVertexData(tourable);
             // notify user on how to stop
-            tourable.gui.current.notification.current.notify(`Press "Esc" to stop`, 2000)
+            tourable.uncontrolledGUI.current.notification.current.notify(`Press "Esc" to stop`, 2000)
         }, false)
         tourable.eventManager.mouse0.onButtonDownObservable.AddObservable(pivotPickObservable);
         // press escape to stop
         tourable.eventManager.escape.onKeyDownObservable.Add(this._observableManager, () => {
             pivotPickObservable.Dispose();
-            tourable.gui.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
+            tourable.uncontrolledGUI.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
         }, true)
     }
     export = ():PolySchema => {
