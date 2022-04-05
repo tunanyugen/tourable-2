@@ -1,3 +1,4 @@
+import { Paper } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 
 export interface PopupProps extends GUIObjectProps{
@@ -19,12 +20,21 @@ class Popup extends GUIObject<PopupProps, PopupState> {
     }
     render() { 
         return (
-            <div
-                className={`ck-content tourable__popup ${this.__className}`}
+            <Paper
+                className="ck-content tourable__popup"
+                sx={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    transition: ".25s",
+                    opacity: this.state.hidden ? "0" : "1",
+                    pointerEvents: this.state.hidden ? "none" : "all",
+                }}
                 onPointerEnter={() => { this.cancelHideTimeout() }}
                 onPointerLeave={() => { this.hide() }}
                 dangerouslySetInnerHTML={{__html: this.state.content}}
-            ></div>
+            ></Paper>
         );
     }
     display = (content:string) => {

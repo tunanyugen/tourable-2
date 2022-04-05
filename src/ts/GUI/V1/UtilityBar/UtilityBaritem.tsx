@@ -1,5 +1,5 @@
+import { Button } from "@mui/material";
 import GUIObject, {GUIObjectProps, GUIObjectState} from "../../GUIObject";
-import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
 
 export interface UtilityBarItemProps extends GUIObjectProps{
     onClick:React.MouseEventHandler<HTMLButtonElement>;

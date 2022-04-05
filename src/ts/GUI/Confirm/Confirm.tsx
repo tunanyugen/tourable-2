@@ -1,53 +1,60 @@
-import GUIObject, { GUIObjectProps, GUIObjectState } from '../GUIObject';
-import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 
-export interface ConfirmProps extends GUIObjectProps{
-    
+export interface ConfirmProps extends GUIObjectProps {}
+
+export interface ConfirmState extends GUIObjectState {
+    message: string;
+    onConfirm: Function;
+    onCancel: Function;
 }
- 
-export interface ConfirmState extends GUIObjectState{
-    message:string;
-    onConfirm:Function;
-    onCancel:Function;
-}
- 
+
 class Confirm extends GUIObject<ConfirmProps, ConfirmState> {
-    private get _className(){ return this.state.hidden ? "hide" : "show" }
     constructor(props: ConfirmProps) {
         super(props);
         this.state = {
             ...this.state,
-            message: ""
-        }
+            message: "",
+        };
     }
-    render() { 
+    render() {
         return (
-            <div className={`tourable__confirm ${this._className}`}>
-                <div className="tourable__confirm__message">{this.state.message}</div>
-                <div className="tourable__confirm__buttons">
+            <Paper
+                className={`tourable__confirm`}
+                sx={{
+                    position: "absolute",
+                    transition: ".25s",
+                    opacity: this.state.hidden ? "0" : "1",
+                    pointerEvents: this.state.hidden ? "none" : "all",
+                }}
+            >
+                <Typography>{this.state.message}</Typography>
+                <Box>
                     <Button
-                        className="tourable__confirm__confirm"
                         onClick={() => {
                             this.state.onConfirm();
                             this.hide();
                         }}
-                    >Confirm</Button>
+                    >
+                        Confirm
+                    </Button>
                     <Button
                         onClick={() => {
                             this.state.onCancel();
                             this.hide();
                         }}
-                        className="error tourable__confirm__cancel"
-                    >Cancel</Button>
-                </div>
-            </div>
+                    >
+                        Cancel
+                    </Button>
+                </Box>
+            </Paper>
         );
     }
-    display = (message:string, onConfirm:Function, onCancel:Function) => {
+    display = (message: string, onConfirm: Function, onCancel: Function) => {
         this.setState({ message, onConfirm, onCancel }, () => {
             this.show();
-        })
-    }
+        });
+    };
 }
- 
+
 export default Confirm;

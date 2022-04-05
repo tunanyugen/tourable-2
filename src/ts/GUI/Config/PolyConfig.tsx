@@ -1,10 +1,9 @@
-import * as React from 'react';
-import CKEditor from "@tunanyugen/react-components/src/ts/Form/CKEditor/CKEditor";
-import Input from "@tunanyugen/react-components/src/ts/Form/Input/Input";
-import Slider from "@tunanyugen/react-components/src/ts/Form/Slider/Slider";
 import { Color3 } from "babylonjs";
 import Poly from "../../SceneObject/Poly/Poly";
 import Config, { ConfigProps, ConfigState } from "./Config";
+import { Box, Slider, TextField } from '@mui/material';
+import CKEditor from '../Components/CKEditor';
+import Label from './Label';
 const colorConverter = require("color-convert");
 
 export interface PolyConfigProps extends ConfigProps{
@@ -38,9 +37,9 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     }
     renderComponents = () => {
         return (
-            <React.Fragment>
-                <Input
-                    label="Color"
+            <Box>
+                <Label>Color</Label>
+                <TextField
                     placeholder="Enter hex code here"
                     value={this.target ? `#${colorConverter.rgb.hex(this.target.color.r * 255, this.target.color.g * 255, this.target.color.b * 255)}` : ""}
                     onChange={(e) => {
@@ -50,37 +49,37 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         this.props.tourable.config.poly.color = {r: rgb[0], g: rgb[1], b: rgb[2]};
                     }}
                 />
+                <Label>Title on hover</Label>
                 <CKEditor
-                    label="Title on hover"
                     placeholder="Enter text here"
-                    value={this.target ? this.target.hoverTitle : ""}
+                    defaultValue={this.target ? this.target.hoverTitle : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.hoverTitle = content;
                     }}
                 />
+                <Label>Title on click</Label>
                 <CKEditor
-                    label="Title on click"
                     placeholder="Enter text here"
-                    value={this.target ? this.target.clickTitle : ""}
+                    defaultValue={this.target ? this.target.clickTitle : ""}
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.clickTitle = content;
                     }}
                 />
+                <Label>Opacity</Label>
                 <Slider
-                    label="Opacity"
                     min={15}
                     max={100}
                     value={this.target ? this.target.opacity * 100 : 100}
-                    onChange={(e) => {
+                    onChange={(e, value) => {
                         if (!this.target){ return }
-                        let opacity = parseFloat(e.target.value) / 100;
+                        let opacity = parseFloat(`${value as number}`) / 100;
                         this.target.opacity = opacity;
                         this.props.tourable.config.poly.opacity = opacity;
                     }}
                 />
-            </React.Fragment>
+            </Box>
         )
     }
 }

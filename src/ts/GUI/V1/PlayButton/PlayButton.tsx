@@ -1,4 +1,4 @@
-import Button from "@tunanyugen/react-components/src/ts/Form/Button/Button";
+import { Button } from "@mui/material";
 import GUIObject, {GUIObjectProps, GUIObjectState} from "../../GUIObject";
 
 export interface PlayButtonProps extends GUIObjectProps{
@@ -17,7 +17,7 @@ class PlayButton extends GUIObject<PlayButtonProps, PlayButtonState> {
         return (
             <Button
                 className="tourable__play-button"
-                onClick={(e) => { this.props.tourable.gui.current.hide() }}
+                onClick={(e) => { this.props.tourable.clientGUI.current.hide() }}
             >
                 <i className="fas fa-play"></i>
             </Button>

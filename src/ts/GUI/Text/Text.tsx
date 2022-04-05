@@ -1,3 +1,4 @@
+import { Box, Paper } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 
 export interface TextProps extends GUIObjectProps{
@@ -9,7 +10,6 @@ export interface TextState extends GUIObjectState{
 }
  
 class Text extends GUIObject<TextProps, TextState> {
-    private get _className(){ return this.state.hidden ? "hide" : "show" }
     constructor(props: TextProps) {
         super(props);
         this.state = {
@@ -23,16 +23,19 @@ class Text extends GUIObject<TextProps, TextState> {
     }
     render() { 
         return (
-            <div
-                className={`tourable__text ${this._className}`}
-                style={{
+            <Paper
+                className="tourable__text"
+                sx={{
+                    position: "absolute",
                     left: this.state.left,
-                    top: this.state.top
+                    top: this.state.top,
+                    transition: ".25s",
+                    opacity: this.state.hidden ? "0" : "1",
+                    pointerEvents: "none",
                 }}
                 dangerouslySetInnerHTML={{__html: this.state.content}}
-                onPointerLeave={() => { this.delayedHide(500) }}
             >
-            </div>
+            </Paper>
         );
     }
     display = (x:number, y:number, content:string) => {

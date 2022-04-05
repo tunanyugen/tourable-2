@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import React from "react";
 import Confirm from "./Confirm/Confirm";
 import GUI, { GUIProps, GUIState } from "./GUI";
@@ -21,13 +22,13 @@ class UncontrolledGUI extends GUI<UncontrolledGUIProps, UncontrolledGUIState> {
   }
   render() {
     return (
-      <React.Fragment>
+      <>
         <Text ref={this.text} tourable={this.props.tourable} />
         <Popup ref={this.popup} tourable={this.props.tourable} />
         <Confirm ref={this.confirm} tourable={this.props.tourable} />
         <LoadScreen ref={this.loadScreen} tourable={this.props.tourable} />
         <Notification ref={this.notification} tourable={this.props.tourable} />
-      </React.Fragment>
+      </>
     );
   }
 }
