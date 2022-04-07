@@ -37,11 +37,11 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                         return { src };
                     })}
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
-                    onSelect={(src) => {
+                    onSelect={(media) => {
                         if (!this.target) {
                             return;
                         }
-                        this.target.texture = src;
+                        this.target.texture = media.src;
                         // update to see texture change effect
                         this.forceUpdate();
                     }}

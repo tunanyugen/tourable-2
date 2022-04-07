@@ -45,6 +45,7 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                     left: this.state.hidden ? "100%" : "calc(100% - 360px)",
                     top: "0",
                     transition: ".25s",
+                    overflow: "auto",
                 }}
             >
                 {this.renderComponents()}

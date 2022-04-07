@@ -40,11 +40,11 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                         return { src };
                     })}
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
-                    onSelect={(src) => {
+                    onSelect={(media) => {
                         if (!this.target) {
                             return;
                         }
-                        this.target.texture = src;
+                        this.target.texture = media.src;
                         // refresh to see texture change effect
                         this.forceUpdate();
                     }}
