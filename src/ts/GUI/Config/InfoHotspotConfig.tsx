@@ -1,9 +1,9 @@
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { StandardMaterial, Vector3 } from "babylonjs";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
-import { Box, Slider } from "@mui/material";
-import CKEditor from "../Components/CKEditor";
-import MediaSelector from "../Components/MediaSelector";
+import { Box, Paper, Slider } from "@mui/material";
+import CKEditor from "../CKEditor/CKEditor";
+import MediaSelector from "../MediaSelector/MediaSelector";
 
 export interface InfoHotspotConfigProps extends ConfigProps {}
 
@@ -31,7 +31,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
     }
     renderComponents = () => {
         return (
-            <Box>
+            <Paper className="tourable__info-hotspot-config">
                 <MediaSelector
                     medias={this.props.tourable.config.assets.infoHotspot.map((src) => {
                         return { src };
@@ -82,7 +82,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                         this.target.originalScaling = scaling.clone();
                     }}
                 />
-            </Box>
+            </Paper>
         );
     };
 }

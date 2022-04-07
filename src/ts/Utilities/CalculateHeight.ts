@@ -10,6 +10,5 @@ export default function CalculateHeight(element: HTMLElement) {
     document.body.append(clone);
     let height = clone.offsetHeight;
     clone.remove();
-    console.log(height);
     return height;
 }

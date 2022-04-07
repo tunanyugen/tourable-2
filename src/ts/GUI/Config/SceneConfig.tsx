@@ -1,7 +1,8 @@
-import { TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import * as React from "react";
 import Poly from "../../SceneObject/Poly/Poly";
 import Config, { ConfigProps, ConfigState } from "./Config";
+import Label from "./Label";
 
 export interface PolyConfigProps extends ConfigProps {}
 
@@ -31,11 +32,20 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     renderComponents = () => {
         return (
             <React.Fragment>
+                <Label>Name</Label>
                 <TextField
-                    label="Name"
+                    fullWidth
+                    size="small"
                     placeholder="Name"
-                    value={this.props.tourable.sceneManager.sceneToRender ? this.props.tourable.sceneManager.sceneToRender.panorama.name : ""}
+                    value={
+                        this.props.tourable.sceneManager.sceneToRender
+                            ? this.props.tourable.sceneManager.sceneToRender.panorama.name
+                            : ""
+                    }
                     onChange={(e) => {
+                        // update value
+                        this.props.tourable.sceneManager.sceneToRender.panorama.name = e.target.value;
+                        this.forceUpdate();
                         if (this.nameTimeout) {
                             clearTimeout(this.nameTimeout);
                         }
@@ -44,11 +54,20 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         }, 500);
                     }}
                 />
+                <Label>Panorama</Label>
                 <TextField
-                    label="Panorama"
+                    fullWidth
+                    size="small"
                     placeholder="Url"
-                    value={this.props.tourable.sceneManager.sceneToRender ? this.props.tourable.sceneManager.sceneToRender.panorama.src : ""}
+                    value={
+                        this.props.tourable.sceneManager.sceneToRender
+                            ? this.props.tourable.sceneManager.sceneToRender.panorama.src
+                            : ""
+                    }
                     onChange={(e) => {
+                        // update value
+                        this.props.tourable.sceneManager.sceneToRender.panorama.src = e.target.value;
+                        this.forceUpdate();
                         if (this.panoramaTimeout) {
                             clearTimeout(this.panoramaTimeout);
                         }
@@ -57,11 +76,20 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         }, 500);
                     }}
                 />
+                <Label>Thumbnail</Label>
                 <TextField
-                    label="thumbnail"
+                    fullWidth
+                    size="small"
                     placeholder="Thumbnail"
-                    value={this.props.tourable.sceneManager.sceneToRender ? this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail : ""}
+                    value={
+                        this.props.tourable.sceneManager.sceneToRender
+                            ? this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail
+                            : ""
+                    }
                     onChange={(e) => {
+                        // update value
+                        this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail = e.target.value;
+                        this.forceUpdate();
                         if (this.thumbnailTimeout) {
                             clearTimeout(this.thumbnailTimeout);
                         }
@@ -70,6 +98,9 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         }, 500);
                     }}
                 />
+                <Box sx={{ position: "absolute", left: "0", bottom: "0", width: "100%", height: "40px" }}>
+                    <Button fullWidth color="error" variant="contained" onClick={this.state.onDelete}>Delete</Button>
+                </Box>
             </React.Fragment>
         );
     };

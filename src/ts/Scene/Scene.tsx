@@ -4,11 +4,11 @@ import Panorama, { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
 import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
-import FloatingHotspot, { FloatingHotspotSchema } from "../SceneObject/Hotspot/FloatingHotspot";
+import FloatingHotspot from "../SceneObject/Hotspot/FloatingHotspot";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import InfoHotspot, { InfoHotspotSchema } from "../SceneObject/Hotspot/InfoHotspot";
-import Pivot, { PivotSchema } from "../SceneObject/Pivot/Pivot";
-import Poly, { PolySchema } from "../SceneObject/Poly/Poly";
+import InfoHotspot from "../SceneObject/Hotspot/InfoHotspot";
+import Pivot from "../SceneObject/Pivot/Pivot";
+import Poly from "../SceneObject/Poly/Poly";
 
 export interface SceneSchema {
     id:number;

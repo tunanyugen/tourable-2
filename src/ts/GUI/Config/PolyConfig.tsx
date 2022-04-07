@@ -2,7 +2,7 @@ import { Color3 } from "babylonjs";
 import Poly from "../../SceneObject/Poly/Poly";
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { Box, Slider, TextField } from '@mui/material';
-import CKEditor from '../Components/CKEditor';
+import CKEditor from '../CKEditor/CKEditor';
 import Label from './Label';
 const colorConverter = require("color-convert");
 

@@ -41,11 +41,13 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                     position: "absolute",
                     width: "360px",
                     height: "100%",
+                    padding: "40px 8px 40px 8px",
                     left: this.state.hidden ? "100%" : "calc(100% - 360px)",
                     top: "0",
                     transition: ".25s",
                 }}
             >
+                {this.renderComponents()}
                 {this.renderEditButton()}
             </Paper>
         );

@@ -14,7 +14,7 @@ class Label extends React.Component<LabelProps, LabelState> {
         super(props);
     }
     render() { 
-        return (<Typography>{this.props.children}</Typography>);
+        return (<Typography fontSize={14}>{this.props.children}</Typography>);
     }
 }
  

@@ -2,10 +2,10 @@ import * as React from "react";
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { StandardMaterial, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
-import MediaSelector from "../Components/MediaSelector";
+import MediaSelector from "../MediaSelector/MediaSelector";
 import Label from "./Label";
 import { Box, Slider } from "@mui/material";
-import CKEditor from "../Components/CKEditor";
+import CKEditor from "../CKEditor/CKEditor";
 
 export interface FloatingHotspotConfigProps extends ConfigProps {}
 

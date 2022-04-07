@@ -2,10 +2,10 @@ import * as React from "react";
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { StandardMaterial, Texture } from "babylonjs";
 import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
-import MediaSelector from "../Components/MediaSelector";
+import MediaSelector from "../MediaSelector/MediaSelector";
 import Label from "./Label";
 import { Box } from "@mui/material";
-import CKEditor from "../Components/CKEditor";
+import CKEditor from "../CKEditor/CKEditor";
 
 export interface FloorHotspotConfigProps extends ConfigProps {}
 
