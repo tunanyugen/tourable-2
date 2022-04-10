@@ -22,8 +22,8 @@ class LibraryItem extends React.Component<LibraryItemProps, LibraryItemState> {
     }
     render() {
         return (
-            <div onClick={this.props.onClick}>
-                <Paper sx={{ position: "relative", flex: "0 0 220px", height: "120px", userSelect: "none", cursor: "pointer" }}>
+            <div style={{ position: "relative", flex: "0 0 220px", height: "120px", userSelect: "none", cursor: "pointer" }} onClick={this.props.onClick}>
+                <Paper>
                     <Box sx={{ width: "100%", height: "100%", cursor: "pointer" }}>
                         <img
                             style={{

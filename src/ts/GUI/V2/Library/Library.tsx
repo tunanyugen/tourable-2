@@ -3,12 +3,14 @@ import React from "react";
 import { GUIProps, GUIState } from "../../GUI";
 import GUIObject from "../../GUIObject";
 import LibraryItem from "./LibraryItem";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 export interface LibraryProps extends GUIProps {}
 
-export interface LibraryState extends GUIState {}
+export interface LibraryState extends GUIState {
+    currentItem: number;
+}
 
 class Library extends GUIObject<LibraryProps, LibraryState> {
     constructor(props: LibraryProps) {
@@ -20,8 +22,12 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
             },
             true
         );
+        this.state = {
+            ...this.state,
+            currentItem: 0
+        }
     }
-    private _container:React.RefObject<HTMLDivElement> = React.createRef();
+    private _container: React.RefObject<HTMLDivElement> = React.createRef();
     render() {
         return (
             <Box
@@ -38,10 +44,10 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
                     ref={this._container}
                     sx={{
                         display: "flex",
-                        gap: "calc(100vw * 45 / 1920)",
+                        gap: "30px",
                         width: "100%",
                         height: "100%",
-                        overflow: "hidden"
+                        overflow: "hidden",
                     }}
                 >
                     {this.renderItems()}
@@ -50,6 +56,19 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
             </Box>
         );
     }
+    /**
+     * 
+     * @param direction 1 = next
+     * @param direction -1 = previous
+     */
+    scrollTo = (direction: -1 | 1) => {
+        let index = this.state.currentItem + direction;
+        if (this._container.current.children[index]){
+            this.setState({currentItem: index}, () => {
+                this._container.current.scrollTo((this._container.current.children[this.state.currentItem] as HTMLElement).offsetLeft, 0);
+            });
+        }
+    };
     renderItems = () => {
         let scenes = Array.from(this.props.tourable.sceneManager.scenes);
         return scenes.map(([key, scene], index) => {
@@ -65,7 +84,7 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
             );
         });
     };
-    renderNavigation = (direction:"left"|"right") => {
+    renderNavigation = (direction: "left" | "right") => {
         return (
             <Button
                 sx={{
@@ -81,13 +100,16 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
                     left: direction == "right" ? "calc(100% + 16px)" : null,
                     color: "#ffffff",
                 }}
+                onClick={(e) => {
+                    this.scrollTo(direction == "left" ? -1 : 1);
+                }}
             >
                 {(() => {
-                    return direction == "left" ? <ChevronLeftIcon/> : <ChevronRightIcon/>
+                    return direction == "left" ? <ChevronLeftIcon /> : <ChevronRightIcon />;
                 })()}
             </Button>
         );
-    }
+    };
 }
 
 export default Library;

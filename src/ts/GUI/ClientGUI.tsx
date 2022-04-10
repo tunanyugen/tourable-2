@@ -1,5 +1,7 @@
 import GUI, { GUIProps, GUIState } from "./GUI";
+import Copyright from "./V2/Copyright/Copyright";
 import Library from "./V2/Library/Library";
+import Logo from "./V2/Logo/Logo";
 
 export interface ClientGUIProps extends GUIProps {}
 
@@ -22,6 +24,8 @@ class ClientGUI extends GUI<ClientGUIProps, ClientGUIState> {
         return (
             <>
                 <Library tourable={this.props.tourable} />
+                <Copyright tourable={this.props.tourable} />
+                <Logo tourable={this.props.tourable} />
             </>
         );
     }

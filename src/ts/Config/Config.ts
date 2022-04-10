@@ -7,6 +7,8 @@ export default class Config{
         public cameraSpeed = 0.16, // camera movement speed
         public mouseMoveInterval = 16, // floor hotspot size
         public defaultPanorama = "/static/default-panorama.jpg",
+        public logo = "/static/logo.svg",
+        public description = "",
         public floorHotspot = {
             size: 0.2,
             renderingGroupID: Config.renderingGroupInterval,
