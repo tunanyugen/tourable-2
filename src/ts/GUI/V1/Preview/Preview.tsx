@@ -13,7 +13,7 @@ class Preview extends GUIObject<PreviewProps, PreviewState> {
     constructor(props: PreviewProps) {
         super(props);
 
-        this.props.tourable.onLoadObservabl.Add(this._observableManager, () => {
+        this.props.tourable.onLoadObservable.Add(this._observableManager, () => {
             this.forceUpdate();
         }, true)
     }

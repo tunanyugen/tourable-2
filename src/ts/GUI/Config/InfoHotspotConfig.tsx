@@ -4,6 +4,7 @@ import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 import { Box, Paper, Slider } from "@mui/material";
 import CKEditor from "../CKEditor/CKEditor";
 import MediaSelector from "../MediaSelector/MediaSelector";
+import Label from "./Label";
 
 export interface InfoHotspotConfigProps extends ConfigProps {}
 
@@ -32,6 +33,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
     renderComponents = () => {
         return (
             <Paper className="tourable__info-hotspot-config">
+                <Label>Choose the style of the hotspot</Label>
                 <MediaSelector
                     medias={this.props.tourable.config.assets.infoHotspot.map((src) => {
                         return { src };
@@ -46,28 +48,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                         this.forceUpdate();
                     }}
                 />
-                <CKEditor
-                    label="Title on hover"
-                    placeholder="Enter text here"
-                    defaultValue={this.target ? this.target.hoverTitle : ""}
-                    onChange={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.hoverTitle = content;
-                    }}
-                />
-                <CKEditor
-                    label="Title on click"
-                    placeholder="Enter text here"
-                    defaultValue={this.target ? this.target.clickTitle : ""}
-                    onChange={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.clickTitle = content;
-                    }}
-                />
+                <Label>Scaling</Label>
                 <Slider
                     min={15}
                     max={100}
@@ -80,6 +61,28 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                         let scaling = new Vector3(value, value, value);
                         this.target.mesh.scaling = scaling.clone();
                         this.target.originalScaling = scaling.clone();
+                    }}
+                />
+                <Label>Title on hover</Label>
+                <CKEditor
+                    placeholder="Enter text here"
+                    defaultValue={this.target ? this.target.hoverTitle : ""}
+                    onChange={(content) => {
+                        if (!this.target) {
+                            return;
+                        }
+                        this.target.hoverTitle = content;
+                    }}
+                />
+                <Label>Title on click</Label>
+                <CKEditor
+                    placeholder="Enter text here"
+                    defaultValue={this.target ? this.target.clickTitle : ""}
+                    onChange={(content) => {
+                        if (!this.target) {
+                            return;
+                        }
+                        this.target.clickTitle = content;
                     }}
                 />
             </Paper>

@@ -31,7 +31,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
         super(tourable, sceneID, schema)
         // load schema
         if (schema){
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.texture = schema.texture;
             }, true)
         }

@@ -46,7 +46,7 @@ export default class Poly extends SceneObject implements PolySchema{
         if (!schema){
             this.tutorial(tourable);
         } else {
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 let scene = tourable.sceneManager.scenes.get(this.sceneID);
                 let pivotMap = new Map<number, boolean>();
                 schema.pivotIDs.forEach((id) => {

@@ -11,7 +11,7 @@ export default class SceneObjectManager{
     private _hoverSceneObject:SceneObject;
     get hoverSceneObject(){ return this._hoverSceneObject }
     constructor(tourable:Tourable){
-        tourable.onLoadObservabl.Add(this._observableManager, () => {
+        tourable.onLoadObservable.Add(this._observableManager, () => {
             // pick hovering scene object
             tourable.eventManager.onMouseMoveObservable.Add(this._observableManager, () => {
                 let result = this.pick(tourable);

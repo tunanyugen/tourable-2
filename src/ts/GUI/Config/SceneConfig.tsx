@@ -34,8 +34,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
             <React.Fragment>
                 <Label>Name</Label>
                 <TextField
-                    fullWidth
-                    size="small"
+                    {...this._textFieldProps}
                     placeholder="Name"
                     value={
                         this.props.tourable.sceneManager.sceneToRender
@@ -56,8 +55,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 />
                 <Label>Panorama</Label>
                 <TextField
-                    fullWidth
-                    size="small"
+                    {...this._textFieldProps}
                     placeholder="Url"
                     value={
                         this.props.tourable.sceneManager.sceneToRender
@@ -78,8 +76,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 />
                 <Label>Thumbnail</Label>
                 <TextField
-                    fullWidth
-                    size="small"
+                    {...this._textFieldProps}
                     placeholder="Thumbnail"
                     value={
                         this.props.tourable.sceneManager.sceneToRender
@@ -98,9 +95,6 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         }, 500);
                     }}
                 />
-                <Box sx={{ position: "absolute", left: "0", bottom: "0", width: "100%", height: "40px" }}>
-                    <Button fullWidth color="error" variant="contained" onClick={this.state.onDelete}>Delete</Button>
-                </Box>
             </React.Fragment>
         );
     };

@@ -35,7 +35,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             this.id = schema.id;
             tourable.uidGenerator.uid = this.id + 1;
             this.panorama = new Panorama(schema.panorama.name, schema.panorama.src, schema.panorama.thumbnail);
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 (schema.sceneObjects as any).forEach((schema) => {
                     switch(schema.type){
                         case "floorHotspot": new FloorHotspot(tourable, this.id, schema); break;

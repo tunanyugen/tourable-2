@@ -44,7 +44,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
             this._targetSceneID = schema.targetSceneID;
             this.enteringAngle = schema.enteringAngle ? new Vector3(schema.enteringAngle.x, schema.enteringAngle.y, schema.enteringAngle.z) : new Vector3();
             this.hoverTitle = schema.hoverTitle;
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.texture = schema.texture;
             }, true)
         }

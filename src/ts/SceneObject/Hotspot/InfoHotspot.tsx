@@ -15,7 +15,7 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.hookEvents(tourable)
             }, true)
         }

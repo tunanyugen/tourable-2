@@ -1,41 +1,41 @@
+import { Box } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
+import NotificationItem from "./NotificationItem";
 
-export interface NotificationProps extends GUIObjectProps{
-    
+export interface NotificationProps extends GUIObjectProps {}
+
+export interface NotificationState extends GUIObjectState {
+    messages: Map<number, string>;
 }
- 
-export interface NotificationState extends GUIObjectState{
-    messages:Map<number,string>;
-}
- 
+
 class Notification extends GUIObject<NotificationProps, NotificationState> {
     constructor(props: NotificationProps) {
         super(props);
         this.state = {
             ...this.state,
-            messages: new Map()
-        }
+            messages: new Map(),
+        };
     }
     render() {
         return (
-            <div className="tourable__notification">
+            <Box
+                className="tourable__notification"
+                sx={{ display: "flex", flexDirection: "column", gap: "8px", position: "absolute", right: "8px", bottom: "8px" }}
+            >
                 {this.renderItems()}
-            </div>
+            </Box>
         );
     }
     renderItems = () => {
         return Array.from(this.state.messages).map(([key, value], index) => {
             return (
-                <div
-                    key={index}
-                    className="tourable__notification__item"
-                >
+                <NotificationItem key={`${new Date().getTime()}-${key}`} tourable={this.props.tourable}>
                     {value}
-                </div>
-            )
-        })
-    }
-    notify = (message:string, duration:number = 500) => {
+                </NotificationItem>
+            );
+        });
+    };
+    notify = (message: string, duration: number = 500) => {
         let id = Date.now();
         this.state.messages.set(id, message);
         this.forceUpdate();
@@ -43,7 +43,7 @@ class Notification extends GUIObject<NotificationProps, NotificationState> {
             this.state.messages.delete(id);
             this.forceUpdate();
         }, duration);
-    }
+    };
 }
- 
+
 export default Notification;

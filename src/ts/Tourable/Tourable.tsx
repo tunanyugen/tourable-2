@@ -36,7 +36,7 @@ export default class Tourable {
     engine: Engine;
     config: Config;
     // observables
-    onLoadObservabl: Observable = new Observable(this._observableManager, null, true);
+    onLoadObservable: Observable = new Observable(this._observableManager, null, true);
 
     constructor(containerSelector: string, sceneSchemas: SceneSchema[]) {
         RenderingManager.MAX_RENDERINGGROUPS = Config.MAX_RENDERINGGROUPS;
@@ -72,7 +72,7 @@ export default class Tourable {
         // init events
         this.eventManager = new EventManager(this);
         // finished loading
-        this.onLoadObservabl.Resolve();
+        this.onLoadObservable.Resolve();
         this._loaded = true;
         // run render loop
         this.engine.runRenderLoop(() => {

@@ -15,7 +15,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
     constructor(props: GeneralContextMenuProps) {
         super(props);
         // toggle
-        this.props.tourable.onLoadObservabl.Add(
+        this.props.tourable.onLoadObservable.Add(
             this._observableManager,
             () => {
                 this.props.tourable.eventManager.mouse2.onButtonUpObservable.Add(

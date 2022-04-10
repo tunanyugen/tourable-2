@@ -15,7 +15,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.hookEvents(tourable)
             }, true)
         }

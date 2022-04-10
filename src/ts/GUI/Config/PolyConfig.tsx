@@ -40,13 +40,26 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
             <Box>
                 <Label>Color</Label>
                 <TextField
+                    {...this._textFieldProps}
                     placeholder="Enter hex code here"
-                    value={this.target ? `#${colorConverter.rgb.hex(this.target.color.r * 255, this.target.color.g * 255, this.target.color.b * 255)}` : ""}
+                    defaultValue={this.target ? `#${colorConverter.rgb.hex(this.target.color.r * 255, this.target.color.g * 255, this.target.color.b * 255)}` : ""}
                     onChange={(e) => {
                         if (!this.target){ return }
                         let rgb = (colorConverter.hex.rgb(e.target.value) as number[]).map((color) => { return color / 255 })
                         this.target.color = new Color3(rgb[0], rgb[1], rgb[2]);
                         this.props.tourable.config.poly.color = {r: rgb[0], g: rgb[1], b: rgb[2]};
+                    }}
+                />
+                <Label>Opacity</Label>
+                <Slider
+                    min={15}
+                    max={100}
+                    value={this.target ? this.target.opacity * 100 : 100}
+                    onChange={(e, value) => {
+                        if (!this.target){ return }
+                        let opacity = parseFloat(`${value as number}`) / 100;
+                        this.target.opacity = opacity;
+                        this.props.tourable.config.poly.opacity = opacity;
                     }}
                 />
                 <Label>Title on hover</Label>
@@ -65,18 +78,6 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                     onChange={(content) => {
                         if (!this.target){ return }
                         this.target.clickTitle = content;
-                    }}
-                />
-                <Label>Opacity</Label>
-                <Slider
-                    min={15}
-                    max={100}
-                    value={this.target ? this.target.opacity * 100 : 100}
-                    onChange={(e, value) => {
-                        if (!this.target){ return }
-                        let opacity = parseFloat(`${value as number}`) / 100;
-                        this.target.opacity = opacity;
-                        this.props.tourable.config.poly.opacity = opacity;
                     }}
                 />
             </Box>

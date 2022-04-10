@@ -16,7 +16,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.hookEvents(tourable)
             }, true)
         }

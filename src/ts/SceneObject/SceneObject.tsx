@@ -64,7 +64,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
             this.originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
             this.hoverTitle = schema.hoverTitle;
             this.clickTitle = schema.clickTitle;
-            tourable.onLoadObservabl.Add(this._observableManager, () => {
+            tourable.onLoadObservable.Add(this._observableManager, () => {
                 this.move(new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z));
                 this.mesh.rotation = new Vector3(schema.mesh.rotation.x, schema.mesh.rotation.y, schema.mesh.rotation.z)
                 this.mesh.scaling = new Vector3(schema.mesh.scaling.x, schema.mesh.scaling.y, schema.mesh.scaling.z)
