@@ -17,7 +17,7 @@ class Copyright extends GUIObject<CopyrightProps, CopyrightState> {
                 sx={{
                     position: "absolute",
                     right: "calc(100vw * 100 / 1920)",
-                    bottom: "calc(100vh * 16 / 1920)",
+                    bottom: "calc(100vh * 20 / 1920)",
                 }}
             >
                 <Typography color="#ffffff" fontWeight="700">

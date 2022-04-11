@@ -24,3 +24,16 @@
 .ck-editor__editable_inline {
   min-height: 200px !important;
 }
+
+.tourable__toolbar__gui-toggler .MuiSwitch-thumb {
+  color: white;
+}
+.tourable__toolbar__gui-toggler .MuiSwitch-track {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: 2px solid white;
+  min-width: 44px;
+  height: 24px;
+  opacity: 1 !important;
+  border-radius: 100rem;
+  transform: translate(-5px, -5px);
+}
