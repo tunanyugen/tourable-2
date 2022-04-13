@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, StandardMaterial, Texture, Vector3 } from "babylonjs";
+import { Color3, MeshBuilder, Quaternion, StandardMaterial, Texture, Vector3 } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, {SceneObjectSchema} from "../SceneObject";
 
@@ -15,7 +15,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
     get enteringAngle(){ return this._enteringAngle.clone() }
     set enteringAngle(rotation:Vector3){ this._enteringAngle = rotation.clone() }
     setTargetSceneID = (tourable:Tourable, value:number) => {
-        let currentScene = tourable.sceneManager.currentSceneGroup.scenes.get(value);
+        let currentScene = tourable.sceneManager.scenes.get(value);
         this._targetSceneID = value;
         if (this.hoverTitle.length <= 0){
             this.hoverTitle = currentScene.panorama.name;
@@ -51,7 +51,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
     }
 
     createMesh = (tourable:Tourable, sceneID:number) => {
-        let scene = tourable.sceneManager.currentSceneGroup.scenes.get(sceneID);
+        let scene = tourable.sceneManager.scenes.get(sceneID);
         let size = 1;
         let texture = "";
         let renderingGroupID = 0;

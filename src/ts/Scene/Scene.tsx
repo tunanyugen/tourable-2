@@ -9,13 +9,11 @@ import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManag
 import InfoHotspot from "../SceneObject/Hotspot/InfoHotspot";
 import Pivot from "../SceneObject/Pivot/Pivot";
 import Poly from "../SceneObject/Poly/Poly";
-import SceneGroup from "./SceneGroup";
-import HasSchema from "../Interfaces/HasSchema";
 import Schema from "../Interfaces/Schema";
+import HasSchema from "../Interfaces/HasSchema";
 
 export interface SceneSchema extends Schema {
     id: number;
-    sceneGroupID: number;
     panorama: Panorama | PanoramaSchema;
     sceneObjects: Map<number, SceneObject> | SceneObjectSchema[] | FloorHotspotSchema[];
 }
@@ -27,26 +25,22 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
     public get id() {
         return this._id;
     }
-    private _sceneGroupID: number;
-    public get sceneGroupID() {
-        return this._sceneGroupID;
-    }
     public sceneObjects: Map<number, SceneObject> = new Map();
     public photoDome: PhotoDome;
     public panorama: Panorama;
     public camera: FreeCamera;
-    constructor(tourable: Tourable, sceneGroup: SceneGroup, panorama: Panorama, schema: SceneSchema = null) {
+    constructor(tourable: Tourable, panorama: Panorama, schema: SceneSchema = null) {
         super(tourable.engine);
         // load schema
         if (schema) {
             this.loadSchema(tourable, schema);
         } else {
             // get id
-            this._id = sceneGroup.uidGenerator.uid;
+            this._id = tourable.uidGenerator.uid;
             this.panorama = panorama;
         }
         // register to sceneManager
-        sceneGroup.scenes.set(this.id, this);
+        tourable.sceneManager.scenes.set(this.id, this);
         // create camera
         this.camera = new FreeCamera("camera1", new Vector3(0, 0, 0), this);
         this.camera.angularSensibility *= -1;
@@ -61,38 +55,6 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             this.panorama.dispose();
         });
     }
-    loadSchema = (tourable: Tourable, schema: SceneSchema) => {
-        let sceneGroup = tourable.sceneManager.sceneGroups.get(schema.sceneGroupID);
-        this._sceneGroupID = sceneGroup.id;
-        this._id = schema.id;
-        sceneGroup.uidGenerator.uid = this.id + 1;
-        this.panorama = new Panorama(schema.panorama);
-        tourable.onLoadObservable.Add(
-            this._observableManager,
-            () => {
-                (schema.sceneObjects as any).forEach((schema) => {
-                    switch (schema.type) {
-                        case "floorHotspot":
-                            new FloorHotspot(tourable, this.id, schema);
-                            break;
-                        case "floatingHotspot":
-                            new FloatingHotspot(tourable, this.id, schema);
-                            break;
-                        case "infoHotspot":
-                            new InfoHotspot(tourable, this.id, schema);
-                            break;
-                        case "poly":
-                            new Poly(tourable, this.id, schema);
-                            break;
-                        case "pivot":
-                            new Pivot(tourable, this.id, schema);
-                            break;
-                    }
-                });
-            },
-            true
-        );
-    };
     createPhotoDome = (onLoad: Function = () => {}) => {
         this.photoDome = new PhotoDome(
             this.panorama.name,
@@ -156,7 +118,7 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         });
     };
     delete = (tourable: Tourable) => {
-        tourable.sceneManager.currentSceneGroup.scenes.delete(this.id);
+        tourable.sceneManager.scenes.delete(this.id);
         tourable.sceneManager.onSwitchSceneObservable.Add(
             this._observableManager,
             () => {
@@ -164,15 +126,11 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             },
             true
         );
-        if (tourable.sceneManager.currentSceneGroup.scenes.size <= 0) {
+        if (tourable.sceneManager.scenes.size <= 0) {
             // create default scene
             tourable.sceneManager.createDefaultScene(tourable);
         }
-        tourable.sceneManager.switchScene(
-            tourable,
-            this.sceneGroupID,
-            tourable.sceneManager.sceneGroups.get(this.sceneGroupID).scenes.entries().next().value[1].id
-        );
+        tourable.sceneManager.switchScene(tourable, tourable.sceneManager.scenes.entries().next().value[1].id);
     };
     resetCamera = (position: boolean = true, rotation: boolean = true) => {
         if (!this.camera) {
@@ -185,10 +143,39 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             (this.camera as FreeCamera).rotation = Vector3.Zero();
         }
     };
+    loadSchema = (tourable: Tourable, schema: SceneSchema) => {
+        this._id = schema.id;
+        tourable.uidGenerator.uid = this.id + 1;
+        this.panorama = new Panorama(schema.panorama);
+        tourable.onLoadObservable.Add(
+            this._observableManager,
+            () => {
+                (schema.sceneObjects as any).forEach((schema) => {
+                    switch (schema.type) {
+                        case "floorHotspot":
+                            new FloorHotspot(tourable, this.id, schema);
+                            break;
+                        case "floatingHotspot":
+                            new FloatingHotspot(tourable, this.id, schema);
+                            break;
+                        case "infoHotspot":
+                            new InfoHotspot(tourable, this.id, schema);
+                            break;
+                        case "poly":
+                            new Poly(tourable, this.id, schema);
+                            break;
+                        case "pivot":
+                            new Pivot(tourable, this.id, schema);
+                            break;
+                    }
+                });
+            },
+            true
+        );
+    };
     export = (): SceneSchema => {
         return {
             id: this.id,
-            sceneGroupID: this.sceneGroupID,
             panorama: {
                 name: this.panorama.name,
                 src: this.panorama.src,

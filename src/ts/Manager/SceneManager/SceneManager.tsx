@@ -9,19 +9,17 @@ import SceneGroup from "../../Scene/SceneGroup";
 
 export default class SceneManager {
     protected _observableManager: ObservableManager = new ObservableManager();
-    public sceneGroups: Map<number, SceneGroup> = new Map();
-    private _currentSceneGroup: SceneGroup;
-    public get currentSceneGroup() {
-        return this._currentSceneGroup;
-    }
-    public set currentSceneGroup(value: SceneGroup) {
-        this._currentSceneGroup = value;
-    }
+    public sceneGroup: Map<number, SceneGroup> = new Map();
+    public scenes: Map<number, Scene> = new Map();
     private _sceneToRender: Scene;
     get sceneToRender() {
         return this._sceneToRender;
     }
-    public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(this._observableManager, null, false);
+    public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(
+        this._observableManager,
+        null,
+        false
+    );
     setScene = (tourable: Tourable, scene: Scene, delay: number = 500, callback = () => {}) => {
         // show load screen
         tourable.uncontrolledGUI.current.loadScreen.current.show();
@@ -73,11 +71,11 @@ export default class SceneManager {
             thumbnail: tourable.config.defaultPanorama,
             overview: "",
         });
-        return new Scene(tourable, this.currentSceneGroup, newPanorama);
+        return new Scene(tourable, newPanorama);
     };
-    switchScene = (tourable: Tourable, sceneGroupID: number, sceneID: number, hotspotID: number = -1) => {
+    switchScene = (tourable: Tourable, sceneID: number, hotspotID: number = -1) => {
         // get scene to check if scene exists
-        let newScene = this.sceneGroups.get(sceneGroupID).scenes.get(sceneID);
+        let newScene = this.scenes.get(sceneID);
         if (!newScene) {
             console.error(`Scene ${sceneID} not found.`);
             return;

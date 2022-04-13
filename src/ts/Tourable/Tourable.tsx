@@ -13,7 +13,6 @@ import EditorGUI from "../GUI/EditorGUI";
 import UncontrolledGUI from "../GUI/UncontrolledGUI";
 import GUIRenderer from "../GUI/GUIRenderer";
 import ClientGUI from "../GUI/ClientGUI";
-import SceneGroup, { SceneGroupSchema } from "../Scene/SceneGroup";
 
 export default class Tourable {
     protected _observableManager: ObservableManager = new ObservableManager();
@@ -75,19 +74,19 @@ export default class Tourable {
         this.onLoadObservable.Resolve();
         this._loaded = true;
         // run render loop
-        // this.engine.runRenderLoop(() => {
-        //     if (this.sceneManager.sceneToRender) {
-        //         this.sceneManager.sceneToRender.render();
-        //     }
-        // });
+        this.engine.runRenderLoop(() => {
+            if (this.sceneManager.sceneToRender) {
+                this.sceneManager.sceneToRender.render();
+            }
+        });
         // resize on viewport change
         window.addEventListener("resize", () => {
             this.engine.resize();
         });
     }
-    export = (): SceneGroupSchema[] => {
-        return Array.from(this.sceneManager.sceneGroups).map(([id, sceneGroup]) => {
-            return sceneGroup.export();
+    export = (): SceneSchema[] => {
+        return Array.from(this.sceneManager.scenes).map(([id, scene]) => {
+            return scene.export();
         });
     };
 }
