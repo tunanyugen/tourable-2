@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, Paper, SxProps, TextFieldProps, Theme } from "@mui/material";
+import { Button, ButtonProps, Paper, TextFieldProps } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -55,6 +55,7 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                     top: "0",
                     transition: ".25s",
                     overflow: "auto",
+                    zIndex: "99",
                 }}
             >
                 <Paper elevation={6} sx={{ flex: "1", overflow: "auto", padding: "8px" }}>{this.renderComponents()}</Paper>

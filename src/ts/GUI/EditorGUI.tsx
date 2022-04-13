@@ -7,7 +7,7 @@ import PolyConfig from "./Config/PolyConfig";
 import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
 import SceneConfig from "./Config/SceneConfig";
 import GUI, { GUIProps, GUIState } from "./GUI";
-import { Box } from "@mui/material";
+import GlobalConfig from "./Config/GlobalConfig";
 
 export interface EditorGUIProps extends GUIProps {}
 
@@ -15,6 +15,7 @@ export interface EditorGUIState extends GUIState {}
 
 class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
     generalContextMenu: React.RefObject<GeneralContextMenu> = React.createRef();
+    globalConfig: React.RefObject<GlobalConfig> = React.createRef();
     floorHotspotConfig: React.RefObject<FloorHotspotConfig> = React.createRef();
     floatingHotspotConfig: React.RefObject<FloatingHotspotConfig> = React.createRef();
     infoHotspotConfig: React.RefObject<InfoHotspotConfig> = React.createRef();
@@ -28,6 +29,7 @@ class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
         return (
             <>
                 <GeneralContextMenu ref={this.generalContextMenu} tourable={this.props.tourable} />
+                <GlobalConfig ref={this.globalConfig} tourable={this.props.tourable} />
                 <FloorHotspotConfig ref={this.floorHotspotConfig} tourable={this.props.tourable} />
                 <FloatingHotspotConfig ref={this.floatingHotspotConfig} tourable={this.props.tourable} />
                 <InfoHotspotConfig ref={this.infoHotspotConfig} tourable={this.props.tourable} />

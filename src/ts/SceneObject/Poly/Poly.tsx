@@ -47,7 +47,7 @@ export default class Poly extends SceneObject implements PolySchema{
             this.tutorial(tourable);
         } else {
             tourable.onLoadObservable.Add(this._observableManager, () => {
-                let scene = tourable.sceneManager.scenes.get(this.sceneID);
+                let scene = tourable.sceneManager.currentSceneGroup.scenes.get(this.sceneID);
                 let pivotMap = new Map<number, boolean>();
                 schema.pivotIDs.forEach((id) => {
                     if (!pivotMap.has(id)){{
@@ -61,7 +61,7 @@ export default class Poly extends SceneObject implements PolySchema{
         }
     }
     createMesh = (tourable:Tourable) => {
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.sceneManager.currentSceneGroup.scenes.get(this.sceneID);
         // create mesh
         this.mesh = new Mesh(this.id.toString(), scene);
         // create material
@@ -75,7 +75,7 @@ export default class Poly extends SceneObject implements PolySchema{
         this.mesh.renderingGroupId = tourable.config.poly.renderingGroupID;
     }
     createVertexData = (tourable:Tourable) => {
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.sceneManager.currentSceneGroup.scenes.get(this.sceneID);
         // generate positions
         let positions:number[] = [];
         let verticesCount = parseInt(`${this.pivotIDs.length / 3}`) * 3;
@@ -95,7 +95,7 @@ export default class Poly extends SceneObject implements PolySchema{
     }
     updateMesh = (tourable:Tourable) => {
         // create new positions
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.sceneManager.currentSceneGroup.scenes.get(this.sceneID);
         let positions:number[] = [];
         let count = parseInt(`${this.pivotIDs.length / 3}`) * 3;
         for (let i = 0; i < count; i++){

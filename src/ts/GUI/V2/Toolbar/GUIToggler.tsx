@@ -16,8 +16,13 @@ class GUIToggler extends GUIObject<GUITogglerProps, GUITogglerState> {
                         <Switch
                             color="primary"
                             className="tourable__toolbar__gui-toggler"
+                            defaultChecked={true}
                             onChange={(e, checked) => {
-                                console.log(checked);
+                                if (checked){
+                                    this.props.tourable.clientGUI.current.show();
+                                } else {
+                                    this.props.tourable.clientGUI.current.hide();
+                                }
                             }}
                         />
                     }

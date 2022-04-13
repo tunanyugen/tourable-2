@@ -1,8 +1,9 @@
 import { Box, Button, TextField } from "@mui/material";
 import * as React from "react";
 import Poly from "../../SceneObject/Poly/Poly";
+import CKEditor from "../CKEditor/CKEditor";
 import Config, { ConfigProps, ConfigState } from "./Config";
-import Label from "./Label";
+import Label from "../Label/Label";
 
 export interface PolyConfigProps extends ConfigProps {}
 
@@ -25,13 +26,17 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 this.hide();
             },
         };
+        this.props.tourable.sceneManager.onSwitchSceneObservable.Add(this._observableManager, () => {
+            this.remount();
+        }, false)
     }
-    nameTimeout: NodeJS.Timeout;
-    panoramaTimeout: NodeJS.Timeout;
-    thumbnailTimeout: NodeJS.Timeout;
+    private _nameTimeout: NodeJS.Timeout;
+    private _panoramaTimeout: NodeJS.Timeout;
+    private _thumbnailTimeout: NodeJS.Timeout;
+    private _overviewTimeout: NodeJS.Timeout;
     renderComponents = () => {
         return (
-            <React.Fragment>
+            <React.Fragment key={this.state.key}>
                 <Label>Name</Label>
                 <TextField
                     {...this._textFieldProps}
@@ -45,10 +50,10 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         // update value
                         this.props.tourable.sceneManager.sceneToRender.panorama.name = e.target.value;
                         this.forceUpdate();
-                        if (this.nameTimeout) {
-                            clearTimeout(this.nameTimeout);
+                        if (this._nameTimeout) {
+                            clearTimeout(this._nameTimeout);
                         }
-                        this.nameTimeout = setTimeout(() => {
+                        this._nameTimeout = setTimeout(() => {
                             this.props.tourable.sceneManager.sceneToRender.panorama.name = e.target.value;
                         }, 500);
                     }}
@@ -66,10 +71,10 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         // update value
                         this.props.tourable.sceneManager.sceneToRender.panorama.src = e.target.value;
                         this.forceUpdate();
-                        if (this.panoramaTimeout) {
-                            clearTimeout(this.panoramaTimeout);
+                        if (this._panoramaTimeout) {
+                            clearTimeout(this._panoramaTimeout);
                         }
-                        this.panoramaTimeout = setTimeout(() => {
+                        this._panoramaTimeout = setTimeout(() => {
                             this.props.tourable.sceneManager.sceneToRender.panorama.src = e.target.value;
                         }, 500);
                     }}
@@ -87,11 +92,31 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                         // update value
                         this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail = e.target.value;
                         this.forceUpdate();
-                        if (this.thumbnailTimeout) {
-                            clearTimeout(this.thumbnailTimeout);
+                        if (this._thumbnailTimeout) {
+                            clearTimeout(this._thumbnailTimeout);
                         }
-                        this.thumbnailTimeout = setTimeout(() => {
+                        this._thumbnailTimeout = setTimeout(() => {
                             this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail = e.target.value;
+                        }, 500);
+                    }}
+                />
+                <Label>Overview</Label>
+                <CKEditor
+                    placeholder="Overview"
+                    defaultValue={
+                        this.props.tourable.sceneManager.sceneToRender
+                            ? this.props.tourable.sceneManager.sceneToRender.panorama.overview
+                            : ""
+                    }
+                    onChange={(value) => {
+                        // update value
+                        this.props.tourable.sceneManager.sceneToRender.panorama.overview = value;
+                        this.forceUpdate();
+                        if (this._overviewTimeout) {
+                            clearTimeout(this._overviewTimeout);
+                        }
+                        this._overviewTimeout = setTimeout(() => {
+                            this.props.tourable.sceneManager.sceneToRender.panorama.overview = value;
                         }, 500);
                     }}
                 />

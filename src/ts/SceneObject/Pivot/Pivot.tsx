@@ -45,7 +45,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
     }
 
     createMesh = (tourable:Tourable, sceneID:number) => {
-        let scene = tourable.sceneManager.scenes.get(sceneID);
+        let scene = tourable.sceneManager.currentSceneGroup.scenes.get(sceneID);
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
             size: tourable.config.pivot.size,

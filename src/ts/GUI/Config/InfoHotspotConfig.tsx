@@ -4,7 +4,7 @@ import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 import { Box, Paper, Slider } from "@mui/material";
 import CKEditor from "../CKEditor/CKEditor";
 import MediaSelector from "../MediaSelector/MediaSelector";
-import Label from "./Label";
+import Label from "../Label/Label";
 
 export interface InfoHotspotConfigProps extends ConfigProps {}
 

@@ -3,7 +3,7 @@ import Poly from "../../SceneObject/Poly/Poly";
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { Box, Slider, TextField } from '@mui/material';
 import CKEditor from '../CKEditor/CKEditor';
-import Label from './Label';
+import Label from '../Label/Label';
 const colorConverter = require("color-convert");
 
 export interface PolyConfigProps extends ConfigProps{

@@ -1,8 +1,8 @@
+import { Box } from "@mui/material";
 import GUI, { GUIProps, GUIState } from "./GUI";
 import Copyright from "./V2/Copyright/Copyright";
 import Library from "./V2/Library/Library";
 import Logo from "./V2/Logo/Logo";
-import Toolbar from "./V2/Toolbar/Toolbar";
 
 export interface ClientGUIProps extends GUIProps {}
 
@@ -23,12 +23,17 @@ class ClientGUI extends GUI<ClientGUIProps, ClientGUIState> {
     }
     render() {
         return (
-            <>
+            <Box
+                sx={{
+                    transition: ".25s",
+                    opacity: this.state.hidden ? "0" : "1",
+                    pointerEvents: this.state.hidden ? "none" : "all",
+                }}
+            >
                 <Library tourable={this.props.tourable} />
                 <Copyright tourable={this.props.tourable} />
                 <Logo tourable={this.props.tourable} />
-                <Toolbar tourable={this.props.tourable} />
-            </>
+            </Box>
         );
     }
 }

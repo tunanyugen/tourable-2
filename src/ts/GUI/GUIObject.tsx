@@ -2,6 +2,7 @@ import Observable from '@tunanyugen/observable';
 import { ObservableManager } from '@tunanyugen/observable/src/ts/ObservableManager';
 import * as React from 'react';
 import Tourable from '../Tourable/Tourable';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface GUIObjectProps {
     tourable:Tourable
@@ -11,6 +12,7 @@ export interface GUIObjectState {
     hidden:boolean;
     left:number;
     top:number;
+    key: string;
 }
  
 abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> extends React.Component<P, S> {
@@ -24,7 +26,8 @@ abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> ext
             ...this.state,
             hidden: true,
             left: 0,
-            top: 0
+            top: 0,
+            key: uuidv4(),
         }
     }
     move = (x:number, y:number, callback:()=>void = () => {}) => {
@@ -49,6 +52,9 @@ abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> ext
     }
     toggle = (callback:()=>void = () => {}) => {
         this.setState({hidden: !this.state.hidden}, callback)
+    }
+    remount = () => {
+        this.setState({key: uuidv4()})
     }
 }
  

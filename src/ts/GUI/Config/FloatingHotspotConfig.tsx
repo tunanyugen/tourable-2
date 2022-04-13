@@ -3,7 +3,7 @@ import Config, { ConfigProps, ConfigState } from "./Config";
 import { StandardMaterial, Vector3 } from "babylonjs";
 import FloatingHotspot from "../../SceneObject/Hotspot/FloatingHotspot";
 import MediaSelector from "../MediaSelector/MediaSelector";
-import Label from "./Label";
+import Label from "../Label/Label";
 import { Box, Slider } from "@mui/material";
 import CKEditor from "../CKEditor/CKEditor";
 
