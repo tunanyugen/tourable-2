@@ -30,6 +30,9 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
             },
         };
     }
+    applySettings = () => {
+        
+    }
     renderComponents = () => {
         return (
             <Paper className="tourable__info-hotspot-config">

@@ -98,6 +98,7 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
         this.show();
     };
     abstract renderComponents: () => JSX.Element;
+    abstract applySettings: () => void;
 }
 
 export default Config;

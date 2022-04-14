@@ -5,7 +5,11 @@ import Label from "../Label/Label";
 
 export interface GlobalConfigProps extends ConfigProps {}
 
-export interface GlobalConfigState extends ConfigState {}
+export interface GlobalConfigState extends ConfigState {
+    data: {
+        logo: string,
+    }
+}
 
 class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState> {
     target: Tourable = null;
@@ -18,11 +22,24 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
             onClose: () => {
                 this.hide();
             },
+            data: {
+                logo: ""
+            }
         };
-        this.onHideObservable.Add(this._observableManager, () => {
-            // update client gui on hide
-            this.props.tourable.clientGUI.current.forceUpdate();
+        // sync data on show
+        this.onShowObservable.Add(this._observableManager, () => {
+            this.setState({data: {
+                logo: this.props.tourable.config.logo
+            }})
         }, false)
+        // apply settings on hide
+        this.onHideObservable.Add(this._observableManager, () => {
+            this.applySettings();
+        }, false)
+    }
+    applySettings = () => {
+        // update client gui
+        this.props.tourable.clientGUI.current.forceUpdate();
     }
     renderComponents = () => {
         return (
@@ -31,7 +48,7 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
                 <TextField
                     {...this._textFieldProps}
                     placeholder="Logo"
-                    value={this.props.tourable.config.logo}
+                    value={this.state.data.logo}
                     onChange={(e) => {
                         this.props.tourable.config.logo = e.target.value;
                         this.forceUpdate();
