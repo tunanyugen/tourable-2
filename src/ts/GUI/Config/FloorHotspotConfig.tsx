@@ -34,6 +34,14 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
             },
         };
     }
+    syncSettings = () => {
+        this.setState({
+            hotspotStyle: this.target.texture,
+            hoverTitle: this.target.hoverTitle,
+            clickTitle: this.target.clickTitle,
+            targetSceneID: this.target.targetSceneID,
+        })
+    }
     applySettings = () => {
         this.target.texture = this.state.hotspotStyle;
         this.target.hoverTitle = this.state.hoverTitle;
@@ -57,7 +65,7 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.hoverTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({ hoverTitle: content });
                     }}
                 />
@@ -65,7 +73,7 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.clickTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({clickTitle: content})
                     }}
                 />

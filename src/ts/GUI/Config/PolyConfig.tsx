@@ -42,6 +42,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
             },
         };
     }
+    syncSettings = () => {}
     applySettings = () => {
         // set color
         let rgb = (colorConverter.hex.rgb(this.state.color) as number[]).map((color) => {
@@ -84,7 +85,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.hoverTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({ hoverTitle: content });
                     }}
                 />
@@ -92,7 +93,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.clickTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({ clickTitle: content });
                     }}
                 />

@@ -9,6 +9,7 @@ import CKEditor from "../CKEditor/CKEditor";
 export interface FloatingHotspotConfigProps extends ConfigProps {}
 
 export interface FloatingHotspotConfigState extends ConfigState {
+    hotspotStyle: string;
     hoverTitle: string;
     clickTitle: string;
     originalScaling: number;
@@ -35,10 +36,20 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
             },
         };
     }
+    syncSettings = () => {
+        this.setState({
+            hotspotStyle: this.target.texture,
+            hoverTitle: this.target.hoverTitle,
+            clickTitle: this.target.clickTitle,
+            originalScaling: this.target.originalScaling.x * 50,
+            targetSceneID: this.target.targetSceneID,
+        })
+    }
     applySettings = () => {
+        // set style
+        this.target.texture = this.state.hotspotStyle;
         // hover title
         this.target.hoverTitle = this.state.hoverTitle;
-        console.log(this.target.hoverTitle);
         // click title
         this.target.clickTitle = this.state.clickTitle;
         // scaling
@@ -47,25 +58,27 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
         this.target.mesh.scaling = scaling.clone();
         this.target.originalScaling = scaling.clone();
         // hotspot target scene
-        // set target scene
-        this.target.setTargetSceneID(this.props.tourable, this.state.targetSceneID);
-        // set entering angle
-        // store hotspot in another reference so that it can be kept when target changes
-        let hotspot = this.props.tourable.sceneManager.scenes
-            .get(this.target.sceneID)
-            .sceneObjects.get(this.target.id) as FloatingHotspot;
-        // switch to target scene
-        this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
-        this.props.tourable.uncontrolledGUI.current.confirm.current.display(
-            'Move to your desired angle and click "Confirm".',
-            () => {
-                hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
-                this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
-            },
-            () => {
-                this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
-            }
-        );
+        if (this.state.targetSceneID >= 0){
+            // set target scene
+            this.target.setTargetSceneID(this.props.tourable, this.state.targetSceneID);
+            // set entering angle
+            // store hotspot in another reference so that it can be kept when target changes
+            let hotspot = this.props.tourable.sceneManager.scenes
+                .get(this.target.sceneID)
+                .sceneObjects.get(this.target.id) as FloatingHotspot;
+            // switch to target scene
+            this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
+            this.props.tourable.uncontrolledGUI.current.confirm.current.display(
+                'Move to your desired angle and click "Confirm".',
+                () => {
+                    hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                },
+                () => {
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                }
+            );
+        }
     }
     renderComponents = () => {
         return (
@@ -77,19 +90,16 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                     })}
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(media) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.texture = media.src;
-                        // update to see texture change effect
-                        this.forceUpdate();
+                        this.setState({
+                            hotspotStyle: media.src
+                        })
                     }}
                 />
                 <Label>Title on hover</Label>
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.hoverTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({ hoverTitle: content });
                     }}
                 />
@@ -97,7 +107,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.state.clickTitle || ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         this.setState({ clickTitle: content });
                     }}
                 />
@@ -107,7 +117,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                     max={100}
                     value={this.state.originalScaling || 0}
                     onChange={(e, sliderValue) => {
-                        this.setState({originalScaling: this.state.originalScaling * 50});
+                        this.setState({originalScaling: sliderValue as number});
                     }}
                 />
                 <Label>Pick a scene</Label>

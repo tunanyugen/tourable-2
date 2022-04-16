@@ -31,26 +31,15 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 this.hide();
             },
         };
-        this.props.tourable.sceneManager.onSwitchSceneObservable.Add(
-            this._observableManager,
-            () => {
-                this.remount();
-            },
-            false
-        );
-        this.onShowObservable.Add(
-            this._observableManager,
-            () => {
-                this.setState({
-                    name: this.props.tourable.sceneManager.sceneToRender.panorama.name,
-                    panoramaSrc: this.props.tourable.sceneManager.sceneToRender.panorama.src,
-                    thumbnail: this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail,
-                    overview: this.props.tourable.sceneManager.sceneToRender.panorama.overview,
-                });
-            },
-            false
-        );
     }
+    syncSettings = () => {
+        this.setState({
+            name: this.props.tourable.sceneManager.sceneToRender.panorama.name,
+            panoramaSrc: this.props.tourable.sceneManager.sceneToRender.panorama.src,
+            thumbnail: this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail,
+            overview: this.props.tourable.sceneManager.sceneToRender.panorama.overview,
+        });
+    };
     applySettings = () => {
         // update value
         this.props.tourable.sceneManager.sceneToRender.panorama.name = this.state.name;
@@ -60,7 +49,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     };
     renderComponents = () => {
         return (
-            <React.Fragment key={this.state.key}>
+            <React.Fragment>
                 <Label>Name</Label>
                 <TextField
                     {...this._textFieldProps}
@@ -92,8 +81,8 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
                 <CKEditor
                     placeholder="Overview"
                     defaultValue={this.state.overview || ""}
-                    onChange={(value) => {
-                        this.setState({ overview: this.state.overview });
+                    onBlur={(value) => {
+                        this.setState({ overview: value });
                     }}
                 />
             </React.Fragment>

@@ -1,14 +1,19 @@
 import Config, { ConfigProps, ConfigState } from "./Config";
 import { StandardMaterial, Vector3 } from "babylonjs";
 import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
-import { Box, Paper, Slider } from "@mui/material";
+import { Paper, Slider } from "@mui/material";
 import CKEditor from "../CKEditor/CKEditor";
 import MediaSelector from "../MediaSelector/MediaSelector";
 import Label from "../Label/Label";
 
 export interface InfoHotspotConfigProps extends ConfigProps {}
 
-export interface InfoHotspotConfigState extends ConfigState {}
+export interface InfoHotspotConfigState extends ConfigState {
+    hotspotStyle: string;
+    originalScaling: number;
+    hoverTitle: string;
+    clickTitle: string;
+}
 
 class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, InfoHotspotConfigState> {
     target: InfoHotspot = null;
@@ -30,8 +35,9 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
             },
         };
     }
+    syncSettings = () => {}
     applySettings = () => {
-        
+        this.target.texture = this.state.hotspotStyle;   
     }
     renderComponents = () => {
         return (
@@ -43,12 +49,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                     })}
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(media) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.texture = media.src;
-                        // update to see texture change effect
-                        this.forceUpdate();
+                        this.setState({hotspotStyle: media.src})
                     }}
                 />
                 <Label>Scaling</Label>
@@ -70,7 +71,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.target ? this.target.hoverTitle : ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         if (!this.target) {
                             return;
                         }
@@ -81,7 +82,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                 <CKEditor
                     placeholder="Enter text here"
                     defaultValue={this.target ? this.target.clickTitle : ""}
-                    onChange={(content) => {
+                    onBlur={(content) => {
                         if (!this.target) {
                             return;
                         }

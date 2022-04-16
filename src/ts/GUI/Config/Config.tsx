@@ -15,10 +15,10 @@ export interface ConfigState extends GUIObjectState {
 
 abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends GUIObject<P, S> {
     abstract target: T;
-    protected _textFieldProps:TextFieldProps = {
+    protected _textFieldProps: TextFieldProps = {
         fullWidth: true,
         size: "small",
-    }
+    };
     constructor(props: P) {
         super(props);
         // hide on click on canvas
@@ -33,14 +33,20 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
             },
             true
         );
-        this.onHideObservable.Add(this._observableManager, () => {
-            this.applySettings();
-        }, false)
-    }
-    componentDidUpdate(prevProps: Readonly<ConfigProps>, prevState: Readonly<ConfigState>, snapshot?: any): void {
-        if (!prevState.hidden && prevState.hidden != this.state.hidden) {
-            this.target = null;
-        }
+        this.onShowObservable.Add(
+            this._observableManager,
+            () => {
+                this.syncSettings();
+            },
+            false
+        );
+        this.onHideObservable.Add(
+            this._observableManager,
+            () => {
+                this.applySettings();
+            },
+            false
+        );
     }
     render() {
         return (
@@ -61,8 +67,12 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                     zIndex: "99",
                 }}
             >
-                <Paper elevation={6} sx={{ flex: "1", overflow: "auto", padding: "8px" }}>{this.renderComponents()}</Paper>
-                <Paper elevation={6} sx={{ flex: "0 0 60px" }}>{this.renderButtons()}</Paper>
+                <Paper elevation={6} sx={{ flex: "1", overflow: "auto", padding: "8px" }}>
+                    {this.renderComponents()}
+                </Paper>
+                <Paper elevation={6} sx={{ flex: "0 0 60px" }}>
+                    {this.renderButtons()}
+                </Paper>
             </Paper>
         );
     }
@@ -95,12 +105,17 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
     };
     setTarget = (target: T) => {
         this.target = target;
-        this.setState({
-            hidden: false,
-        });
-        this.show();
+        this.setState(
+            {
+                hidden: false,
+            },
+            () => {
+                this.show();
+            }
+        );
     };
     abstract renderComponents: () => JSX.Element;
+    abstract syncSettings: () => void;
     abstract applySettings: () => void;
 }
 
