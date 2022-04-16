@@ -33,6 +33,9 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
             },
             true
         );
+        this.onHideObservable.Add(this._observableManager, () => {
+            this.applySettings();
+        }, false)
     }
     componentDidUpdate(prevProps: Readonly<ConfigProps>, prevState: Readonly<ConfigState>, snapshot?: any): void {
         if (!prevState.hidden && prevState.hidden != this.state.hidden) {

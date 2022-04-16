@@ -1,6 +1,4 @@
-import * as React from "react";
 import Config, { ConfigProps, ConfigState } from "./Config";
-import { StandardMaterial, Texture } from "babylonjs";
 import FloorHotspot from "../../SceneObject/Hotspot/FloorHotspot";
 import MediaSelector from "../MediaSelector/MediaSelector";
 import Label from "../Label/Label";
@@ -9,7 +7,12 @@ import CKEditor from "../CKEditor/CKEditor";
 
 export interface FloorHotspotConfigProps extends ConfigProps {}
 
-export interface FloorHotspotConfigState extends ConfigState {}
+export interface FloorHotspotConfigState extends ConfigState {
+    hotspotStyle: string;
+    hoverTitle: string;
+    clickTitle: string;
+    targetSceneID: number;
+}
 
 class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, FloorHotspotConfigState> {
     target: FloorHotspot = null;
@@ -31,6 +34,12 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
             },
         };
     }
+    applySettings = () => {
+        this.target.texture = this.state.hotspotStyle;
+        this.target.hoverTitle = this.state.hoverTitle;
+        this.target.clickTitle = this.state.clickTitle;
+        this.target.setTargetSceneID(this.props.tourable, this.state.targetSceneID);
+    };
     renderComponents = () => {
         return (
             <Box>
@@ -39,36 +48,25 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                     medias={this.props.tourable.config.assets.floorHotspot.map((src) => {
                         return { src };
                     })}
-                    defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
+                    defaultValue={this.state.hotspotStyle || ""}
                     onSelect={(media) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.texture = media.src;
-                        // refresh to see texture change effect
-                        this.forceUpdate();
+                        this.setState({ hotspotStyle: media.src })
                     }}
                 />
                 <Label>Title on hover</Label>
                 <CKEditor
                     placeholder="Enter text here"
-                    defaultValue={this.target ? this.target.hoverTitle : ""}
+                    defaultValue={this.state.hoverTitle || ""}
                     onChange={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.hoverTitle = content;
+                        this.setState({ hoverTitle: content });
                     }}
                 />
                 <Label>Title on click</Label>
                 <CKEditor
                     placeholder="Enter text here"
-                    defaultValue={this.target ? this.target.clickTitle : ""}
+                    defaultValue={this.state.clickTitle || ""}
                     onChange={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.clickTitle = content;
+                        this.setState({clickTitle: content})
                     }}
                 />
                 <Label>Pick a scene</Label>
@@ -78,9 +76,7 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                             label: scene.panorama.name,
                             src: scene.panorama.thumbnail,
                             onSelect: () => {
-                                if (this.target) {
-                                    this.target.setTargetSceneID(this.props.tourable, scene.id);
-                                }
+                                this.setState({targetSceneID: scene.id});
                             },
                         };
                     })}
