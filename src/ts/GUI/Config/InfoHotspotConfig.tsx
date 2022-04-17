@@ -10,7 +10,7 @@ export interface InfoHotspotConfigProps extends ConfigProps {}
 
 export interface InfoHotspotConfigState extends ConfigState {
     hotspotStyle: string;
-    originalScaling: number;
+    scaling: number;
     hoverTitle: string;
     clickTitle: string;
 }
@@ -35,10 +35,27 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
             },
         };
     }
-    syncSettings = () => {}
+    syncSettings = () => {
+        this.setState({
+            hotspotStyle: this.target.texture,
+            scaling: this.target.mesh.scaling.x * 50,
+            hoverTitle: this.target.hoverTitle,
+            clickTitle: this.target.clickTitle,
+        })
+    };
     applySettings = () => {
-        this.target.texture = this.state.hotspotStyle;   
-    }
+        // set hotspot texture
+        this.target.texture = this.state.hotspotStyle;
+        // set scaling
+        let value = this.state.scaling / 50;
+        let scaling = new Vector3(value, value, value);
+        this.target.mesh.scaling = scaling.clone();
+        this.target.originalScaling = scaling.clone();
+        // set hover title
+        this.target.hoverTitle = this.state.hoverTitle;
+        // set click title
+        this.target.clickTitle = this.state.clickTitle;
+    };
     renderComponents = () => {
         return (
             <Paper className="tourable__info-hotspot-config">
@@ -49,7 +66,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                     })}
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(media) => {
-                        this.setState({hotspotStyle: media.src})
+                        this.setState({ hotspotStyle: media.src });
                     }}
                 />
                 <Label>Scaling</Label>
@@ -58,13 +75,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                     max={100}
                     defaultValue={this.target ? this.target.originalScaling.x * 50 : 50}
                     onChange={(e, sliderValue) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        let value = parseInt(`${sliderValue as number}`) / 50;
-                        let scaling = new Vector3(value, value, value);
-                        this.target.mesh.scaling = scaling.clone();
-                        this.target.originalScaling = scaling.clone();
+                        this.setState({ scaling: sliderValue as number });
                     }}
                 />
                 <Label>Title on hover</Label>
@@ -72,10 +83,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                     placeholder="Enter text here"
                     defaultValue={this.target ? this.target.hoverTitle : ""}
                     onBlur={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.hoverTitle = content;
+                        this.setState({ hoverTitle: content });
                     }}
                 />
                 <Label>Title on click</Label>
@@ -83,10 +91,7 @@ class InfoHotspotConfig extends Config<InfoHotspot, InfoHotspotConfigProps, Info
                     placeholder="Enter text here"
                     defaultValue={this.target ? this.target.clickTitle : ""}
                     onBlur={(content) => {
-                        if (!this.target) {
-                            return;
-                        }
-                        this.target.clickTitle = content;
+                        this.setState({ clickTitle: content });
                     }}
                 />
             </Paper>

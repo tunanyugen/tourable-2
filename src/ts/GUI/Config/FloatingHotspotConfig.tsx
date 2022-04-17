@@ -12,7 +12,7 @@ export interface FloatingHotspotConfigState extends ConfigState {
     hotspotStyle: string;
     hoverTitle: string;
     clickTitle: string;
-    originalScaling: number;
+    scaling: number;
     targetSceneID: number;
 }
 
@@ -41,7 +41,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
             hotspotStyle: this.target.texture,
             hoverTitle: this.target.hoverTitle,
             clickTitle: this.target.clickTitle,
-            originalScaling: this.target.originalScaling.x * 50,
+            scaling: this.target.mesh.scaling.x * 50,
             targetSceneID: this.target.targetSceneID,
         })
     }
@@ -53,7 +53,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
         // click title
         this.target.clickTitle = this.state.clickTitle;
         // scaling
-        let value = parseInt(`${this.state.originalScaling}`) / 50;
+        let value = parseInt(`${this.state.scaling}`) / 50;
         let scaling = new Vector3(value, value, value);
         this.target.mesh.scaling = scaling.clone();
         this.target.originalScaling = scaling.clone();
@@ -115,9 +115,9 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                 <Slider
                     min={15}
                     max={100}
-                    value={this.state.originalScaling || 0}
+                    value={this.state.scaling || 0}
                     onChange={(e, sliderValue) => {
-                        this.setState({originalScaling: sliderValue as number});
+                        this.setState({scaling: sliderValue as number});
                     }}
                 />
                 <Label>Pick a scene</Label>
