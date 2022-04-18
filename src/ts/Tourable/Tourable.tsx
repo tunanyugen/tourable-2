@@ -60,7 +60,7 @@ export default class Tourable {
         this.engine.renderEvenInBackground = false;
         // create scenes
         if (sceneSchemas.length <= 0) {
-            this.sceneManager.createDefaultScene(this);
+            this.sceneManager.createSceneGroup(this);
         } else {
             sceneSchemas.forEach((schema) => {
                 new Scene(this, new Panorama(schema.panorama), schema);

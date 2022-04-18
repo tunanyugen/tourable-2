@@ -8,6 +8,7 @@ import GeneralContextMenu from "./ContextMenu/GeneralContextMenu";
 import SceneConfig from "./Config/SceneConfig";
 import GUI, { GUIProps, GUIState } from "./GUI";
 import GlobalConfig from "./Config/GlobalConfig";
+import SceneGroupConfig from "./Config/SceneGroupConfig";
 
 export interface EditorGUIProps extends GUIProps {}
 
@@ -22,6 +23,7 @@ class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
     pivotConfig: React.RefObject<PivotConfig> = React.createRef();
     polyConfig: React.RefObject<PolyConfig> = React.createRef();
     sceneConfig: React.RefObject<SceneConfig> = React.createRef();
+    sceneGroupConfig: React.RefObject<SceneGroupConfig> = React.createRef();
     constructor(props: EditorGUIProps) {
         super(props);
     }
@@ -36,6 +38,7 @@ class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
                 <PivotConfig ref={this.pivotConfig} tourable={this.props.tourable} />
                 <PolyConfig ref={this.polyConfig} tourable={this.props.tourable} />
                 <SceneConfig ref={this.sceneConfig} tourable={this.props.tourable} />
+                <SceneGroupConfig ref={this.sceneGroupConfig} tourable={this.props.tourable} />
             </>
         );
     }

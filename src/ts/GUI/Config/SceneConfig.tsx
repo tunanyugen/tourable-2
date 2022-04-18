@@ -1,33 +1,33 @@
 import { TextField } from "@mui/material";
 import * as React from "react";
-import Poly from "../../SceneObject/Poly/Poly";
 import CKEditor from "../CKEditor/CKEditor";
 import Config, { ConfigProps, ConfigState } from "./Config";
 import Label from "../Label/Label";
+import Scene from "../../Scene/Scene";
 
-export interface PolyConfigProps extends ConfigProps {}
+export interface SceneConfigProps extends ConfigProps {}
 
-export interface PolyConfigState extends ConfigState {
+export interface SceneConfigState extends ConfigState {
     name: string;
     panoramaSrc: string;
     thumbnail: string;
     overview: string;
 }
 
-class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
-    target: Poly = null;
-    constructor(props: PolyConfigProps) {
+class SceneConfig extends Config<Scene, SceneConfigProps, SceneConfigState> {
+    target: Scene = null;
+    constructor(props: SceneConfigProps) {
         super(props);
         this.state = {
             ...this.state,
-            title: "Edit poly",
+            title: "Edit scene",
             hidden: true,
             onClose: () => {
                 this.hide();
             },
             onDelete: () => {
                 // dispose scene
-                this.props.tourable.sceneManager.sceneToRender.delete(this.props.tourable);
+                this.target.delete(this.props.tourable);
                 this.hide();
             },
         };
@@ -46,6 +46,7 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
         this.props.tourable.sceneManager.sceneToRender.panorama.src = this.state.panoramaSrc;
         this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail = this.state.thumbnail;
         this.props.tourable.sceneManager.sceneToRender.panorama.overview = this.state.overview;
+        this.applySettingsObservable.Resolve(this.state);
     };
     renderComponents = () => {
         return (
@@ -90,4 +91,4 @@ class PolyConfig extends Config<Poly, PolyConfigProps, PolyConfigState> {
     };
 }
 
-export default PolyConfig;
+export default SceneConfig;

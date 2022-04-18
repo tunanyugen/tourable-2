@@ -2,6 +2,7 @@ import { Button, ButtonProps, Paper, TextFieldProps } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Observable from "@tunanyugen/observable";
 
 export interface ConfigProps extends GUIObjectProps {}
 
@@ -15,6 +16,7 @@ export interface ConfigState extends GUIObjectState {
 
 abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends GUIObject<P, S> {
     abstract target: T;
+    public applySettingsObservable:Observable<GUIObjectState> = new Observable(this._observableManager);
     protected _textFieldProps: TextFieldProps = {
         fullWidth: true,
         size: "small",

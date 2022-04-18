@@ -22,10 +22,42 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
             },
             true
         );
+        this.props.tourable.onLoadObservable.Add(
+            this._observableManager,
+            () => {
+                // update on new scene created
+                this.props.tourable.sceneManager.createDefaultSceneObservable.Add(
+                    this._observableManager,
+                    (scene) => {
+                        this.forceUpdate();
+                    },
+                    false
+                );
+                // update on scene settings applied
+                this.props.tourable.editorGUI.current.sceneConfig.current.applySettingsObservable.Add(
+                    this._observableManager,
+                    () => {
+                        this.forceUpdate();
+                    },
+                    false
+                );
+                // update on scene group change
+                this.props.tourable.sceneManager.changeSceneGroupObservable.Add(
+                    this._observableManager,
+                    (sceneGroup) => {
+                        this.forceUpdate();
+                    },
+                    false
+                );
+                // rerender once tourable has loaded
+                this.forceUpdate();
+            },
+            true
+        );
         this.state = {
             ...this.state,
-            currentItem: 0
-        }
+            currentItem: 0,
+        };
     }
     private _container: React.RefObject<HTMLDivElement> = React.createRef();
     render() {
@@ -57,21 +89,26 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
         );
     }
     /**
-     * 
+     *
      * @param direction 1 = next
      * @param direction -1 = previous
      */
     scrollTo = (direction: -1 | 1) => {
         let index = this.state.currentItem + direction;
-        if (this._container.current.children[index]){
-            this.setState({currentItem: index}, () => {
+        if (this._container.current.children[index]) {
+            this.setState({ currentItem: index }, () => {
                 this._container.current.scrollTo((this._container.current.children[this.state.currentItem] as HTMLElement).offsetLeft, 0);
             });
         }
     };
     renderItems = () => {
-        let scenes = Array.from(this.props.tourable.sceneManager.scenes);
-        return scenes.map(([key, scene], index) => {
+        if (!this.props.tourable.sceneManager.currentSceneGroup) {
+            return [];
+        }
+        let scenes = this.props.tourable.sceneManager.currentSceneGroup.sceneIDs.map((sceneID) => {
+            return this.props.tourable.sceneManager.scenes.get(sceneID);
+        });
+        return scenes.map((scene, index) => {
             return (
                 <LibraryItem
                     key={`${scene.panorama.name}-${index}`}

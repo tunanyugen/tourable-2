@@ -9,17 +9,28 @@ import SceneGroup from "../../Scene/SceneGroup";
 
 export default class SceneManager {
     protected _observableManager: ObservableManager = new ObservableManager();
-    public sceneGroup: Map<number, SceneGroup> = new Map();
+    public createDefaultSceneObservable: Observable<Scene> = new Observable(this._observableManager);
+    public changeSceneGroupObservable: Observable<SceneGroup> = new Observable(this._observableManager);
+    public sceneGroups: SceneGroup[] = [];
     public scenes: Map<number, Scene> = new Map();
     private _sceneToRender: Scene;
     get sceneToRender() {
         return this._sceneToRender;
     }
-    public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(
-        this._observableManager,
-        null,
-        false
-    );
+    private _currentSceneGroup: SceneGroup;
+    get currentSceneGroup() {
+        return this._currentSceneGroup;
+    }
+    public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(this._observableManager, null, false);
+    switchSceneGroup = (tourable: Tourable, sceneGroup: SceneGroup) => {
+        if (this.currentSceneGroup == sceneGroup){ return }
+        this._currentSceneGroup = sceneGroup;
+        if (this.currentSceneGroup.sceneIDs.length <= 0) {
+            this.createDefaultScene(tourable);
+        }
+        this.switchScene(tourable, this.currentSceneGroup.sceneIDs[0]);
+        this.changeSceneGroupObservable.Resolve(this.currentSceneGroup);
+    };
     setScene = (tourable: Tourable, scene: Scene, delay: number = 500, callback = () => {}) => {
         // show load screen
         tourable.uncontrolledGUI.current.loadScreen.current.show();
@@ -64,6 +75,10 @@ export default class SceneManager {
     };
 
     constructor(tourable: Tourable) {}
+    createSceneGroup = (tourable: Tourable) => {
+        let newSceneGroup = new SceneGroup(tourable);
+        this.switchSceneGroup(tourable, newSceneGroup);
+    }
     createDefaultScene = (tourable: Tourable): Scene => {
         let newPanorama = new Panorama({
             name: "New scene",
@@ -71,7 +86,10 @@ export default class SceneManager {
             thumbnail: tourable.config.defaultPanorama,
             overview: "",
         });
-        return new Scene(tourable, newPanorama);
+        let scene = new Scene(tourable, newPanorama);
+        this.currentSceneGroup.addScene(scene);
+        this.createDefaultSceneObservable.Resolve(scene);
+        return scene;
     };
     switchScene = (tourable: Tourable, sceneID: number, hotspotID: number = -1) => {
         // get scene to check if scene exists

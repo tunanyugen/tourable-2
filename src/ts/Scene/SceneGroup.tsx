@@ -1,17 +1,13 @@
 import HasSchema from "../Interfaces/HasSchema";
 import Schema from "../Interfaces/Schema";
 import Tourable from "../Tourable/Tourable";
+import Scene from "./Scene";
 export interface SceneGroupSchema extends Schema {
-    id: number;
     name: string;
     sceneIDs: number[];
 }
 export default class SceneGroup implements HasSchema, SceneGroupSchema {
-    private _id: number = -1;
-    public get id() {
-        return this._id;
-    }
-    private _name: string = "";
+    private _name: string = "Default scene group";
     public get name() {
         return this._name;
     }
@@ -19,14 +15,24 @@ export default class SceneGroup implements HasSchema, SceneGroupSchema {
         this._name = value;
     }
     public sceneIDs: number[] = [];
+    constructor(tourable:Tourable){
+        tourable.sceneManager.sceneGroups.push(this);
+    }
+    addScene = (scene: Scene) => {
+        if (!this.sceneIDs.includes(scene.id)){
+            this.sceneIDs.push(scene.id);
+        }
+    }
     loadSchema = (tourable: Tourable, schema: SceneGroupSchema) => {
-        this._id = schema.id;
-        tourable.uidGenerator.uid = this._id + 1;
         this._name = schema.name;
     };
+    delete = (tourable: Tourable) => {
+        this.sceneIDs.map((sceneID) => {
+            tourable.sceneManager.scenes.get(sceneID).delete(tourable);
+        })
+    }
     export = () => {
         return {
-            id: this.id,
             name: this.name,
             sceneIDs: this.sceneIDs,
         };
