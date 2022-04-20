@@ -74,11 +74,11 @@ export default class Tourable {
         this.onLoadObservable.Resolve();
         this._loaded = true;
         // run render loop
-        this.engine.runRenderLoop(() => {
-            if (this.sceneManager.sceneToRender) {
-                this.sceneManager.sceneToRender.render();
-            }
-        });
+        // this.engine.runRenderLoop(() => {
+        //     if (this.sceneManager.sceneToRender) {
+        //         this.sceneManager.sceneToRender.render();
+        //     }
+        // });
         // resize on viewport change
         window.addEventListener("resize", () => {
             this.engine.resize();

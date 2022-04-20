@@ -7,6 +7,7 @@ export default class Config{
         public cameraSpeed = 0.16, // camera movement speed
         public mouseMoveInterval = 16, // floor hotspot size
         public defaultPanorama = "/static/default-panorama.jpg",
+        public name = "Căn hộ cao cấp </br> Garden sky view",
         public logo = "/static/logo.png",
         public description = "",
         public floorHotspot = {

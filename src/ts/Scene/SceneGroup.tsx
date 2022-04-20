@@ -7,7 +7,7 @@ export interface SceneGroupSchema extends Schema {
     sceneIDs: number[];
 }
 export default class SceneGroup implements HasSchema, SceneGroupSchema {
-    private _name: string = "Default scene group";
+    private _name: string = `Default scene group ${new Date().getTime()}`;
     public get name() {
         return this._name;
     }

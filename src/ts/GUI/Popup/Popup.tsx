@@ -26,6 +26,7 @@ class Popup extends GUIObject<PopupProps, PopupState> {
                     left: "50%",
                     top: "50%",
                     padding: "8px",
+                    maxWidth: "80vw",
                     transform: "translate(-50%, -50%)",
                     transition: ".25s",
                     opacity: this.state.hidden ? "0" : "1",

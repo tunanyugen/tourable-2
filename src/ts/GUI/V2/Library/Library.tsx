@@ -67,7 +67,7 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
                     position: "absolute",
                     left: "50%",
                     bottom: "calc(100vh * 50 / 1080)",
-                    width: "calc(100vw * 1120 / 1920)",
+                    width: "calc(100vw * 900 / 1920)",
                     transform: "translate(-50%, 0)",
                 }}
             >
