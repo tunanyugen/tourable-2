@@ -39,7 +39,8 @@ class Popup extends GUIObject<PopupProps, PopupState> {
         );
     }
     display = (content:string) => {
-        this.setState({content}, () => {
+        let processedContent = !content || content.length <= 0 ? "No data" : content;
+        this.setState({content: processedContent}, () => {
             this.show(() => {
                 this.delayedHide(1000)
             })

@@ -13,7 +13,7 @@ class Map extends GUIObject<MapProps, MapState> {
     render() {
         return (
             <ToolbarItem onClick={(e) => {
-                console.log("Showing map")
+                this.props.tourable.uncontrolledGUI.current.popup.current.display(this.props.tourable.sceneManager.sceneToRender.panorama.googleMap);
             }}>
                 <LocationOnOutlinedIcon />
             </ToolbarItem>

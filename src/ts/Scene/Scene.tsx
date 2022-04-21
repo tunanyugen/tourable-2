@@ -179,6 +179,8 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             panorama: {
                 name: this.panorama.name,
                 src: this.panorama.src,
+                info: this.panorama.info,
+                googleMap: this.panorama.googleMap,
                 thumbnail: this.panorama.thumbnail,
                 overview: this.panorama.overview,
             },

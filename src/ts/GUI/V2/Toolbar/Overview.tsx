@@ -14,20 +14,12 @@ class Overview extends GUIObject<OverviewProps, OverviewState> {
         return (
             <ToolbarItem
                 onClick={(e) => {
-                    this.props.tourable.uncontrolledGUI.current.popup.current.display(this.renderContent());
+                    this.props.tourable.uncontrolledGUI.current.popup.current.display(this.props.tourable.sceneManager.sceneToRender.panorama.overview);
                 }}
             >
                 <MapOutlinedIcon />
             </ToolbarItem>
         );
-    }
-    renderContent = () => {
-        let overview = this.props.tourable.sceneManager.sceneToRender.panorama.overview;
-        if (!overview || overview.length <= 0){
-            return "No data"
-        } else {
-            return overview;
-        }
     }
 }
 

@@ -83,6 +83,8 @@ export default class SceneManager {
         let newPanorama = new Panorama({
             name: "New scene",
             src: tourable.config.defaultPanorama,
+            info: "",
+            googleMap: "",
             thumbnail: tourable.config.defaultPanorama,
             overview: "",
         });

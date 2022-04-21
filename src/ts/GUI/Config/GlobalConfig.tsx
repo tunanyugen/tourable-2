@@ -2,11 +2,13 @@ import Config, { ConfigProps, ConfigState } from "./Config";
 import Tourable from "../../Tourable/Tourable";
 import { Box, TextField } from "@mui/material";
 import Label from "../Label/Label";
+import CKEditor from "../CKEditor/CKEditor";
 
 export interface GlobalConfigProps extends ConfigProps {}
 
 export interface GlobalConfigState extends ConfigState {
     logo: string;
+    googleMap: string;
 }
 
 class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState> {
@@ -21,6 +23,7 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
                 this.hide();
             },
             logo: "",
+            googleMap: "",
         };
     }
     syncSettings = () => {
@@ -28,6 +31,7 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
     };
     applySettings = () => {
         // update client gui
+        this.props.tourable.sceneManager.sceneToRender.panorama.googleMap = this.state.googleMap;
         this.props.tourable.clientGUI.current.forceUpdate();
     };
     renderComponents = () => {
@@ -41,6 +45,14 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
                     onChange={(e) => {
                         this.props.tourable.config.logo = e.target.value;
                         this.forceUpdate();
+                    }}
+                />
+                <Label>Google map</Label>
+                <CKEditor
+                    placeholder="Enter text here"
+                    defaultValue={this.state.googleMap || ""}
+                    onBlur={(content) => {
+                        this.setState({ googleMap: content });
                     }}
                 />
             </Box>

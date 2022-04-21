@@ -18,7 +18,7 @@ class Info extends GUIObject<InfoProps, InfoState> {
         return (
             <ToolbarItem
                 onClick={(e) => {
-                    console.log("Showing info");
+                    this.props.tourable.uncontrolledGUI.current.popup.current.display(this.props.tourable.sceneManager.sceneToRender.panorama.info);
                 }}
             >
                 <InfoOutlinedIcon />

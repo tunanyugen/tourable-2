@@ -25,6 +25,11 @@
   min-height: 200px !important;
 }
 
+.ck-dropdown__panel {
+  max-width: 318px;
+  overlfow: hidden;
+}
+
 .tourable__toolbar__gui-toggler .MuiSwitch-thumb {
   color: white;
 }

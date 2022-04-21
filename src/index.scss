@@ -14,5 +14,9 @@ $ckeditorBorderColor: #cecece;
 .ck-editor__editable_inline {
     min-height: 200px !important;
 }
+.ck-dropdown__panel {
+    max-width: 318px;
+    overlfow: hidden;
+}
 
 @import "./scss/toolbar.scss"
