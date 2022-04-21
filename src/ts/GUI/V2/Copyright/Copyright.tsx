@@ -20,7 +20,7 @@ class Copyright extends GUIObject<CopyrightProps, CopyrightState> {
                     bottom: "calc(100vh * 20 / 1920)",
                 }}
             >
-                <Typography color="#ffffff" fontWeight="700">
+                <Typography fontSize="14px" color="#ffffff" fontWeight="700">
                     Virtual Tour By Anflash Technology
                 </Typography>
             </Box>

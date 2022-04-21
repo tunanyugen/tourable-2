@@ -22,6 +22,9 @@ class Fullscreen extends GUIObject<FullscreenProps, FullscreenState> {
                         color: "white",
                         fontWeight: "700",
                     }}
+                    onClick={(e) => {
+                        document.body.requestFullscreen();
+                    }}
                 />
             </Box>
         );

@@ -5,7 +5,7 @@ import GUIToggler from "./GUIToggler";
 import Info from "./Info";
 import Map from "./Map";
 import MusicToggler from "./MusicToggler";
-import ProjectMap from "./ProjectMap";
+import Overview from "./Overview";
 
 export interface ToolbarProps extends GUIObjectProps {}
 
@@ -38,7 +38,7 @@ class Toolbar extends GUIObject<ToolbarProps, ToolbarState> {
                     <MusicToggler tourable={this.props.tourable} />
                     <Info tourable={this.props.tourable} />
                     <Map tourable={this.props.tourable} />
-                    <ProjectMap tourable={this.props.tourable} />
+                    <Overview tourable={this.props.tourable} />
                 </Box>
                 <Box
                     sx={{

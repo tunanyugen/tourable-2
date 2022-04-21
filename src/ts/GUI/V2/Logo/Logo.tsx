@@ -18,10 +18,10 @@ class Logo extends GUIObject<LogoProps, LogoState> {
                     left: "0px",
                     top: "24px",
                     display: "flex",
-                    height: "87px",
+                    height: "72px",
                     padding: "12px",
-                    borderTopRightRadius: "20px",
-                    borderBottomRightRadius: "20px",
+                    borderTopRightRadius: "16px",
+                    borderBottomRightRadius: "16px",
                     background: "#c4c4c4",
                 }}
             >

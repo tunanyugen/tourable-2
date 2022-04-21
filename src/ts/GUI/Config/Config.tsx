@@ -1,7 +1,8 @@
-import { Box, Button, ButtonProps, Paper, SxProps, TextFieldProps, Theme } from "@mui/material";
+import { Button, ButtonProps, Paper, TextFieldProps } from "@mui/material";
 import GUIObject, { GUIObjectProps, GUIObjectState } from "../GUIObject";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Observable from "@tunanyugen/observable";
 
 export interface ConfigProps extends GUIObjectProps {}
 
@@ -15,10 +16,11 @@ export interface ConfigState extends GUIObjectState {
 
 abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends GUIObject<P, S> {
     abstract target: T;
-    protected _textFieldProps:TextFieldProps = {
+    public applySettingsObservable:Observable<GUIObjectState> = new Observable(this._observableManager);
+    protected _textFieldProps: TextFieldProps = {
         fullWidth: true,
         size: "small",
-    }
+    };
     constructor(props: P) {
         super(props);
         // hide on click on canvas
@@ -33,11 +35,20 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
             },
             true
         );
-    }
-    componentDidUpdate(prevProps: Readonly<ConfigProps>, prevState: Readonly<ConfigState>, snapshot?: any): void {
-        if (!prevState.hidden && prevState.hidden != this.state.hidden) {
-            this.target = null;
-        }
+        this.onShowObservable.Add(
+            this._observableManager,
+            () => {
+                this.syncSettings();
+            },
+            false
+        );
+        this.onHideObservable.Add(
+            this._observableManager,
+            () => {
+                this.applySettings();
+            },
+            false
+        );
     }
     render() {
         return (
@@ -55,10 +66,15 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
                     top: "0",
                     transition: ".25s",
                     overflow: "auto",
+                    zIndex: "99",
                 }}
             >
-                <Paper elevation={6} sx={{ flex: "1", overflow: "auto", padding: "8px" }}>{this.renderComponents()}</Paper>
-                <Paper elevation={6} sx={{ flex: "0 0 60px" }}>{this.renderButtons()}</Paper>
+                <Paper elevation={6} sx={{ flex: "1", overflow: "auto", padding: "8px" }}>
+                    {this.renderComponents()}
+                </Paper>
+                <Paper elevation={6} sx={{ flex: "0 0 60px" }}>
+                    {this.renderButtons()}
+                </Paper>
             </Paper>
         );
     }
@@ -91,12 +107,18 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
     };
     setTarget = (target: T) => {
         this.target = target;
-        this.setState({
-            hidden: false,
-        });
-        this.show();
+        this.setState(
+            {
+                hidden: false,
+            },
+            () => {
+                this.show();
+            }
+        );
     };
     abstract renderComponents: () => JSX.Element;
+    abstract syncSettings: () => void;
+    abstract applySettings: () => void;
 }
 
 export default Config;

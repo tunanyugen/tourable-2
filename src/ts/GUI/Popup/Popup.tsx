@@ -10,7 +10,6 @@ export interface PopupState extends GUIObjectState{
 }
  
 class Popup extends GUIObject<PopupProps, PopupState> {
-    private get __className(){ return this.state.hidden ? "hide" : "show" }
     constructor(props: PopupProps) {
         super(props);
         this.state = {
@@ -26,6 +25,8 @@ class Popup extends GUIObject<PopupProps, PopupState> {
                     position: "absolute",
                     left: "50%",
                     top: "50%",
+                    padding: "8px",
+                    maxWidth: "80vw",
                     transform: "translate(-50%, -50%)",
                     transition: ".25s",
                     opacity: this.state.hidden ? "0" : "1",
@@ -38,7 +39,8 @@ class Popup extends GUIObject<PopupProps, PopupState> {
         );
     }
     display = (content:string) => {
-        this.setState({content}, () => {
+        let processedContent = !content || content.length <= 0 ? "No data" : content;
+        this.setState({content: processedContent}, () => {
             this.show(() => {
                 this.delayedHide(1000)
             })

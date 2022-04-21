@@ -6,6 +6,7 @@ import InfoHotspot from "../../SceneObject/Hotspot/InfoHotspot";
 import Pivot from "../../SceneObject/Pivot/Pivot";
 import Mathematics from "../../Utilities/Mathematics/Mathematics";
 import Poly from "../../SceneObject/Poly/Poly";
+import SceneGroup from "../../Scene/SceneGroup";
 
 export interface GeneralContextMenuProps extends ContextMenuProps {}
 
@@ -46,8 +47,30 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
             items: [
                 {
                     icon: () => "",
+                    name: "Global config",
+                    onSelect: () => {
+                        this.props.tourable.editorGUI.current.globalConfig.current.show();
+                    },
+                },
+                {
+                    icon: () => "",
                     name: "Scene",
                     children: [
+                        {
+                            icon: () => "",
+                            name: "Create scene group",
+                            onSelect: () => {
+                                let newSceneGroup = new SceneGroup(this.props.tourable);
+                                this.props.tourable.sceneManager.switchSceneGroup(this.props.tourable, newSceneGroup);
+                            },
+                        },
+                        {
+                            icon: () => "",
+                            name: "Config scene group",
+                            onSelect: () => {
+                                this.props.tourable.editorGUI.current.sceneGroupConfig.current.show();
+                            },
+                        },
                         {
                             icon: () => "",
                             name: "Create scene",

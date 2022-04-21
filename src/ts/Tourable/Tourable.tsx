@@ -1,5 +1,4 @@
 import * as React from "react";
-import GUI from "../GUI/GUI";
 import UIDGenerator from "../Generator/UIDGenerator";
 import SceneManager from "../Manager/SceneManager/SceneManager";
 import SceneObjectManager from "../Manager/SceneObjectManager/SceneObjectManager";
@@ -61,10 +60,10 @@ export default class Tourable {
         this.engine.renderEvenInBackground = false;
         // create scenes
         if (sceneSchemas.length <= 0) {
-            this.sceneManager.createDefaultScene(this);
+            this.sceneManager.createSceneGroup(this);
         } else {
             sceneSchemas.forEach((schema) => {
-                new Scene(this, new Panorama(schema.panorama.name, schema.panorama.src, schema.panorama.thumbnail), schema);
+                new Scene(this, new Panorama(schema.panorama), schema);
             });
         }
         // switch to first scene
@@ -75,11 +74,11 @@ export default class Tourable {
         this.onLoadObservable.Resolve();
         this._loaded = true;
         // run render loop
-        this.engine.runRenderLoop(() => {
-            if (this.sceneManager.sceneToRender) {
-                this.sceneManager.sceneToRender.render();
-            }
-        });
+        // this.engine.runRenderLoop(() => {
+        //     if (this.sceneManager.sceneToRender) {
+        //         this.sceneManager.sceneToRender.render();
+        //     }
+        // });
         // resize on viewport change
         window.addEventListener("resize", () => {
             this.engine.resize();

@@ -24,7 +24,7 @@ abstract class GUIObject<P extends GUIObjectProps, S extends GUIObjectState> ext
             ...this.state,
             hidden: true,
             left: 0,
-            top: 0
+            top: 0,
         }
     }
     move = (x:number, y:number, callback:()=>void = () => {}) => {

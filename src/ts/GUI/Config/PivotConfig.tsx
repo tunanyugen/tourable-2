@@ -26,6 +26,8 @@ class PivotConfig extends Config<Pivot, PivotConfigProps, PivotConfigState> {
             }
         }
     }
+    syncSettings = () => {}
+    applySettings = () => {}
     renderComponents = () => {
         return (
             <React.Fragment></React.Fragment>
