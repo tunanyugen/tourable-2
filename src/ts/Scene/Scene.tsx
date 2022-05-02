@@ -2,33 +2,33 @@ import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar, Texture 
 import UIDGenerator from "../Generator/UIDGenerator";
 import Panorama, { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
-import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
-import FloorHotspot, { FloorHotspotSchema } from "../SceneObject/Hotspot/FloorHotspot";
-import FloatingHotspot from "../SceneObject/Hotspot/FloatingHotspot";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import InfoHotspot from "../SceneObject/Hotspot/InfoHotspot";
-import Pivot from "../SceneObject/Pivot/Pivot";
-import Poly from "../SceneObject/Poly/Poly";
 import Schema from "../Interfaces/Schema";
 import HasSchema from "../Interfaces/HasSchema";
 
 export interface SceneSchema extends Schema {
     id: number;
-    panorama: Panorama | PanoramaSchema;
-    sceneObjects: Map<number, SceneObject> | SceneObjectSchema[] | FloorHotspotSchema[];
+    panoramaId: number;
+    sceneObjectIds: number[];
 }
 
 export default class Scene extends BABYLONScene implements HasSchema, SceneSchema {
     protected _observableManager: ObservableManager = new ObservableManager();
     public uidGenerator: UIDGenerator = new UIDGenerator();
+    public photoDome: PhotoDome;
+    public camera: FreeCamera;
+    // id
     private _id: number;
     public get id() {
         return this._id;
     }
-    public sceneObjects: Map<number, SceneObject> = new Map();
-    public photoDome: PhotoDome;
-    public panorama: Panorama;
-    public camera: FreeCamera;
+    // panoramaId
+    private _panoramaId: number = -1;
+    public get panoramaId() {
+        return this._panoramaId;
+    }
+    // sceneObjectIds
+    public sceneObjectIds: number[] = [];
     constructor(tourable: Tourable, panorama: Panorama, schema: SceneSchema = null) {
         super(tourable.engine);
         // load schema
@@ -146,47 +146,14 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
     loadSchema = (tourable: Tourable, schema: SceneSchema) => {
         this._id = schema.id;
         tourable.uidGenerator.uid = this.id + 1;
-        this.panorama = new Panorama(schema.panorama);
-        tourable.onLoadObservable.Add(
-            this._observableManager,
-            () => {
-                (schema.sceneObjects as any).forEach((schema) => {
-                    switch (schema.type) {
-                        case "floorHotspot":
-                            new FloorHotspot(tourable, this.id, schema);
-                            break;
-                        case "floatingHotspot":
-                            new FloatingHotspot(tourable, this.id, schema);
-                            break;
-                        case "infoHotspot":
-                            new InfoHotspot(tourable, this.id, schema);
-                            break;
-                        case "poly":
-                            new Poly(tourable, this.id, schema);
-                            break;
-                        case "pivot":
-                            new Pivot(tourable, this.id, schema);
-                            break;
-                    }
-                });
-            },
-            true
-        );
+        this.panoramaId = schema.panoramaId;
+        this.sceneObjectIds = schema.sceneObjectIds;
     };
     export = (): SceneSchema => {
         return {
             id: this.id,
-            panorama: {
-                name: this.panorama.name,
-                src: this.panorama.src,
-                info: this.panorama.info,
-                googleMap: this.panorama.googleMap,
-                thumbnail: this.panorama.thumbnail,
-                overview: this.panorama.overview,
-            },
-            sceneObjects: Array.from(this.sceneObjects).map(([id, sceneObject]) => {
-                return sceneObject.export();
-            }),
+            sceneObjectIds: this.sceneObjectIds,
+            panoramaId: this.panoramaId,
         };
     };
 }
