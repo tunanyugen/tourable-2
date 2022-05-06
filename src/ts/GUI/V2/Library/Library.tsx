@@ -106,14 +106,15 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
             return [];
         }
         let scenes = this.props.tourable.sceneManager.currentSceneGroup.sceneIDs.map((sceneID) => {
-            return this.props.tourable.sceneManager.scenes.get(sceneID);
+            return this.props.tourable.scenes.get(sceneID);
         });
         return scenes.map((scene, index) => {
+            let panorama = this.props.tourable.panoramas.get(scene.panoramaId);
             return (
                 <LibraryItem
-                    key={`${scene.panorama.name}-${index}`}
-                    label={scene.panorama.name}
-                    src={scene.panorama.thumbnail}
+                    key={`${panorama.name}-${index}`}
+                    label={panorama.name}
+                    src={panorama.thumbnail}
                     onClick={(e) => {
                         this.props.tourable.sceneManager.switchScene(this.props.tourable, scene.id);
                     }}

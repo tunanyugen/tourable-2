@@ -13,6 +13,11 @@ import EditorGUI from "../GUI/EditorGUI";
 import UncontrolledGUI from "../GUI/UncontrolledGUI";
 import GUIRenderer from "../GUI/GUIRenderer";
 import ClientGUI from "../GUI/ClientGUI";
+import SceneObject from "../SceneObject/SceneObject";
+
+export default interface TourableSchema {
+    sceneSchemas: SceneSchema[];
+}
 
 export default class Tourable {
     protected _observableManager: ObservableManager = new ObservableManager();
@@ -36,8 +41,12 @@ export default class Tourable {
     config: Config;
     // observables
     onLoadObservable: Observable = new Observable(this._observableManager, null, true);
+    // entities
+    panoramas: Map<number, Panorama> = new Map();
+    scenes: Map<number, Scene> = new Map();
+    sceneObjects: Map<number, SceneObject> = new Map();
 
-    constructor(containerSelector: string, sceneSchemas: SceneSchema[]) {
+    constructor(containerSelector: string, schema: TourableSchema) {
         RenderingManager.MAX_RENDERINGGROUPS = Config.MAX_RENDERINGGROUPS;
         // init config
         this.config = new Config();
@@ -59,15 +68,15 @@ export default class Tourable {
         });
         this.engine.renderEvenInBackground = false;
         // create scenes
-        if (sceneSchemas.length <= 0) {
+        if (schema.sceneSchemas.length <= 0) {
             this.sceneManager.createSceneGroup(this);
         } else {
-            sceneSchemas.forEach((schema) => {
-                new Scene(this, new Panorama(schema.panorama), schema);
+            schema.sceneSchemas.forEach((sceneSchema) => {
+                new Scene(this, sceneSchema);
             });
         }
         // switch to first scene
-        this.sceneManager.switchScene(this, this.sceneManager.scenes.entries().next().value[1].id);
+        this.sceneManager.switchScene(this, this.scenes.entries().next().value[1].id);
         // init events
         this.eventManager = new EventManager(this);
         // finished loading
@@ -84,9 +93,12 @@ export default class Tourable {
             this.engine.resize();
         });
     }
-    export = (): SceneSchema[] => {
-        return Array.from(this.sceneManager.scenes).map(([id, scene]) => {
+    export = () => {
+        let panoramas = Array.from(this.panoramas).map(([id, panorama]) => {
+            return panorama.export();
+        })
+        let scenes = Array.from(this.scenes).map(([id, scene]) => {
             return scene.export();
-        });
+        })
     };
 }

@@ -12,7 +12,6 @@ export default class SceneManager {
     public createDefaultSceneObservable: Observable<Scene> = new Observable(this._observableManager);
     public changeSceneGroupObservable: Observable<SceneGroup> = new Observable(this._observableManager);
     public sceneGroups: SceneGroup[] = [];
-    public scenes: Map<number, Scene> = new Map();
     private _sceneToRender: Scene;
     get sceneToRender() {
         return this._sceneToRender;

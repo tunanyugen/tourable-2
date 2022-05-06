@@ -2,11 +2,13 @@ import Observable from "@tunanyugen/observable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { Mesh, Space, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
+import HasSchema from "../Interfaces/HasSchema";
+import Schema from "../Interfaces/Schema";
 import Tourable from "../Tourable/Tourable";
 import Mathematics from "../Utilities/Mathematics/Mathematics";
 
-export interface SceneObjectSchema {
-    type:string;
+export interface SceneObjectSchema extends Schema{
+    type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
     id:number;
     sceneID:number;
     originalScaling: {x:number, y:number, z:number},
@@ -19,9 +21,17 @@ export interface SceneObjectSchema {
     clickTitle: string;
 }
 
-export default abstract class SceneObject implements SceneObjectSchema{
+export default abstract class SceneObject implements SceneObjectSchema, HasSchema{
     abstract readonly type:"floorHotspot"|"floatingHotspot"|"infoHotspot"|"poly"|"pivot";
-    public originalScaling: Vector3 = new Vector3(1, 1, 1);
+    //#region original scaling
+    private _originalScaling: Vector3 = new Vector3(1, 1, 1);
+    public get originalScaling(){
+        return this._originalScaling;
+    }
+    public set originalScaling(value: Vector3){
+        this._originalScaling = value.clone();
+    }
+    //#endregion
     public id: number;
     public sceneID: number;
     public mesh:Mesh;
@@ -56,7 +66,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
 
     constructor(tourable:Tourable, sceneID:number, schema:SceneObjectSchema){
         this.sceneID = sceneID;
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.scenes.get(this.sceneID);
         if (schema){
             // load schema
             this.id = schema.id;
@@ -73,8 +83,8 @@ export default abstract class SceneObject implements SceneObjectSchema{
             // get id
             this.id = scene.uidGenerator.uid;
         }
-        // register to map
-        scene.sceneObjects.set(this.id, this);
+        // register to tourable
+        tourable.sceneObjects.set(this.id, this);
         // init events
         this.defaultEvents(tourable);
     }
@@ -92,7 +102,7 @@ export default abstract class SceneObject implements SceneObjectSchema{
         }
     }
     dispose = (tourable:Tourable) => {
-        tourable.sceneManager.scenes.get(this.sceneID).sceneObjects.delete(this.id);
+        tourable.sceneObjects.delete(this.id);
         this.disposeObservable.Resolve();
         if (this.mesh){ this.mesh.dispose(); }
         // for some reason some observables will not be resolved if run the following command without delay
@@ -187,5 +197,6 @@ export default abstract class SceneObject implements SceneObjectSchema{
             }
         }, false)
     }
+    abstract loadSchema: (tourable: Tourable, schema: Schema) => void;
     abstract export: () => SceneObjectSchema;
 }

@@ -17,19 +17,23 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
     public uidGenerator: UIDGenerator = new UIDGenerator();
     public photoDome: PhotoDome;
     public camera: FreeCamera;
-    // id
+    //#region id
     private _id: number;
     public get id() {
         return this._id;
     }
-    // panoramaId
+    //#endregion
+    //#region panoramaId
     private _panoramaId: number = -1;
     public get panoramaId() {
         return this._panoramaId;
     }
-    // sceneObjectIds
+    public set panoramaId(value: number){
+        this._panoramaId = value;
+    }
+    //#endregion
     public sceneObjectIds: number[] = [];
-    constructor(tourable: Tourable, panorama: Panorama, schema: SceneSchema = null) {
+    constructor(tourable: Tourable, schema: SceneSchema = null) {
         super(tourable.engine);
         // load schema
         if (schema) {
@@ -37,10 +41,9 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         } else {
             // get id
             this._id = tourable.uidGenerator.uid;
-            this.panorama = panorama;
         }
         // register to sceneManager
-        tourable.sceneManager.scenes.set(this.id, this);
+        tourable.scenes.set(this.id, this);
         // create camera
         this.camera = new FreeCamera("camera1", new Vector3(0, 0, 0), this);
         this.camera.angularSensibility *= -1;
@@ -52,13 +55,14 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         this.camera.attachControl();
 
         this.onDisposeObservable.addOnce(() => {
-            this.panorama.dispose();
+            tourable.panoramas.get(this.panoramaId).dispose();
         });
     }
-    createPhotoDome = (onLoad: Function = () => {}) => {
+    createPhotoDome = (tourable:Tourable, onLoad: Function = () => { }) => {
+        let panorama = tourable.panoramas.get(this.panoramaId);
         this.photoDome = new PhotoDome(
-            this.panorama.name,
-            this.panorama.src,
+            panorama.name,
+            panorama.src,
             {
                 resolution: 16,
                 size: 2,
@@ -66,7 +70,7 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             this
         );
         this.photoDome.mesh.isPickable = false;
-        this.panorama.srcObservable.Add(
+        panorama.srcObservable.Add(
             this._observableManager,
             (src) => {
                 this.photoDome.material.diffuseTexture = new Texture(src, this, {
@@ -118,7 +122,7 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         });
     };
     delete = (tourable: Tourable) => {
-        tourable.sceneManager.scenes.delete(this.id);
+        tourable.scenes.delete(this.id);
         tourable.sceneManager.onSwitchSceneObservable.Add(
             this._observableManager,
             () => {
@@ -126,11 +130,11 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
             },
             true
         );
-        if (tourable.sceneManager.scenes.size <= 0) {
+        if (tourable.scenes.size <= 0) {
             // create default scene
             tourable.sceneManager.createDefaultScene(tourable);
         }
-        tourable.sceneManager.switchScene(tourable, tourable.sceneManager.scenes.entries().next().value[1].id);
+        tourable.sceneManager.switchScene(tourable, tourable.scenes.entries().next().value[1].id);
     };
     resetCamera = (position: boolean = true, rotation: boolean = true) => {
         if (!this.camera) {
