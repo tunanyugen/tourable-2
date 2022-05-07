@@ -1,6 +1,5 @@
 import Observable from "@tunanyugen/observable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import HasSchema from "../Interfaces/HasSchema";
 import Schema from "../Interfaces/Schema";
 import Tourable from "../Tourable/Tourable";
 
@@ -13,7 +12,7 @@ export interface PanoramaSchema extends Schema {
     overview: string;
 }
 
-export default class Panorama implements PanoramaSchema, HasSchema {
+export default class Panorama implements PanoramaSchema {
     private _observableManager: ObservableManager = new ObservableManager();
     //#region id
     private _id: number;
@@ -88,20 +87,22 @@ export default class Panorama implements PanoramaSchema, HasSchema {
     }
     //#endregion
     constructor(tourable: Tourable, schema?: PanoramaSchema) {
-        if (!schema){
-            this._id = tourable.uidGenerator.uid;
-        } else {
-            this.loadSchema(tourable, schema);
-        }
+        this.loadSchema(tourable, schema);
+        // register to tourable
+        tourable.panoramas.set(this._id, this);
     }
     loadSchema = (tourable: Tourable, schema: PanoramaSchema) => {
-        this._id = schema.id;
-        this._googleMap = schema.googleMap;
-        this._info = schema.info;
-        this._name = schema.name;
-        this._overview = schema.overview;
-        this._src = schema.src;
-        this._thumbnail = schema.thumbnail;
+        if (!schema){
+            this._id = schema.id;
+            this._googleMap = schema.googleMap;
+            this._info = schema.info;
+            this._name = schema.name;
+            this._overview = schema.overview;
+            this._src = schema.src;
+            this._thumbnail = schema.thumbnail;
+        } else {
+            this._id = tourable.uidGenerator.uid;
+        }
     };
     export: () => PanoramaSchema = () => {
         return {

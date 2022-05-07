@@ -97,10 +97,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             name: "Create floor hotspot",
                             onSelect: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.camera;
-                                let hotspot = new FloorHotspot(
-                                    this.props.tourable,
-                                    this.props.tourable.sceneManager.sceneToRender.id
-                                );
+                                let hotspot = new FloorHotspot(this.props.tourable);
                                 let screenPos = new Vector2(
                                     this.props.tourable.sceneManager.sceneToRender.pointerX,
                                     this.props.tourable.sceneManager.sceneToRender.pointerY
@@ -114,10 +111,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             name: "Create floating hotspot",
                             onSelect: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.camera;
-                                let hotspot = new FloatingHotspot(
-                                    this.props.tourable,
-                                    this.props.tourable.sceneManager.sceneToRender.id
-                                );
+                                let hotspot = new FloatingHotspot(this.props.tourable);
                                 let screenPos = new Vector2(
                                     this.props.tourable.sceneManager.sceneToRender.pointerX,
                                     this.props.tourable.sceneManager.sceneToRender.pointerY
@@ -131,10 +125,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             name: "Create info hotspot",
                             onSelect: () => {
                                 let camera = this.props.tourable.sceneManager.sceneToRender.camera;
-                                let hotspot = new InfoHotspot(
-                                    this.props.tourable,
-                                    this.props.tourable.sceneManager.sceneToRender.id
-                                );
+                                let hotspot = new InfoHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
                                 let screenPos = new Vector2(
                                     this.props.tourable.sceneManager.sceneToRender.pointerX,
                                     this.props.tourable.sceneManager.sceneToRender.pointerY
@@ -149,7 +140,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                     icon: () => "",
                     name: "Poly",
                     onSelect: () => {
-                        new Poly(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                        new Poly(this.props.tourable);
                     },
                 },
                 {

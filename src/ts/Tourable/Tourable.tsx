@@ -68,7 +68,7 @@ export default class Tourable {
         });
         this.engine.renderEvenInBackground = false;
         // create scenes
-        if (schema.sceneSchemas.length <= 0) {
+        if (!schema.sceneSchemas || schema.sceneSchemas.length <= 0) {
             this.sceneManager.createSceneGroup(this);
         } else {
             schema.sceneSchemas.forEach((sceneSchema) => {

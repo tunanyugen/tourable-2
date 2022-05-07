@@ -1,18 +1,15 @@
 import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar, Texture } from "babylonjs";
 import UIDGenerator from "../Generator/UIDGenerator";
-import Panorama, { PanoramaSchema } from "../Panorama/Panorama";
 import Tourable from "../Tourable/Tourable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import Schema from "../Interfaces/Schema";
-import HasSchema from "../Interfaces/HasSchema";
 
 export interface SceneSchema extends Schema {
     id: number;
     panoramaId: number;
-    sceneObjectIds: number[];
 }
 
-export default class Scene extends BABYLONScene implements HasSchema, SceneSchema {
+export default class Scene extends BABYLONScene implements SceneSchema {
     protected _observableManager: ObservableManager = new ObservableManager();
     public uidGenerator: UIDGenerator = new UIDGenerator();
     public photoDome: PhotoDome;
@@ -32,18 +29,11 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         this._panoramaId = value;
     }
     //#endregion
-    public sceneObjectIds: number[] = [];
     constructor(tourable: Tourable, schema: SceneSchema = null) {
         super(tourable.engine);
-        // load schema
-        if (schema) {
-            this.loadSchema(tourable, schema);
-        } else {
-            // get id
-            this._id = tourable.uidGenerator.uid;
-        }
-        // register to sceneManager
-        tourable.scenes.set(this.id, this);
+        this.loadSchema(tourable, schema);
+        // register to tourable
+        tourable.scenes.set(this._id, this);
         // create camera
         this.camera = new FreeCamera("camera1", new Vector3(0, 0, 0), this);
         this.camera.angularSensibility *= -1;
@@ -148,15 +138,16 @@ export default class Scene extends BABYLONScene implements HasSchema, SceneSchem
         }
     };
     loadSchema = (tourable: Tourable, schema: SceneSchema) => {
-        this._id = schema.id;
-        tourable.uidGenerator.uid = this.id + 1;
-        this.panoramaId = schema.panoramaId;
-        this.sceneObjectIds = schema.sceneObjectIds;
+        if (!schema){
+            this._id = schema.id;
+            this.panoramaId = schema.panoramaId;
+        } else {
+            this._id = tourable.uidGenerator.uid;
+        }
     };
     export = (): SceneSchema => {
         return {
             id: this.id,
-            sceneObjectIds: this.sceneObjectIds,
             panoramaId: this.panoramaId,
         };
     };

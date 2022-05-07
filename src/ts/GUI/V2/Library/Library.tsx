@@ -105,11 +105,14 @@ class Library extends GUIObject<LibraryProps, LibraryState> {
         if (!this.props.tourable.sceneManager.currentSceneGroup) {
             return [];
         }
-        let scenes = this.props.tourable.sceneManager.currentSceneGroup.sceneIDs.map((sceneID) => {
+        let scenes = this.props.tourable.sceneManager.currentSceneGroup.sceneIds.map((sceneID) => {
             return this.props.tourable.scenes.get(sceneID);
         });
         return scenes.map((scene, index) => {
             let panorama = this.props.tourable.panoramas.get(scene.panoramaId);
+            if (!panorama) {
+                return "";
+            }
             return (
                 <LibraryItem
                     key={`${panorama.name}-${index}`}
