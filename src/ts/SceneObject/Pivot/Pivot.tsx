@@ -26,7 +26,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
          this.mesh.material = newMaterial;
     }
 
-    constructor(tourable:Tourable, sceneID:number, schema:PivotSchema = null){
+    constructor(tourable:Tourable, sceneID:number, schema?:PivotSchema){
         super(tourable, schema)
         this.createMesh(tourable, sceneID);
         if (!schema){ this.texture = tourable.config.assets.pivot[0] }
@@ -67,7 +67,7 @@ export default class Pivot extends SceneObject implements PivotSchema {
             }
         }, false)
     }
-    loadSchema = (tourable: Tourable, schema: PivotSchema) => {
+    loadHotspotSchema = (tourable: Tourable, schema: PivotSchema) => {
         this.loadSceneObjectSchema(tourable, schema);
         if (schema){
             this._texture = schema.texture;

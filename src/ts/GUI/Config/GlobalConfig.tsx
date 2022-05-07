@@ -31,7 +31,7 @@ class GlobalConfig extends Config<Tourable, GlobalConfigProps, GlobalConfigState
     };
     applySettings = () => {
         // update client gui
-        this.props.tourable.sceneManager.sceneToRender.panorama.googleMap = this.state.googleMap;
+        this.props.tourable.panoramas.get(this.props.tourable.sceneManager.sceneToRender.panoramaId).googleMap = this.state.googleMap;
         this.props.tourable.clientGUI.current.forceUpdate();
     };
     renderComponents = () => {

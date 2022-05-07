@@ -31,7 +31,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
         }, false)
         this.onClickObservable.Add(this._observableManager, () => {
             // switch scene
-            tourable.sceneManager.switchScene(tourable, this._targetSceneID, this.id)
+            tourable.sceneManager.switchScene(tourable, this._targetSceneId, this.id)
         }, false)
         this.onRightClickObservable.Add(this._observableManager, () => {
             // show configurations
@@ -49,7 +49,7 @@ export default class FloatingHotspot extends Hotspot implements FloatingHotspotS
             type: this.type,
             id: this.id,
             sceneId: this.sceneId,
-            targetSceneID: this.targetSceneID,
+            targetSceneId: this.targetSceneId,
             enteringAngle: {x: this.enteringAngle.x, y: this.enteringAngle.y, z: this.enteringAngle.z},
             texture: this.texture,
             hoverTitle: this.hoverTitle,

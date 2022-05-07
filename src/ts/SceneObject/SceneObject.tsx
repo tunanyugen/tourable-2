@@ -8,7 +8,6 @@ import Mathematics from "../Utilities/Mathematics/Mathematics";
 
 export interface SceneObjectSchema extends Schema {
     type: "floorHotspot" | "floatingHotspot" | "infoHotspot" | "poly" | "pivot";
-    id: number;
     sceneId: number;
     originalScaling: { x: number; y: number; z: number };
     mesh:
@@ -273,6 +272,6 @@ export default abstract class SceneObject {
             type: this._type,
         }
     };
-    abstract loadSchema: (tourable:Tourable, schema: SceneObjectSchema) => void;
+    abstract loadHotspotSchema: (tourable:Tourable, schema: SceneObjectSchema) => void;
     abstract export: () => SceneObjectSchema;
 }

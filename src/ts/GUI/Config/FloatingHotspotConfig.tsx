@@ -42,7 +42,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
             hoverTitle: this.target.hoverTitle,
             clickTitle: this.target.clickTitle,
             scaling: this.target.mesh.scaling.x * 50,
-            targetSceneID: this.target.targetSceneID,
+            targetSceneID: this.target.targetSceneId,
         })
     }
     applySettings = () => {
@@ -67,7 +67,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                 .get(this.target.sceneId)
                 .sceneObjects.get(this.target.id) as FloatingHotspot;
             // switch to target scene
-            this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
+            this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneId);
             this.props.tourable.uncontrolledGUI.current.confirm.current.display(
                 'Move to your desired angle and click "Confirm".',
                 () => {

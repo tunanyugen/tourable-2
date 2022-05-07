@@ -35,7 +35,7 @@ export default class Poly extends SceneObject implements PolySchema{
     constructor(tourable:Tourable, schema:PolySchema = null){
         super(tourable, schema);
         this.createMesh(tourable);
-        this.loadSchema(tourable, schema);
+        this.loadHotspotSchema(tourable, schema);
         this.hookEvents(tourable);
         if (!schema){
             this.tutorial(tourable);
@@ -141,7 +141,7 @@ export default class Poly extends SceneObject implements PolySchema{
             tourable.uncontrolledGUI.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
         }, true)
     }
-    loadSchema = (tourable: Tourable, schema: PolySchema) => {
+    loadHotspotSchema = (tourable: Tourable, schema: PolySchema) => {
         this.loadSceneObjectSchema(tourable, schema);
         if (schema){
             this.pivotIds = schema.pivotIds;

@@ -37,7 +37,7 @@ export default class SceneObjectManager{
             let possibleResults:SceneObjectManagerPickResult[] = [];
     
             for (let r = 0; r < results.length; r++){
-                let object = tourable.sceneManager.sceneToRender.sceneObjects.get(parseInt(results[r].pickedMesh.name));
+                let object = tourable.sceneObjects.get(parseInt(results[r].pickedMesh.name));
                 if (object){
                     possibleResults.push( { sceneObject: object, pickingInfo:results[r] } );
                 }
