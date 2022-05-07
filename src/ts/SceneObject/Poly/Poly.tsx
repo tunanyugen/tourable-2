@@ -6,52 +6,45 @@ import Pivot from "../Pivot/Pivot";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
 
 
-export interface PolySchema extends SceneObjectSchema {
-    pivotIDs:number[];
+export interface PolySchema extends SceneObjectSchema{
+    pivotIds:number[];
     color: {r:number, g:number, b:number};
     opacity: number;
 }
 
 export default class Poly extends SceneObject implements PolySchema{
-    type: "poly" = "poly";
-    public id: number;
-    public pivotIDs: number[] = [];
+    //#region pivotIds
+    public pivotIds: number[] = [];
+    //#endregion
+    //#region color
     private _color:Color3 = new Color3(1, 1, 1);
     public get color(){ return this._color }
     public set color(value:Color3){
         this._color = value.clone();
         (this.mesh.material as StandardMaterial).emissiveColor = this._color;
     }
+    //#endregion
+    //#region opacity
     private _opacity:number = 1;;
     public get opacity(){ return this._opacity }
     public set opacity(value:number){
         this._opacity = value;
         (this.mesh.material as StandardMaterial).alpha = value;
     }
-    constructor(tourable:Tourable, sceneID:number, schema:PolySchema = null){
-        super(tourable, sceneID, schema);
-        // load data from schema
-        if (schema){
-            this.pivotIDs = schema.pivotIDs;
-            this._color = new Color3(schema.color.r, schema.color.g, schema.color.b);
-            this._opacity = schema.opacity;
-        } else {
-            this._color = new Color3(tourable.config.poly.color.r, tourable.config.poly.color.g, tourable.config.poly.color.b);
-            this._opacity = tourable.config.poly.opacity;
-        }
-        // create mesh
+    //#endregion
+    constructor(tourable:Tourable, schema:PolySchema = null){
+        super(tourable, schema);
         this.createMesh(tourable);
-        // hook events
+        this.loadSchema(tourable, schema);
         this.hookEvents(tourable);
         if (!schema){
             this.tutorial(tourable);
         } else {
             tourable.onLoadObservable.Add(this._observableManager, () => {
-                let scene = tourable.sceneManager.scenes.get(this.sceneID);
                 let pivotMap = new Map<number, boolean>();
-                schema.pivotIDs.forEach((id) => {
+                schema.pivotIds.forEach((id) => {
                     if (!pivotMap.has(id)){{
-                        let pivot = scene.sceneObjects.get(id) as Pivot;
+                        let pivot = tourable.sceneObjects.get(id) as Pivot;
                         this.subscribeToPivot(tourable, pivot);
                         pivotMap.set(id, true);
                     }}
@@ -61,7 +54,7 @@ export default class Poly extends SceneObject implements PolySchema{
         }
     }
     createMesh = (tourable:Tourable) => {
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.scenes.get(this.sceneId);
         // create mesh
         this.mesh = new Mesh(this.id.toString(), scene);
         // create material
@@ -75,12 +68,12 @@ export default class Poly extends SceneObject implements PolySchema{
         this.mesh.renderingGroupId = tourable.config.poly.renderingGroupID;
     }
     createVertexData = (tourable:Tourable) => {
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
+        let scene = tourable.scenes.get(this.sceneId);
         // generate positions
         let positions:number[] = [];
-        let verticesCount = parseInt(`${this.pivotIDs.length / 3}`) * 3;
+        let verticesCount = parseInt(`${this.pivotIds.length / 3}`) * 3;
         for (let i = 0; i < verticesCount; i++){
-            let pivot = scene.sceneObjects.get(this.pivotIDs[i]) as Pivot;
+            let pivot = tourable.sceneObjects.get(this.pivotIds[i]) as Pivot;
             positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
         }
         // generate indices
@@ -95,11 +88,10 @@ export default class Poly extends SceneObject implements PolySchema{
     }
     updateMesh = (tourable:Tourable) => {
         // create new positions
-        let scene = tourable.sceneManager.scenes.get(this.sceneID);
         let positions:number[] = [];
-        let count = parseInt(`${this.pivotIDs.length / 3}`) * 3;
+        let count = parseInt(`${this.pivotIds.length / 3}`) * 3;
         for (let i = 0; i < count; i++){
-            let pivot = scene.sceneObjects.get(this.pivotIDs[i]) as Pivot;
+            let pivot = tourable.sceneObjects.get(this.pivotIds[i]) as Pivot;
             positions.push(pivot.mesh.position.x, pivot.mesh.position.y, pivot.mesh.position.z);
         }
         this.mesh.updateVerticesData(VertexBuffer.PositionKind, positions);
@@ -126,11 +118,11 @@ export default class Poly extends SceneObject implements PolySchema{
             if (result && result.sceneObject instanceof Pivot){
                 pivot = result.sceneObject;
             } else {
-                pivot = new Pivot(tourable, this.sceneID);
+                pivot = new Pivot(tourable, this.sceneId);
                 pivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
             }
             // add pivot array
-            this.pivotIDs.push(pivot.id);
+            this.pivotIds.push(pivot.id);
             if (!pivotMap.has(pivot.id)){
                 // subcribe to pivot events
                 this.subscribeToPivot(tourable, pivot);
@@ -149,22 +141,22 @@ export default class Poly extends SceneObject implements PolySchema{
             tourable.uncontrolledGUI.current.notification.current.notify(`Stopped picking vertices for poly`, 2000)
         }, true)
     }
-    export = ():PolySchema => {
-        return {
-            id: this.id,
-            sceneID: this.sceneID,
-            type: this.type,
-            pivotIDs: this.pivotIDs,
-            color: {r: this.color.r, g: this.color.g, b: this.color.b},
-            opacity: this.opacity,
-            originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
-            mesh: {
-                position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
-                rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
-                scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            },
-            hoverTitle: this.hoverTitle,
-            clickTitle: this.clickTitle,
+    loadSchema = (tourable: Tourable, schema: PolySchema) => {
+        this.loadSceneObjectSchema(tourable, schema);
+        if (schema){
+            this.pivotIds = schema.pivotIds;
+            this._color = new Color3(schema.color.r, schema.color.g, schema.color.b);
+            this._opacity = schema.opacity;
+        } else {
+            this._color = new Color3(tourable.config.poly.color.r, tourable.config.poly.color.g, tourable.config.poly.color.b);
+            this._opacity = tourable.config.poly.opacity;
         }
+    }
+    export = ():PolySchema => {
+        let sceneObjectSchema = this.exportSceneObject() as PolySchema;
+        sceneObjectSchema.pivotIds = this.pivotIds;
+        sceneObjectSchema.color = {r: this.color.r, g: this.color.g, b: this.color.b};
+        sceneObjectSchema.opacity = this.opacity;
+        return sceneObjectSchema;
     }
 }

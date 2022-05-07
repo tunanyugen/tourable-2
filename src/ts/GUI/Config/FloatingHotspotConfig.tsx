@@ -64,7 +64,7 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
             // set entering angle
             // store hotspot in another reference so that it can be kept when target changes
             let hotspot = this.props.tourable.sceneManager.scenes
-                .get(this.target.sceneID)
+                .get(this.target.sceneId)
                 .sceneObjects.get(this.target.id) as FloatingHotspot;
             // switch to target scene
             this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
@@ -72,10 +72,10 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                 'Move to your desired angle and click "Confirm".',
                 () => {
                     hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
-                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneId);
                 },
                 () => {
-                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneId);
                 }
             );
         }

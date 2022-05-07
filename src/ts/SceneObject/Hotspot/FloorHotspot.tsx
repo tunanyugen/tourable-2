@@ -55,7 +55,7 @@ export default class FloorHotspot extends Hotspot implements FloorHotspotSchema 
         return {
             type: this.type,
             id: this.id,
-            sceneID: this.sceneID,
+            sceneId: this.sceneId,
             targetSceneID: this.targetSceneID,
             enteringAngle: {x: this.enteringAngle.x, y: this.enteringAngle.y, z: this.enteringAngle.z},
             texture: this.texture,
