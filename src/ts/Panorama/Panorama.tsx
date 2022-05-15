@@ -92,7 +92,7 @@ export default class Panorama implements PanoramaSchema {
         tourable.panoramas.set(this._id, this);
     }
     loadSchema = (tourable: Tourable, schema: PanoramaSchema) => {
-        if (!schema){
+        if (schema){
             this._id = schema.id;
             this._googleMap = schema.googleMap;
             this._info = schema.info;

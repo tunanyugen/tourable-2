@@ -23,7 +23,7 @@ class UncontrolledGUI extends GUI<UncontrolledGUIProps, UncontrolledGUIState> {
   render() {
     return (
       <>
-        <Toolbar tourable={this.props.tourable} />
+        {/* <Toolbar tourable={this.props.tourable} /> */}
         <Text ref={this.text} tourable={this.props.tourable} />
         <Popup ref={this.popup} tourable={this.props.tourable} />
         <Confirm ref={this.confirm} tourable={this.props.tourable} />

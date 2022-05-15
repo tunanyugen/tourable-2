@@ -33,7 +33,7 @@ export default class GUIRenderer {
                         },
                     }}
                 >
-                    <ClientGUI ref={clientGUI} tourable={tourable} />
+                    {/* <ClientGUI ref={clientGUI} tourable={tourable} /> */}
                     <EditorGUI ref={editorGUI} tourable={tourable} />
                     <UncontrolledGUI ref={uncontrolledGUI} tourable={tourable} />
                 </Box>

@@ -21,6 +21,7 @@ export default class SceneManager {
         return this._currentSceneGroup;
     }
     public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(this._observableManager, null, false);
+    constructor(tourable: Tourable) {}
     switchSceneGroup = (tourable: Tourable, sceneGroup: SceneGroup) => {
         if (this.currentSceneGroup == sceneGroup) {
             return;
@@ -32,10 +33,11 @@ export default class SceneManager {
         this.switchScene(tourable, this.currentSceneGroup.sceneIds[0]);
         this.changeSceneGroupObservable.Resolve(this.currentSceneGroup);
     };
-    setScene = (tourable: Tourable, scene: Scene, delay: number = 500, callback = () => {}) => {
+    setScene = (tourable: Tourable, sceneId: number, delay: number = 500, callback = () => {}) => {
         // show load screen
         tourable.uncontrolledGUI.current.loadScreen.current.show();
         setTimeout(() => {
+            let scene = tourable.scenes.get(sceneId);
             // load dome and switch scene
             if (!scene.photoDome) {
                 let startedLoadingAt = Date.now();
@@ -74,8 +76,6 @@ export default class SceneManager {
             }
         }, delay);
     };
-
-    constructor(tourable: Tourable) {}
     createSceneGroup = (tourable: Tourable) => {
         let newSceneGroup = new SceneGroup(tourable);
         this.switchSceneGroup(tourable, newSceneGroup);
@@ -125,7 +125,7 @@ export default class SceneManager {
                 )
                 .then(() => {
                     // switch scene
-                    this.setScene(tourable, newScene, 0, () => {
+                    this.setScene(tourable, newScene.id, 0, () => {
                         this.sceneToRender.camera.detachControl();
                         this.sceneToRender.camera.rotation = hotspot.enteringAngle;
                         this.sceneToRender.camera.attachControl();
@@ -142,7 +142,7 @@ export default class SceneManager {
                 });
         } else {
             // switch scene
-            this.setScene(tourable, newScene, 500, () => {
+            this.setScene(tourable, newScene.id, 500, () => {
                 if (hotspot) {
                     this.sceneToRender.camera.detachControl();
                     this.sceneToRender.camera.rotation = hotspot.enteringAngle;

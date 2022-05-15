@@ -25,7 +25,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
     public get panoramaId() {
         return this._panoramaId;
     }
-    public set panoramaId(value: number){
+    public set panoramaId(value: number) {
         this._panoramaId = value;
     }
     //#endregion
@@ -48,7 +48,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
             tourable.panoramas.get(this.panoramaId).dispose();
         });
     }
-    createPhotoDome = (tourable:Tourable, onLoad: Function = () => { }) => {
+    createPhotoDome = (tourable: Tourable, onLoad: Function = () => {}) => {
         let panorama = tourable.panoramas.get(this.panoramaId);
         this.photoDome = new PhotoDome(
             panorama.name,
@@ -138,7 +138,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         }
     };
     loadSchema = (tourable: Tourable, schema: SceneSchema) => {
-        if (!schema){
+        if (schema) {
             this._id = schema.id;
             this.panoramaId = schema.panoramaId;
         } else {

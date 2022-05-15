@@ -5,11 +5,23 @@ import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
 export default class SceneObjectManager{
     protected _observableManager:ObservableManager = new ObservableManager();
-    target:SceneObject;
+    //#region target
+    private _target:SceneObject;
+    public get target(){
+        return this._target;
+    }
+    public set target(value: SceneObject){
+        this._target = value;
+    }
+    //#endregion
+    //#region lastHoverSceneObject
     private _lastHoverSceneObject:SceneObject;
-    get lastHoverSceneObject(){ return this._lastHoverSceneObject }
+    public get lastHoverSceneObject(){ return this._lastHoverSceneObject }
+    //#endregion
+    //#region hoverSceneObject
     private _hoverSceneObject:SceneObject;
     get hoverSceneObject(){ return this._hoverSceneObject }
+    //#endregion
     constructor(tourable:Tourable){
         tourable.onLoadObservable.Add(this._observableManager, () => {
             // pick hovering scene object
@@ -46,10 +58,5 @@ export default class SceneObjectManager{
         } else {
             return null;
         }
-    }
-    private _pickTarget = (tourable:Tourable) => {
-        let result = this.pick(tourable);
-        if (!result){ return }
-        this.target = result.sceneObject;
     }
 }
