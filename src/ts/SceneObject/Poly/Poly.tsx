@@ -33,7 +33,7 @@ export default class Poly extends SceneObject implements PolySchema{
     }
     //#endregion
     constructor(tourable:Tourable, schema:PolySchema = null){
-        super(tourable, schema);
+        super(tourable, SceneObjectType.poly, schema);
         this.createMesh(tourable);
         this.loadHotspotSchema(tourable, schema);
         this.hookEvents(tourable);
@@ -118,7 +118,7 @@ export default class Poly extends SceneObject implements PolySchema{
             if (result && result.sceneObject instanceof Pivot){
                 pivot = result.sceneObject;
             } else {
-                pivot = new Pivot(tourable, this.sceneId);
+                pivot = new Pivot(tourable);
                 pivot.move(Mathematics.ScreenToWorldXZPlane(tourable, new Vector2(e.clientX, e.clientY), -1));
             }
             // add pivot array

@@ -5,7 +5,7 @@ export interface FloorHotspotSchema extends HotspotSchema {}
 
 export default class FloorHotspot extends Hotspot implements FloorHotspotSchema {
     constructor(tourable: Tourable, schema: FloorHotspotSchema = null) {
-        super(tourable, schema);
+        super(tourable, SceneObjectType.floorHotspot, schema);
         this.loadSchema(tourable, schema);
         this.mesh.rotation.x = Math.PI / 2;
 

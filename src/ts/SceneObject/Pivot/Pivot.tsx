@@ -25,10 +25,9 @@ export default class Pivot extends SceneObject implements PivotSchema {
          this.mesh.material = newMaterial;
     }
 
-    constructor(tourable:Tourable, sceneID:number, schema?:PivotSchema){
-        super(tourable, schema)
-        this.createMesh(tourable, sceneID);
-        if (!schema){ this.texture = tourable.config.assets.pivot[0] }
+    constructor(tourable:Tourable, schema?:PivotSchema){
+        super(tourable, SceneObjectType.pivot, schema)
+        this.loadSchema(tourable, schema);
         this.hookEvents(tourable);
         // look at camera
         this.moveObservable.Add(this._observableManager, () => {
@@ -66,12 +65,15 @@ export default class Pivot extends SceneObject implements PivotSchema {
             }
         }, false)
     }
-    loadHotspotSchema = (tourable: Tourable, schema: PivotSchema) => {
-        this.loadSceneObjectSchema(tourable, schema);
-        if (schema){
+    loadSchema = (tourable:Tourable, schema: PivotSchema) => {
+        if (!schema){
+            this.texture = tourable.config.assets.pivot[0];
+            this.createMesh(tourable, tourable.sceneManager.sceneToRender.id);
+        } else {
             this._texture = schema.texture;
+            this.createMesh(tourable, schema.sceneId);
         }
-    };
+    }
     export = (): PivotSchema => {
         let sceneObjectSchema = this.exportSceneObject() as PivotSchema;
         sceneObjectSchema.texture = this._texture;

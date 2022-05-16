@@ -23,7 +23,7 @@ export interface SceneObjectSchema extends EntitySchema {
 
 export default abstract class SceneObject extends Entity {
     //#region type
-    protected abstract _type: SceneObjectType;
+    protected _type: SceneObjectType;
     public get type() {
         return this._type;
     }
@@ -88,8 +88,9 @@ export default abstract class SceneObject extends Entity {
     public hoverTitleChangeObservable: Observable<string> = new Observable(this._observableManager, null, false);
     public clickTitleChangeObserable: Observable<string> = new Observable(this._observableManager, null, false);
 
-    constructor(tourable: Tourable, schema?: SceneObjectSchema) {
+    constructor(tourable: Tourable, sceneObjectType: SceneObjectType, schema?: SceneObjectSchema) {
         super(tourable, schema);
+        this._type = sceneObjectType;
         // register to tourable
         tourable.sceneObjects.set(this.id, this);
         // init events
@@ -265,6 +266,5 @@ export default abstract class SceneObject extends Entity {
         entitySchema.type = this._type;
         return entitySchema;
     };
-    abstract loadHotspotSchema: (tourable: Tourable, schema: SceneObjectSchema) => void;
     abstract export: () => SceneObjectSchema;
 }

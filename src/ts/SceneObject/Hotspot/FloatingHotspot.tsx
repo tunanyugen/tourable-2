@@ -5,7 +5,7 @@ export interface FloatingHotspotSchema extends HotspotSchema {}
 
 export default class FloatingHotspot extends Hotspot implements FloatingHotspotSchema {
     constructor(tourable: Tourable, schema?: FloatingHotspotSchema) {
-        super(tourable, schema);
+        super(tourable, SceneObjectType.floatingHotspot, schema);
         this.loadSchema(tourable, schema);
         if (tourable.loaded) {
             this.hookEvents(tourable);

@@ -54,8 +54,8 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
     }
     //#endregion
     
-    constructor(tourable: Tourable, schema: HotspotSchema = null) {
-        super(tourable, schema);
+    constructor(tourable: Tourable, sceneObjectType: SceneObjectType, schema: HotspotSchema = null) {
+        super(tourable, sceneObjectType, schema);
         this.createMesh(tourable);
     }
 

@@ -6,8 +6,8 @@ export interface InfoHotspotSchema extends HotspotSchema {
 }
 
 export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
-    constructor( tourable:Tourable, sceneID:number, schema?:InfoHotspotSchema){
-        super(tourable, schema)
+    constructor( tourable:Tourable, schema?:InfoHotspotSchema){
+        super(tourable, SceneObjectType.infoHotspot, schema)
         this.loadSchema(tourable, schema);
         if (tourable.loaded){
             this.hookEvents(tourable)

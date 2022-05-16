@@ -1,5 +1,9 @@
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import SceneObject from "../../SceneObject/SceneObject";
+import FloatingHotspot, { FloatingHotspotSchema } from "../../SceneObject/Hotspot/FloatingHotspot";
+import FloorHotspot, { FloorHotspotSchema } from "../../SceneObject/Hotspot/FloorHotspot";
+import InfoHotspot, { InfoHotspotSchema } from "../../SceneObject/Hotspot/InfoHotspot";
+import Pivot, { PivotSchema } from "../../SceneObject/Pivot/Pivot";
+import SceneObject, { SceneObjectSchema } from "../../SceneObject/SceneObject";
 import Tourable from "../../Tourable/Tourable";
 import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
@@ -58,6 +62,14 @@ export default class SceneObjectManager{
             return possibleResults;
         } else {
             return null;
+        }
+    }
+    loadSceneObjectSchema = (tourable:Tourable, schema:SceneObjectSchema) => {
+        switch(schema.type){
+            case SceneObjectType.floatingHotspot: new FloatingHotspot(tourable, schema as FloatingHotspotSchema); break;
+            case SceneObjectType.floorHotspot: new FloorHotspot(tourable, schema as FloorHotspotSchema);
+            case SceneObjectType.infoHotspot: new InfoHotspot(tourable, schema as InfoHotspotSchema);
+            case SceneObjectType.pivot: new Pivot(tourable, schema as PivotSchema);
         }
     }
 }

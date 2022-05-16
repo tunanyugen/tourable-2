@@ -128,7 +128,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             onSelect: () => {
                                 let scene = this.props.tourable.sceneManager.sceneToRender.scene;
                                 let camera = this.props.tourable.sceneManager.sceneToRender.camera;
-                                let hotspot = new InfoHotspot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                                let hotspot = new InfoHotspot(this.props.tourable);
                                 let screenPos = new Vector2(scene.pointerX, scene.pointerY);
                                 hotspot.move(Mathematics.ScreenToWorldPoint(this.props.tourable, screenPos, 1));
                                 hotspot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());
@@ -149,7 +149,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                     onSelect: () => {
                         let scene = this.props.tourable.sceneManager.sceneToRender.scene;
                         let camera = this.props.tourable.sceneManager.sceneToRender.camera;
-                        let pivot = new Pivot(this.props.tourable, this.props.tourable.sceneManager.sceneToRender.id);
+                        let pivot = new Pivot(this.props.tourable);
                         let screenPos = new Vector2(scene.pointerX, scene.pointerY);
                         pivot.move(Mathematics.ScreenToWorldXZPlane(this.props.tourable, screenPos, -1));
                         pivot.mesh.lookAt(camera.getDirection(Vector3.Forward()).negate());

@@ -111,7 +111,7 @@ export default class Tourable {
             new SceneGroup(this, sceneGroupSchema);
         })
         schema.sceneObjectSchemas.forEach((sceneObjectSchema) => {
-            
+            this.sceneObjectManager.loadSceneObjectSchema(this, sceneObjectSchema);
         })
     };
     export: () => TourableSchema = () => {
