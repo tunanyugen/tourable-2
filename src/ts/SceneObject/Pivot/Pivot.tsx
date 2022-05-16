@@ -1,14 +1,12 @@
-import { Color3, Material, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
+import { Color3, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
-import Scene from "../../Scene/Scene";
 
 export interface PivotSchema extends SceneObjectSchema {
     texture:string;
 }
 
 export default class Pivot extends SceneObject implements PivotSchema {
-    type: "pivot" = "pivot";
     protected _texture:string = "";
     get texture(){ return this._texture }
     set texture(val:string){
@@ -27,25 +25,18 @@ export default class Pivot extends SceneObject implements PivotSchema {
          this.mesh.material = newMaterial;
     }
 
-    constructor(tourable:Tourable, sceneID:number, schema:PivotSchema = null){
-        super(tourable, sceneID, schema)
-        // load schema
-        if (schema){
-            tourable.onLoadObservable.Add(this._observableManager, () => {
-                this.texture = schema.texture;
-            }, true)
-        }
-        this.createMesh(tourable, sceneID);
-        if (!schema){ this.texture = tourable.config.assets.pivot[0] }
+    constructor(tourable:Tourable, schema?:PivotSchema){
+        super(tourable, SceneObjectType.pivot, schema)
+        this.loadSchema(tourable, schema);
         this.hookEvents(tourable);
         // look at camera
         this.moveObservable.Add(this._observableManager, () => {
-            this.mesh.lookAt((this.mesh.getScene() as Scene).camera.position);
+            this.mesh.lookAt(this.mesh.getScene().activeCamera.position);
         }, false)
     }
 
     createMesh = (tourable:Tourable, sceneID:number) => {
-        let scene = tourable.sceneManager.scenes.get(sceneID);
+        let scene = tourable.scenes.get(sceneID).scene;
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
             size: tourable.config.pivot.size,
@@ -74,20 +65,18 @@ export default class Pivot extends SceneObject implements PivotSchema {
             }
         }, false)
     }
-    export = (): PivotSchema => {
-        return {
-            id: this.id,
-            sceneID: this.sceneID,
-            type: this.type,
-            texture: this.texture,
-            originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
-            mesh: {
-                position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
-                rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
-                scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            },
-            hoverTitle: this.hoverTitle,
-            clickTitle: this.clickTitle,
+    loadSchema = (tourable:Tourable, schema: PivotSchema) => {
+        if (!schema){
+            this.texture = tourable.config.assets.pivot[0];
+            this.createMesh(tourable, tourable.sceneManager.sceneToRender.id);
+        } else {
+            this._texture = schema.texture;
+            this.createMesh(tourable, schema.sceneId);
         }
+    }
+    export = (): PivotSchema => {
+        let sceneObjectSchema = this.exportSceneObject() as PivotSchema;
+        sceneObjectSchema.texture = this._texture;
+        return sceneObjectSchema;
     }
 }

@@ -42,9 +42,9 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
             hoverTitle: this.target.hoverTitle,
             clickTitle: this.target.clickTitle,
             scaling: this.target.mesh.scaling.x * 50,
-            targetSceneID: this.target.targetSceneID,
-        })
-    }
+            targetSceneID: this.target.targetSceneId,
+        });
+    };
     applySettings = () => {
         // set style
         this.target.texture = this.state.hotspotStyle;
@@ -58,28 +58,26 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
         this.target.mesh.scaling = scaling.clone();
         this.target.originalScaling = scaling.clone();
         // hotspot target scene
-        if (this.state.targetSceneID >= 0){
+        if (this.state.targetSceneID >= 0) {
             // set target scene
             this.target.setTargetSceneID(this.props.tourable, this.state.targetSceneID);
             // set entering angle
             // store hotspot in another reference so that it can be kept when target changes
-            let hotspot = this.props.tourable.sceneManager.scenes
-                .get(this.target.sceneID)
-                .sceneObjects.get(this.target.id) as FloatingHotspot;
+            let hotspot = this.props.tourable.sceneObjects.get(this.target.id) as FloatingHotspot;
             // switch to target scene
-            this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneID);
+            this.props.tourable.sceneManager.switchScene(this.props.tourable, this.target.targetSceneId);
             this.props.tourable.uncontrolledGUI.current.confirm.current.display(
                 'Move to your desired angle and click "Confirm".',
                 () => {
                     hotspot.enteringAngle = this.props.tourable.sceneManager.sceneToRender.camera.rotation;
-                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneId);
                 },
                 () => {
-                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneID);
+                    this.props.tourable.sceneManager.switchScene(this.props.tourable, hotspot.sceneId);
                 }
             );
         }
-    }
+    };
     renderComponents = () => {
         return (
             <Box>
@@ -91,8 +89,8 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                     defaultValue={this.target ? (this.target.mesh.material as StandardMaterial).diffuseTexture._texture.url : ""}
                     onSelect={(media) => {
                         this.setState({
-                            hotspotStyle: media.src
-                        })
+                            hotspotStyle: media.src,
+                        });
                     }}
                 />
                 <Label>Title on hover</Label>
@@ -117,17 +115,18 @@ class FloatingHotspotConfig extends Config<FloatingHotspot, FloatingHotspotConfi
                     max={100}
                     value={this.state.scaling || 0}
                     onChange={(e, sliderValue) => {
-                        this.setState({scaling: sliderValue as number});
+                        this.setState({ scaling: sliderValue as number });
                     }}
                 />
                 <Label>Pick a scene</Label>
                 <MediaSelector
-                    medias={Array.from(this.props.tourable.sceneManager.scenes).map(([id, scene]) => {
+                    medias={Array.from(this.props.tourable.scenes).map(([id, scene]) => {
+                        let panorama = this.props.tourable.panoramas.get(scene.panoramaId);
                         return {
-                            label: scene.panorama.name,
-                            src: scene.panorama.thumbnail,
+                            label: panorama.name,
+                            src: panorama.thumbnail,
                             onSelect: () => {
-                                this.setState({targetSceneID: scene.id});
+                                this.setState({ targetSceneID: scene.id });
                             },
                         };
                     })}

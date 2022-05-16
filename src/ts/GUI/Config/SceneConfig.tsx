@@ -33,19 +33,20 @@ class SceneConfig extends Config<Scene, SceneConfigProps, SceneConfigState> {
         };
     }
     syncSettings = () => {
+        let panorama = this.props.tourable.panoramas.get(this.props.tourable.sceneManager.sceneToRender.panoramaId);
         this.setState({
-            name: this.props.tourable.sceneManager.sceneToRender.panorama.name,
-            panoramaSrc: this.props.tourable.sceneManager.sceneToRender.panorama.src,
-            thumbnail: this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail,
-            overview: this.props.tourable.sceneManager.sceneToRender.panorama.overview,
+            name: panorama.name,
+            panoramaSrc: panorama.src,
+            thumbnail: panorama.thumbnail,
+            overview: panorama.overview,
         });
     };
     applySettings = () => {
-        // update value
-        this.props.tourable.sceneManager.sceneToRender.panorama.name = this.state.name;
-        this.props.tourable.sceneManager.sceneToRender.panorama.src = this.state.panoramaSrc;
-        this.props.tourable.sceneManager.sceneToRender.panorama.thumbnail = this.state.thumbnail;
-        this.props.tourable.sceneManager.sceneToRender.panorama.overview = this.state.overview;
+        let panorama = this.props.tourable.panoramas.get(this.props.tourable.sceneManager.sceneToRender.panoramaId);
+        panorama.name = this.state.name;
+        panorama.src = this.state.panoramaSrc;
+        panorama.thumbnail = this.state.thumbnail;
+        panorama.overview = this.state.overview;
         this.applySettingsObservable.Resolve(this.state);
     };
     renderComponents = () => {

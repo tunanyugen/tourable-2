@@ -6,12 +6,9 @@ export interface InfoHotspotSchema extends HotspotSchema {
 }
 
 export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
-    type: "infoHotspot" = "infoHotspot";
-
-    constructor( tourable:Tourable, sceneID:number, schema:InfoHotspotSchema = null){
-        super(tourable, sceneID, schema)
-        // create mesh
-        this.createMesh(tourable, sceneID);
+    constructor( tourable:Tourable, schema?:InfoHotspotSchema){
+        super(tourable, SceneObjectType.infoHotspot, schema)
+        this.loadSchema(tourable, schema);
         if (tourable.loaded){
             this.hookEvents(tourable)
         } else {
@@ -44,22 +41,11 @@ export default class InfoHotspot extends Hotspot implements InfoHotspotSchema {
             }
         }, false)
     }
+    loadSchema: (tourable: Tourable, schema: InfoHotspotSchema) => void = (tourable: Tourable, schema: InfoHotspotSchema) => {
+        this.loadHotspotSchema(tourable, schema);
+    };
     export = ():InfoHotspotSchema => {
-        return {
-            type: this.type,
-            id: this.id,
-            sceneID: this.sceneID,
-            targetSceneID: this.targetSceneID,
-            enteringAngle: {x: this.enteringAngle.x, y: this.enteringAngle.y, z: this.enteringAngle.z},
-            texture: this.texture,
-            originalScaling: {x: this.originalScaling.x, y: this.originalScaling.y, z: this.originalScaling.z},
-            mesh: {
-                position: {x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
-                rotation: {x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
-                scaling: {x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z},
-            },
-            hoverTitle: this.hoverTitle,
-            clickTitle: this.clickTitle,
-        }
+        let hotspotSchema = this.exportHotspot();
+        return hotspotSchema;
     }
 }
