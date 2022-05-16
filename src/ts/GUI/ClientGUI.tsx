@@ -1,9 +1,12 @@
 import { Box } from "@mui/material";
+import React from "react";
 import GUI, { GUIProps, GUIState } from "./GUI";
-import Copyright from "./V2/Copyright/Copyright";
-import Library from "./V2/Library/Library";
-import Logo from "./V2/Logo/Logo";
-import SceneGroupSelector from "./V2/SceneGroupSelector/SceneGroupSelector";
+import Copyright from "./V3/Copyright/Copyright";
+import Hotpots from "./V3/Hotpots/Hotpots";
+// import Library from "./V2/Library/Library";
+// import Logo from "./V2/Logo/Logo";
+// import SceneGroupSelector from "./V2/SceneGroupSelector/SceneGroupSelector";
+import Menu from "./V3/Menu/Menu"
 
 export interface ClientGUIProps extends GUIProps {}
 
@@ -23,6 +26,7 @@ class ClientGUI extends GUI<ClientGUIProps, ClientGUIState> {
         );
     }
     render() {
+        let menuClient: React.RefObject<Menu> = React.createRef();
         return (
             <Box
                 sx={{
@@ -30,11 +34,13 @@ class ClientGUI extends GUI<ClientGUIProps, ClientGUIState> {
                     opacity: this.state.hidden ? "0" : "1",
                     pointerEvents: this.state.hidden ? "none" : "all",
                 }}
-            >
-                <Library tourable={this.props.tourable} />
+                >
                 <Copyright tourable={this.props.tourable} />
+                <Menu  tourable={this.props.tourable}/>
+                <Hotpots tourable={this.props.tourable}></Hotpots>
+                {/* <Library tourable={this.props.tourable} />
                 <Logo tourable={this.props.tourable} />
-                <SceneGroupSelector tourable={this.props.tourable} />
+                <SceneGroupSelector tourable={this.props.tourable} /> */}
             </Box>
         );
     }
