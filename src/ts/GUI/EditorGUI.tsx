@@ -40,7 +40,7 @@ class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
                 <PolyConfig ref={this.polyConfig} tourable={this.props.tourable} />
                 <SceneConfig ref={this.sceneConfig} tourable={this.props.tourable} />
                 <SceneGroupConfig ref={this.sceneGroupConfig} tourable={this.props.tourable} />
-                <GridLayout tourable={this.props.tourable} />
+                {/* <GridLayout tourable={this.props.tourable} /> */}
             </>
         );
     }
