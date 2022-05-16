@@ -1,17 +1,11 @@
-import Schema from "../Interfaces/Schema";
+import Entity, { EntitySchema } from "../Entity/Entity";
 import Tourable from "../Tourable/Tourable";
 import Scene from "./Scene";
-export interface SceneGroupSchema extends Schema {
+export interface SceneGroupSchema extends EntitySchema {
     name: string;
     sceneIds: number[];
 }
-export default class SceneGroup implements SceneGroupSchema {
-    //#region id
-    private _id: number;
-    public get id() {
-        return this._id;
-    }
-    //#endregion
+export default class SceneGroup extends Entity implements SceneGroupSchema {
     //#region name
     private _name: string = `Default scene group ${new Date().getTime()}`;
     public get name() {
@@ -24,8 +18,11 @@ export default class SceneGroup implements SceneGroupSchema {
     //#region sceneIds
     public sceneIds: number[] = [];
     //#endregion
-    constructor(tourable: Tourable) {
+    constructor(tourable: Tourable, schema?: SceneGroupSchema) {
+        super(tourable, schema)
         tourable.sceneManager.sceneGroups.push(this);
+        // register to tourable
+        tourable.sceneGroups.set(this.id, this);
     }
     addScene = (scene: Scene) => {
         if (!this.sceneIds.includes(scene.id)) {
@@ -33,7 +30,13 @@ export default class SceneGroup implements SceneGroupSchema {
         }
     };
     loadSchema = (tourable: Tourable, schema: SceneGroupSchema) => {
-        this._name = schema.name;
+        this.loadEntitySchema(tourable, schema);
+        if (schema){
+            this._name = schema.name;
+            this.sceneIds = schema.sceneIds;
+        } else {
+            // no logic yet
+        }
     };
     delete = (tourable: Tourable) => {
         this.sceneIds.map((sceneID) => {
@@ -41,9 +44,9 @@ export default class SceneGroup implements SceneGroupSchema {
         });
     };
     export = () => {
-        return {
-            name: this.name,
-            sceneIDs: this.sceneIds,
-        };
+        let entitySchema = this.exportEntity() as SceneGroupSchema;
+        entitySchema.name = this.name;
+        entitySchema.sceneIds = this.sceneIds;
+        return entitySchema;
     };
 }

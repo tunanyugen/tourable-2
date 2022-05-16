@@ -13,11 +13,15 @@ import EditorGUI from "../GUI/EditorGUI";
 import UncontrolledGUI from "../GUI/UncontrolledGUI";
 import GUIRenderer from "../GUI/GUIRenderer";
 import ClientGUI from "../GUI/ClientGUI";
-import SceneObject from "../SceneObject/SceneObject";
+import SceneObject, { SceneObjectSchema } from "../SceneObject/SceneObject";
+import SceneGroup, { SceneGroupSchema } from "../Scene/SceneGroup";
+import Entity, { EntitySchema } from "../Entity/Entity";
 
 export default interface TourableSchema {
     panoramaSchemas: PanoramaSchema[];
     sceneSchemas: SceneSchema[];
+    sceneGroupSchemas: SceneGroupSchema[];
+    sceneObjectSchemas: SceneObjectSchema[];
 }
 
 export default class Tourable {
@@ -43,8 +47,10 @@ export default class Tourable {
     // observables
     onLoadObservable: Observable = new Observable(this._observableManager, null, true);
     // entities
+    entities: Map<number, Entity> = new Map();
     panoramas: Map<number, Panorama> = new Map();
     scenes: Map<number, Scene> = new Map();
+    sceneGroups: Map<number, SceneGroup> = new Map();
     sceneObjects: Map<number, SceneObject> = new Map();
 
     constructor(containerSelector: string, schema?: TourableSchema) {
@@ -86,7 +92,7 @@ export default class Tourable {
         // run render loop
         this.engine.runRenderLoop(() => {
             if (this.sceneManager.sceneToRender) {
-                this.sceneManager.sceneToRender.render();
+                this.sceneManager.sceneToRender.scene.render();
             }
         });
         // resize on viewport change
@@ -95,14 +101,18 @@ export default class Tourable {
         });
     }
     loadSchema = (schema: TourableSchema) => {
-        // load panoramas
         schema.panoramaSchemas.forEach((panoramaSchema) => {
             new Panorama(this, panoramaSchema);
         });
-        // load scenes
         schema.sceneSchemas.forEach((sceneSchema) => {
             new Scene(this, sceneSchema);
         });
+        schema.sceneGroupSchemas.forEach((sceneGroupSchema) => {
+            new SceneGroup(this, sceneGroupSchema);
+        })
+        schema.sceneObjectSchemas.forEach((sceneObjectSchema) => {
+            
+        })
     };
     export: () => TourableSchema = () => {
         let panoramaSchemas = Array.from(this.panoramas).map(([id, panorama]) => {
@@ -111,9 +121,17 @@ export default class Tourable {
         let sceneSchemas = Array.from(this.scenes).map(([id, scene]) => {
             return scene.export();
         });
+        let sceneGroupSchemas = Array.from(this.sceneGroups).map(([id, sceneGroup]) => {
+            return sceneGroup.export();
+        })
+        let sceneObjectSchemas = Array.from(this.sceneObjects).map(([id, sceneObject]) => {
+            return sceneObject.export();
+        })
         return {
             panoramaSchemas,
             sceneSchemas,
+            sceneGroupSchemas,
+            sceneObjectSchemas,
         } as TourableSchema;
     };
 }

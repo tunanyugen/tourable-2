@@ -2,12 +2,12 @@ import Observable from "@tunanyugen/observable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { Mesh, Space, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
-import Schema from "../Interfaces/Schema";
+import Entity, { EntitySchema } from "../Entity/Entity";
 import Tourable from "../Tourable/Tourable";
 import Mathematics from "../Utilities/Mathematics/Mathematics";
 
-export interface SceneObjectSchema extends Schema {
-    type: "floorHotspot" | "floatingHotspot" | "infoHotspot" | "poly" | "pivot";
+export interface SceneObjectSchema extends EntitySchema {
+    type: SceneObjectType;
     sceneId: number;
     originalScaling: { x: number; y: number; z: number };
     mesh:
@@ -21,9 +21,9 @@ export interface SceneObjectSchema extends Schema {
     clickTitle: string;
 }
 
-export default abstract class SceneObject {
+export default abstract class SceneObject extends Entity {
     //#region type
-    private _type: "floorHotspot" | "floatingHotspot" | "infoHotspot" | "poly" | "pivot";
+    protected abstract _type: SceneObjectType;
     public get type() {
         return this._type;
     }
@@ -35,12 +35,6 @@ export default abstract class SceneObject {
     }
     public set originalScaling(value: Vector3) {
         this._originalScaling = value.clone();
-    }
-    //#endregion
-    //#region id
-    private _id: number;
-    public get id() {
-        return this._id;
     }
     //#endregion
     //#region sceneID
@@ -94,7 +88,8 @@ export default abstract class SceneObject {
     public hoverTitleChangeObservable: Observable<string> = new Observable(this._observableManager, null, false);
     public clickTitleChangeObserable: Observable<string> = new Observable(this._observableManager, null, false);
 
-    constructor(tourable: Tourable, schema: SceneObjectSchema) {
+    constructor(tourable: Tourable, schema?: SceneObjectSchema) {
+        super(tourable, schema);
         // register to tourable
         tourable.sceneObjects.set(this.id, this);
         // init events
@@ -145,7 +140,7 @@ export default abstract class SceneObject {
     };
     private defaultEvents = (tourable: Tourable) => {
         let validObjectCondition = () => {
-            return !this.mesh || tourable.sceneManager.sceneToRender != this.mesh.getScene();
+            return !this.mesh || tourable.sceneManager.sceneToRender.scene != this.mesh.getScene();
         };
         let mouseOverObjectCondition = () => {
             return tourable.sceneObjectManager.hoverSceneObject != this || validObjectCondition();
@@ -241,9 +236,9 @@ export default abstract class SceneObject {
         );
     };
     loadSceneObjectSchema = (tourable: Tourable, schema: SceneObjectSchema) => {
+        this.loadEntitySchema(tourable, schema);
         if (schema) {
             this._type = schema.type;
-            this._id = schema.id;
             this._sceneId = schema.sceneId;
             this._originalScaling = new Vector3(schema.originalScaling.x, schema.originalScaling.y, schema.originalScaling.z);
             this.mesh.position = new Vector3(schema.mesh.position.x, schema.mesh.position.y, schema.mesh.position.z);
@@ -252,26 +247,24 @@ export default abstract class SceneObject {
             this._hoverTitle = schema.hoverTitle;
             this._clickTitle = schema.clickTitle;
         } else {
-            this._type = schema.type
-            this._id = tourable.uidGenerator.uid;
+            this._type = schema.type;
             this._sceneId = tourable.sceneManager.sceneToRender.id;
         }
     };
     exportSceneObject: () => SceneObjectSchema = () => {
-        return {
-            clickTitle: this._clickTitle,
-            hoverTitle: this._hoverTitle,
-            id: this._id,
-            mesh: {
-                position: { x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z},
-                rotation: { x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z},
-                scaling: { x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z}
-            },
-            originalScaling: { x: this._originalScaling.x, y: this._originalScaling.y, z: this._originalScaling.z },
-            sceneId: this._sceneId,
-            type: this._type,
-        }
+        let entitySchema = this.exportEntity() as SceneObjectSchema;
+        entitySchema.clickTitle = this._clickTitle;
+        entitySchema.hoverTitle = this._hoverTitle;
+        entitySchema.mesh = {
+            position: { x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z },
+            rotation: { x: this.mesh.rotation.x, y: this.mesh.rotation.y, z: this.mesh.rotation.z },
+            scaling: { x: this.mesh.scaling.x, y: this.mesh.scaling.y, z: this.mesh.scaling.z },
+        };
+        entitySchema.originalScaling = { x: this._originalScaling.x, y: this._originalScaling.y, z: this._originalScaling.z };
+        entitySchema.sceneId = this._sceneId;
+        entitySchema.type = this._type;
+        return entitySchema;
     };
-    abstract loadHotspotSchema: (tourable:Tourable, schema: SceneObjectSchema) => void;
+    abstract loadHotspotSchema: (tourable: Tourable, schema: SceneObjectSchema) => void;
     abstract export: () => SceneObjectSchema;
 }

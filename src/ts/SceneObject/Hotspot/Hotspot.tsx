@@ -64,17 +64,17 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
         let texture = "";
         let renderingGroupID = 0;
         switch (this.type) {
-            case "floatingHotspot":
+            case SceneObjectType.floatingHotspot:
                 size = tourable.config.floatingHotspot.size;
                 texture = tourable.config.assets.floatingHotspot[0];
                 renderingGroupID = tourable.config.floatingHotspot.renderingGroupID;
                 break;
-            case "floorHotspot":
+            case SceneObjectType.floorHotspot:
                 size = tourable.config.floorHotspot.size;
                 texture = tourable.config.assets.floorHotspot[0];
                 renderingGroupID = tourable.config.floorHotspot.renderingGroupID;
                 break;
-            case "infoHotspot":
+            case SceneObjectType.infoHotspot:
                 size = tourable.config.infoHotspot.size;
                 texture = tourable.config.assets.infoHotspot[0];
                 renderingGroupID = tourable.config.infoHotspot.renderingGroupID;
@@ -87,7 +87,7 @@ export default abstract class Hotspot extends SceneObject implements HotspotSche
                 size: size,
                 updatable: true,
             },
-            tourable.sceneManager.sceneToRender
+            tourable.sceneManager.sceneToRender.scene
         );
         this.mesh.renderingGroupId = renderingGroupID;
         // set texture

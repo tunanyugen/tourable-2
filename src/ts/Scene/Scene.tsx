@@ -2,24 +2,18 @@ import { Scene as BABYLONScene, PhotoDome, FreeCamera, Vector3, Scalar, Texture 
 import UIDGenerator from "../Generator/UIDGenerator";
 import Tourable from "../Tourable/Tourable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import Schema from "../Interfaces/Schema";
+import Entity, { EntitySchema } from "../Entity/Entity";
 
-export interface SceneSchema extends Schema {
-    id: number;
+export interface SceneSchema extends EntitySchema {
     panoramaId: number;
 }
 
-export default class Scene extends BABYLONScene implements SceneSchema {
+export default class Scene extends Entity implements SceneSchema {
     protected _observableManager: ObservableManager = new ObservableManager();
     public uidGenerator: UIDGenerator = new UIDGenerator();
     public photoDome: PhotoDome;
     public camera: FreeCamera;
-    //#region id
-    private _id: number;
-    public get id() {
-        return this._id;
-    }
-    //#endregion
+    public scene: BABYLONScene;
     //#region panoramaId
     private _panoramaId: number = -1;
     public get panoramaId() {
@@ -30,12 +24,12 @@ export default class Scene extends BABYLONScene implements SceneSchema {
     }
     //#endregion
     constructor(tourable: Tourable, schema: SceneSchema = null) {
-        super(tourable.engine);
+        super(tourable, schema);
         this.loadSchema(tourable, schema);
-        // register to tourable
-        tourable.scenes.set(this._id, this);
+        // create scene
+        this.scene = new BABYLONScene(tourable.engine);
         // create camera
-        this.camera = new FreeCamera("camera1", new Vector3(0, 0, 0), this);
+        this.camera = new FreeCamera("camera1", new Vector3(0, 0, 0), this.scene);
         this.camera.angularSensibility *= -1;
         this.camera.minZ = 0.001;
         this.camera.fov = (tourable.config.fov * Math.PI) / 180;
@@ -44,9 +38,11 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         // Attach the camera to the canvas
         this.camera.attachControl();
 
-        this.onDisposeObservable.addOnce(() => {
+        this.scene.onDisposeObservable.addOnce(() => {
             tourable.panoramas.get(this.panoramaId).dispose();
         });
+        // register to tourable
+        tourable.scenes.set(this.id, this);
     }
     createPhotoDome = (tourable: Tourable, onLoad: Function = () => {}) => {
         let panorama = tourable.panoramas.get(this.panoramaId);
@@ -57,13 +53,13 @@ export default class Scene extends BABYLONScene implements SceneSchema {
                 resolution: 16,
                 size: 2,
             },
-            this
+            this.scene
         );
         this.photoDome.mesh.isPickable = false;
         panorama.srcObservable.Add(
             this._observableManager,
             (src) => {
-                this.photoDome.material.diffuseTexture = new Texture(src, this, {
+                this.photoDome.material.diffuseTexture = new Texture(src, this.scene, {
                     invertY: false,
                 });
             },
@@ -116,7 +112,7 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         tourable.sceneManager.onSwitchSceneObservable.Add(
             this._observableManager,
             () => {
-                this.dispose();
+                this.scene.dispose();
             },
             true
         );
@@ -138,17 +134,16 @@ export default class Scene extends BABYLONScene implements SceneSchema {
         }
     };
     loadSchema = (tourable: Tourable, schema: SceneSchema) => {
+        this.loadEntitySchema(tourable, schema);
         if (schema) {
-            this._id = schema.id;
             this.panoramaId = schema.panoramaId;
         } else {
-            this._id = tourable.uidGenerator.uid;
+            // no logic yet
         }
     };
     export = (): SceneSchema => {
-        return {
-            id: this.id,
-            panoramaId: this.panoramaId,
-        };
+        let entitySchema = this.exportEntity() as SceneSchema;
+        entitySchema.panoramaId = this.panoramaId;
+        return entitySchema;
     };
 }

@@ -45,7 +45,8 @@ export default class SceneObjectManager{
     }
     multiPick = (tourable:Tourable):SceneObjectManagerPickResult[] => {
         if (tourable.sceneManager.sceneToRender){
-            let results = tourable.sceneManager.sceneToRender.multiPick(tourable.sceneManager.sceneToRender.pointerX, tourable.sceneManager.sceneToRender.pointerY);
+            let scene = tourable.sceneManager.sceneToRender.scene;
+            let results = scene.multiPick(scene.pointerX, scene.pointerY);
             let possibleResults:SceneObjectManagerPickResult[] = [];
     
             for (let r = 0; r < results.length; r++){

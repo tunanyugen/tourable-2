@@ -54,7 +54,7 @@ export default class Poly extends SceneObject implements PolySchema{
         }
     }
     createMesh = (tourable:Tourable) => {
-        let scene = tourable.scenes.get(this.sceneId);
+        let scene = tourable.scenes.get(this.sceneId).scene;
         // create mesh
         this.mesh = new Mesh(this.id.toString(), scene);
         // create material

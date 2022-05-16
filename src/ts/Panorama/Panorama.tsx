@@ -1,9 +1,9 @@
 import Observable from "@tunanyugen/observable";
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import Schema from "../Interfaces/Schema";
+import Entity, { EntitySchema } from "../Entity/Entity";
 import Tourable from "../Tourable/Tourable";
 
-export interface PanoramaSchema extends Schema {
+export interface PanoramaSchema extends EntitySchema {
     name: string;
     src: string;
     thumbnail: string;
@@ -12,14 +12,8 @@ export interface PanoramaSchema extends Schema {
     overview: string;
 }
 
-export default class Panorama implements PanoramaSchema {
+export default class Panorama extends Entity implements PanoramaSchema {
     private _observableManager: ObservableManager = new ObservableManager();
-    //#region id
-    private _id: number;
-    public get id() {
-        return this._id;
-    }
-    //#endregion
     //#region name
     public nameObservable: Observable<string> = new Observable<string>(this._observableManager, null, false);
     private _name: string = "";
@@ -87,13 +81,14 @@ export default class Panorama implements PanoramaSchema {
     }
     //#endregion
     constructor(tourable: Tourable, schema?: PanoramaSchema) {
+        super(tourable, schema);
         this.loadSchema(tourable, schema);
         // register to tourable
-        tourable.panoramas.set(this._id, this);
+        tourable.panoramas.set(this.id, this);
     }
     loadSchema = (tourable: Tourable, schema: PanoramaSchema) => {
+        this.loadEntitySchema(tourable, schema);
         if (schema){
-            this._id = schema.id;
             this._googleMap = schema.googleMap;
             this._info = schema.info;
             this._name = schema.name;
@@ -101,19 +96,18 @@ export default class Panorama implements PanoramaSchema {
             this._src = schema.src;
             this._thumbnail = schema.thumbnail;
         } else {
-            this._id = tourable.uidGenerator.uid;
+            // no logic yet
         }
     };
     export: () => PanoramaSchema = () => {
-        return {
-            id: this.id,
-            googleMap: this.googleMap,
-            info: this.info,
-            name: this.name,
-            overview: this.overview,
-            src: this.src,
-            thumbnail: this.thumbnail,
-        }
+        let entitySchema = this.exportEntity() as PanoramaSchema;
+        entitySchema.googleMap = this.googleMap;
+        entitySchema.info = this.info;
+        entitySchema.name = this.name;
+        entitySchema.overview = this.overview;
+        entitySchema.src = this.src;
+        entitySchema.thumbnail = this.thumbnail;
+        return entitySchema;
     };
     dispose = () => {
         this._observableManager.Dispose();

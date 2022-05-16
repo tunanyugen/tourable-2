@@ -1,7 +1,6 @@
 import { Color3, MeshBuilder, StandardMaterial, Texture } from "babylonjs";
 import Tourable from "../../Tourable/Tourable";
 import SceneObject, { SceneObjectSchema } from "../SceneObject";
-import Scene from "../../Scene/Scene";
 
 export interface PivotSchema extends SceneObjectSchema {
     texture:string;
@@ -33,12 +32,12 @@ export default class Pivot extends SceneObject implements PivotSchema {
         this.hookEvents(tourable);
         // look at camera
         this.moveObservable.Add(this._observableManager, () => {
-            this.mesh.lookAt((this.mesh.getScene() as Scene).camera.position);
+            this.mesh.lookAt(this.mesh.getScene().activeCamera.position);
         }, false)
     }
 
     createMesh = (tourable:Tourable, sceneID:number) => {
-        let scene = tourable.scenes.get(sceneID);
+        let scene = tourable.scenes.get(sceneID).scene;
         // create plane using mesh builder
         this.mesh = MeshBuilder.CreatePlane(this.id.toString(), {
             size: tourable.config.pivot.size,
