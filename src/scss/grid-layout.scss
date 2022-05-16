@@ -1,0 +1,8 @@
+.tourable__grid-layout {
+    &__item {
+        &:hover &__index {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+        }
+    }
+}

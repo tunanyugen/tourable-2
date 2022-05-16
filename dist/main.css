@@ -42,3 +42,8 @@
   border-radius: 100rem;
   transform: translate(-5px, -5px);
 }
+
+.tourable__grid-layout__item:hover .tourable__grid-layout__item__index {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}

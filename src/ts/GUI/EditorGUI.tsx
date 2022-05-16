@@ -9,6 +9,7 @@ import SceneConfig from "./Config/SceneConfig";
 import GUI, { GUIProps, GUIState } from "./GUI";
 import GlobalConfig from "./Config/GlobalConfig";
 import SceneGroupConfig from "./Config/SceneGroupConfig";
+import GridLayout from "./GridLayout/GridLayout";
 
 export interface EditorGUIProps extends GUIProps {}
 
@@ -39,6 +40,7 @@ class EditorGUI extends GUI<EditorGUIProps, EditorGUIState> {
                 <PolyConfig ref={this.polyConfig} tourable={this.props.tourable} />
                 <SceneConfig ref={this.sceneConfig} tourable={this.props.tourable} />
                 <SceneGroupConfig ref={this.sceneGroupConfig} tourable={this.props.tourable} />
+                <GridLayout tourable={this.props.tourable} />
             </>
         );
     }
