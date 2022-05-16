@@ -1,15 +1,31 @@
 import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
-import SceneObject from "../../SceneObject/SceneObject";
+import FloatingHotspot, { FloatingHotspotSchema } from "../../SceneObject/Hotspot/FloatingHotspot";
+import FloorHotspot, { FloorHotspotSchema } from "../../SceneObject/Hotspot/FloorHotspot";
+import InfoHotspot, { InfoHotspotSchema } from "../../SceneObject/Hotspot/InfoHotspot";
+import Pivot, { PivotSchema } from "../../SceneObject/Pivot/Pivot";
+import SceneObject, { SceneObjectSchema } from "../../SceneObject/SceneObject";
 import Tourable from "../../Tourable/Tourable";
 import SceneObjectManagerPickResult from "./SceneObjectManagerPickResult";
 
 export default class SceneObjectManager{
     protected _observableManager:ObservableManager = new ObservableManager();
-    target:SceneObject;
+    //#region target
+    private _target:SceneObject;
+    public get target(){
+        return this._target;
+    }
+    public set target(value: SceneObject){
+        this._target = value;
+    }
+    //#endregion
+    //#region lastHoverSceneObject
     private _lastHoverSceneObject:SceneObject;
-    get lastHoverSceneObject(){ return this._lastHoverSceneObject }
+    public get lastHoverSceneObject(){ return this._lastHoverSceneObject }
+    //#endregion
+    //#region hoverSceneObject
     private _hoverSceneObject:SceneObject;
     get hoverSceneObject(){ return this._hoverSceneObject }
+    //#endregion
     constructor(tourable:Tourable){
         tourable.onLoadObservable.Add(this._observableManager, () => {
             // pick hovering scene object
@@ -33,11 +49,12 @@ export default class SceneObjectManager{
     }
     multiPick = (tourable:Tourable):SceneObjectManagerPickResult[] => {
         if (tourable.sceneManager.sceneToRender){
-            let results = tourable.sceneManager.sceneToRender.multiPick(tourable.sceneManager.sceneToRender.pointerX, tourable.sceneManager.sceneToRender.pointerY);
+            let scene = tourable.sceneManager.sceneToRender.scene;
+            let results = scene.multiPick(scene.pointerX, scene.pointerY);
             let possibleResults:SceneObjectManagerPickResult[] = [];
     
             for (let r = 0; r < results.length; r++){
-                let object = tourable.sceneManager.sceneToRender.sceneObjects.get(parseInt(results[r].pickedMesh.name));
+                let object = tourable.sceneObjects.get(parseInt(results[r].pickedMesh.name));
                 if (object){
                     possibleResults.push( { sceneObject: object, pickingInfo:results[r] } );
                 }
@@ -47,9 +64,12 @@ export default class SceneObjectManager{
             return null;
         }
     }
-    private _pickTarget = (tourable:Tourable) => {
-        let result = this.pick(tourable);
-        if (!result){ return }
-        this.target = result.sceneObject;
+    loadSceneObjectSchema = (tourable:Tourable, schema:SceneObjectSchema) => {
+        switch(schema.type){
+            case SceneObjectType.floatingHotspot: new FloatingHotspot(tourable, schema as FloatingHotspotSchema); break;
+            case SceneObjectType.floorHotspot: new FloorHotspot(tourable, schema as FloorHotspotSchema);
+            case SceneObjectType.infoHotspot: new InfoHotspot(tourable, schema as InfoHotspotSchema);
+            case SceneObjectType.pivot: new Pivot(tourable, schema as PivotSchema);
+        }
     }
 }

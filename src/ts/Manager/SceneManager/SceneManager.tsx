@@ -12,7 +12,6 @@ export default class SceneManager {
     public createDefaultSceneObservable: Observable<Scene> = new Observable(this._observableManager);
     public changeSceneGroupObservable: Observable<SceneGroup> = new Observable(this._observableManager);
     public sceneGroups: SceneGroup[] = [];
-    public scenes: Map<number, Scene> = new Map();
     private _sceneToRender: Scene;
     get sceneToRender() {
         return this._sceneToRender;
@@ -22,23 +21,27 @@ export default class SceneManager {
         return this._currentSceneGroup;
     }
     public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(this._observableManager, null, false);
+    constructor(tourable: Tourable) {}
     switchSceneGroup = (tourable: Tourable, sceneGroup: SceneGroup) => {
-        if (this.currentSceneGroup == sceneGroup){ return }
+        if (this.currentSceneGroup == sceneGroup) {
+            return;
+        }
         this._currentSceneGroup = sceneGroup;
-        if (this.currentSceneGroup.sceneIDs.length <= 0) {
+        if (this.currentSceneGroup.sceneIds.length <= 0) {
             this.createDefaultScene(tourable);
         }
-        this.switchScene(tourable, this.currentSceneGroup.sceneIDs[0]);
+        this.switchScene(tourable, this.currentSceneGroup.sceneIds[0]);
         this.changeSceneGroupObservable.Resolve(this.currentSceneGroup);
     };
-    setScene = (tourable: Tourable, scene: Scene, delay: number = 500, callback = () => {}) => {
+    setScene = (tourable: Tourable, sceneId: number, delay: number = 500, callback = () => {}) => {
         // show load screen
         tourable.uncontrolledGUI.current.loadScreen.current.show();
         setTimeout(() => {
+            let scene = tourable.scenes.get(sceneId);
             // load dome and switch scene
             if (!scene.photoDome) {
                 let startedLoadingAt = Date.now();
-                scene.createPhotoDome(() => {
+                scene.createPhotoDome(tourable, () => {
                     let lastScene = this._sceneToRender;
                     // switch scene
                     this._sceneToRender = scene;
@@ -73,14 +76,13 @@ export default class SceneManager {
             }
         }, delay);
     };
-
-    constructor(tourable: Tourable) {}
     createSceneGroup = (tourable: Tourable) => {
         let newSceneGroup = new SceneGroup(tourable);
         this.switchSceneGroup(tourable, newSceneGroup);
-    }
+    };
     createDefaultScene = (tourable: Tourable): Scene => {
-        let newPanorama = new Panorama({
+        let newPanorama = new Panorama(tourable, {
+            id: tourable.uidGenerator.uid,
             name: "New scene",
             src: tourable.config.defaultPanorama,
             info: "",
@@ -88,20 +90,23 @@ export default class SceneManager {
             thumbnail: tourable.config.defaultPanorama,
             overview: "",
         });
-        let scene = new Scene(tourable, newPanorama);
+        let scene = new Scene(tourable, {
+            id: tourable.uidGenerator.uid,
+            panoramaId: newPanorama.id,
+        });
         this.currentSceneGroup.addScene(scene);
         this.createDefaultSceneObservable.Resolve(scene);
         return scene;
     };
     switchScene = (tourable: Tourable, sceneID: number, hotspotID: number = -1) => {
         // get scene to check if scene exists
-        let newScene = this.scenes.get(sceneID);
+        let newScene = tourable.scenes.get(sceneID);
         if (!newScene) {
             console.error(`Scene ${sceneID} not found.`);
             return;
         }
         // get hotspot to know which direction to move toward to
-        let hotspot = this.sceneToRender ? (this.sceneToRender.sceneObjects.get(hotspotID) as Hotspot) : null;
+        let hotspot = this.sceneToRender ? (tourable.sceneObjects.get(hotspotID) as Hotspot) : null;
         // wait for dome to be created or switch to scene if dome has already been created
         // get move direction
         if (hotspot) {
@@ -120,7 +125,7 @@ export default class SceneManager {
                 )
                 .then(() => {
                     // switch scene
-                    this.setScene(tourable, newScene, 0, () => {
+                    this.setScene(tourable, newScene.id, 0, () => {
                         this.sceneToRender.camera.detachControl();
                         this.sceneToRender.camera.rotation = hotspot.enteringAngle;
                         this.sceneToRender.camera.attachControl();
@@ -137,7 +142,7 @@ export default class SceneManager {
                 });
         } else {
             // switch scene
-            this.setScene(tourable, newScene, 500, () => {
+            this.setScene(tourable, newScene.id, 500, () => {
                 if (hotspot) {
                     this.sceneToRender.camera.detachControl();
                     this.sceneToRender.camera.rotation = hotspot.enteringAngle;

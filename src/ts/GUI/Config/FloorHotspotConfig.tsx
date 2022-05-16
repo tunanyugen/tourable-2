@@ -39,7 +39,7 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
             hotspotStyle: this.target.texture,
             hoverTitle: this.target.hoverTitle,
             clickTitle: this.target.clickTitle,
-            targetSceneID: this.target.targetSceneID,
+            targetSceneID: this.target.targetSceneId,
         })
     }
     applySettings = () => {
@@ -79,10 +79,11 @@ class FloorHotspotConfig extends Config<FloorHotspot, FloorHotspotConfigProps, F
                 />
                 <Label>Pick a scene</Label>
                 <MediaSelector
-                    medias={Array.from(this.props.tourable.sceneManager.scenes).map(([id, scene]) => {
+                    medias={Array.from(this.props.tourable.scenes).map(([id, scene]) => {
+                        let panorama = this.props.tourable.panoramas.get(scene.panoramaId);
                         return {
-                            label: scene.panorama.name,
-                            src: scene.panorama.thumbnail,
+                            label: panorama.name,
+                            src: panorama.thumbnail,
                             onSelect: () => {
                                 this.setState({targetSceneID: scene.id});
                             },
