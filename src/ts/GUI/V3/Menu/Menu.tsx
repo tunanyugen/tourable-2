@@ -61,8 +61,8 @@ class Menu extends GUIObject<MenuProps, MenuState> {
                 <Box sx={{
                         display: "flex",
                         position: "absolute",
-                        width: "40px",
-                        height: "40px",
+                        width: "calc(100vw * 40 / 1280)",
+                        height: "calc(100vw * 40 / 1280)",
                         top: "calc(100vh * 12 / 680)",
                         left: "calc(100vw * 12 / 1280)",
                         backgroundColor: "#fff",
