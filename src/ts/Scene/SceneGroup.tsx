@@ -23,6 +23,8 @@ export default class SceneGroup extends Entity implements SceneGroupSchema {
         tourable.sceneManager.sceneGroups.push(this);
         // register to tourable
         tourable.sceneGroups.set(this.id, this);
+        // resolve observable upon creation
+        tourable.sceneGroupObservable.Resolve();
     }
     addScene = (scene: Scene) => {
         if (!this.sceneIds.includes(scene.id)) {

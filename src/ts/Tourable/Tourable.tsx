@@ -46,6 +46,7 @@ export default class Tourable {
     config: Config;
     // observables
     onLoadObservable: Observable = new Observable(this._observableManager, null, true);
+    sceneGroupObservable: Observable = new Observable(this._observableManager, null, false);
     // entities
     entities: Map<number, Entity> = new Map();
     panoramas: Map<number, Panorama> = new Map();

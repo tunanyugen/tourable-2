@@ -46,6 +46,7 @@ abstract class Config<T, P extends ConfigProps, S extends ConfigState> extends G
             this._observableManager,
             () => {
                 this.applySettings();
+                this.applySettingsObservable.Resolve();
             },
             false
         );

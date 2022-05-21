@@ -22,7 +22,8 @@ export default class SceneManager {
     }
     public onSwitchSceneObservable: Observable<{ lastScene: Scene; scene: Scene }> = new Observable(this._observableManager, null, false);
     constructor(tourable: Tourable) {}
-    switchSceneGroup = (tourable: Tourable, sceneGroup: SceneGroup) => {
+    switchSceneGroup = (tourable: Tourable, sceneGroupId: number) => {
+        let sceneGroup = tourable.sceneGroups.get(sceneGroupId);
         if (this.currentSceneGroup == sceneGroup) {
             return;
         }
@@ -78,7 +79,7 @@ export default class SceneManager {
     };
     createSceneGroup = (tourable: Tourable) => {
         let newSceneGroup = new SceneGroup(tourable);
-        this.switchSceneGroup(tourable, newSceneGroup);
+        this.switchSceneGroup(tourable, newSceneGroup.id);
     };
     createDefaultScene = (tourable: Tourable): Scene => {
         let newPanorama = new Panorama(tourable, {

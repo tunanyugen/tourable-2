@@ -1,5 +1,4 @@
 import Observable from "@tunanyugen/observable";
-import { ObservableManager } from "@tunanyugen/observable/src/ts/ObservableManager";
 import { Mesh, Space, Vector3 } from "babylonjs";
 import { Vector2 } from "babylonjs";
 import Entity, { EntitySchema } from "../Entity/Entity";
@@ -74,7 +73,6 @@ export default abstract class SceneObject extends Entity {
     //#endregion
     public mesh: Mesh;
     public grabbing: boolean = false;
-    protected _observableManager: ObservableManager = new ObservableManager();
     public disposeObservable = new Observable(this._observableManager, null, true);
     public moveObservable: Observable = new Observable(this._observableManager, null, false);
     public gDownObservable: Observable;
@@ -115,10 +113,7 @@ export default abstract class SceneObject extends Entity {
         if (this.mesh) {
             this.mesh.dispose();
         }
-        // for some reason some observables will not be resolved if run the following command without delay
-        setTimeout(() => {
-            this._observableManager.Dispose();
-        }, 16);
+        this.disposeEntity();
     };
     private _scaleInterval: NodeJS.Timeout;
     scale = (start: Vector3, end: Vector3, duration: number) => {

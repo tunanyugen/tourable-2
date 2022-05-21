@@ -61,7 +61,7 @@ class GeneralContextMenu extends ContextMenu<GeneralContextMenuProps, GeneralCon
                             name: "Create scene group",
                             onSelect: () => {
                                 let newSceneGroup = new SceneGroup(this.props.tourable);
-                                this.props.tourable.sceneManager.switchSceneGroup(this.props.tourable, newSceneGroup);
+                                this.props.tourable.sceneManager.switchSceneGroup(this.props.tourable, newSceneGroup.id);
                             },
                         },
                         {

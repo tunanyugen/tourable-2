@@ -66,7 +66,7 @@ class SceneGroupSelector extends GUIObject<SceneGroupSelectorProps, SceneGroupSe
                     key={`${sceneGroup.name}-${index}`}
                     value={sceneGroup.name}
                     onClick={() => {
-                        this.props.tourable.sceneManager.switchSceneGroup(this.props.tourable, sceneGroup);
+                        this.props.tourable.sceneManager.switchSceneGroup(this.props.tourable, sceneGroup.id);
                     }}
                 >
                     {sceneGroup.name}

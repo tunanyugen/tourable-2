@@ -13,7 +13,6 @@ export interface PanoramaSchema extends EntitySchema {
 }
 
 export default class Panorama extends Entity implements PanoramaSchema {
-    private _observableManager: ObservableManager = new ObservableManager();
     //#region name
     public nameObservable: Observable<string> = new Observable<string>(this._observableManager, null, false);
     private _name: string = "";

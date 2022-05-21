@@ -7,7 +7,6 @@ export interface SceneGroupConfigProps extends ConfigProps {}
 
 export interface SceneGroupConfigState extends ConfigState {
     name: string;
-
 }
 
 class SceneGroupConfig extends Config<SceneGroup, SceneGroupConfigProps, SceneGroupConfigState> {
@@ -27,9 +26,18 @@ class SceneGroupConfig extends Config<SceneGroup, SceneGroupConfigProps, SceneGr
                 this.hide();
             },
         };
+        this.onShowObservable.Add(
+            this._observableManager,
+            () => {
+                this.setState({ name: this.props.tourable.sceneManager.currentSceneGroup.name });
+            },
+            false
+        );
     }
     syncSettings = () => {};
-    applySettings = () => {};
+    applySettings = () => {
+        this.props.tourable.sceneManager.currentSceneGroup.name = this.state.name;
+    };
     renderComponents = () => {
         return (
             <>
@@ -43,7 +51,6 @@ class SceneGroupConfig extends Config<SceneGroup, SceneGroupConfigProps, SceneGr
                     }}
                 />
                 <Label>Scenes</Label>
-                
             </>
         );
     };
