@@ -4,6 +4,7 @@ import Scene from "./Scene";
 export interface SceneGroupSchema extends EntitySchema {
     name: string;
     sceneIds: number[];
+    description: string;
 }
 export default class SceneGroup extends Entity implements SceneGroupSchema {
     //#region name
@@ -17,6 +18,15 @@ export default class SceneGroup extends Entity implements SceneGroupSchema {
     //#endregion
     //#region sceneIds
     public sceneIds: number[] = [];
+    //#endregion
+    //#region description
+    private _description: string = "";
+    public get description(){
+        return this._description;
+    }
+    public set description(value: string){
+        this._description = value;
+    }
     //#endregion
     constructor(tourable: Tourable, schema?: SceneGroupSchema) {
         super(tourable, schema)
@@ -36,6 +46,7 @@ export default class SceneGroup extends Entity implements SceneGroupSchema {
         if (schema){
             this._name = schema.name;
             this.sceneIds = schema.sceneIds;
+            this._description = schema.description;
         } else {
             // no logic yet
         }
@@ -45,10 +56,11 @@ export default class SceneGroup extends Entity implements SceneGroupSchema {
             tourable.scenes.get(sceneID).delete(tourable);
         });
     };
-    export = () => {
+    export: () => SceneGroupSchema = () => {
         let entitySchema = this.exportEntity() as SceneGroupSchema;
-        entitySchema.name = this.name;
+        entitySchema.name = this._name;
         entitySchema.sceneIds = this.sceneIds;
+        entitySchema.description = this._description;
         return entitySchema;
     };
 }
